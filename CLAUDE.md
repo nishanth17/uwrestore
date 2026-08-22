@@ -41,10 +41,13 @@ mode (a separate, later concern, not the default).
    `(FrameSequence, TemporalState) -> (FrameSequence, UpdatedTemporalState)`.
    Never hide state in globals, singletons, or module-level mutable objects.
 
-4. **Ablation support.** Every correction stage needs a `--no-<stage>` CLI
-   flag (`--no-white-balance`, `--no-backscatter`, `--no-attenuation`,
-   `--no-depth`, `--no-temporal`, ...). The point is attribution: if quality
-   improves, we know which stage did it.
+4. **Ablation support.** Every implemented correction stage needs a
+   `--no-<stage>` CLI flag (`--no-white-balance`, `--no-backscatter`,
+   `--no-attenuation`, `--no-depth`, `--no-temporal`, ...). Future stages
+   must follow this rule when they're implemented — week 1 only requires
+   flags for whatever's actually built this session (gray-world), not
+   placeholder flags for stages that don't exist yet. The point is
+   attribution: if quality improves, we know which stage did it.
 
 5. **Preserve image truth.** Metrics (ΔE, PSNR, SSIM, temporal stability) are
    necessary but not sufficient. Never treat a metric improvement as a
@@ -68,6 +71,11 @@ mode (a separate, later concern, not the default).
    Generated artifacts should be traceable to source input and pipeline
    version (a filename convention or a line in LOG.md is enough at this
    project's scale — no per-experiment directory scaffold needed yet).
+   Test set video/image files stay local-only — never `git add` anything
+   under `data/testset/*/` other than READMEs, `.gitkeep`, `chart_refs.json`,
+   and `manifest.json`. `manifest.json` documents what footage should exist
+   locally (category, path, frame count, notes) without the footage itself
+   being tracked.
 
 8. **Lightweight dependencies by default.** Use the standard library and
    already-established project dependencies (numpy, opencv-python) unless
@@ -91,13 +99,19 @@ intentionally stubbed this session — implemented separately.
 
 ```
 uw/
-  io.py          # video/image -> FrameSequence
+  types.py       # Frame and FrameSequence definitions — data abstractions only, no processing logic
+  io.py          # video/image loading and saving
   colorspace.py  # sRGB <-> linear conversions
   baselines.py   # gray-world, white-patch, CLAHE
   metrics.py     # delta_e (CIEDE2000), temporal_stability
   cli.py         # uw score <path>, uw correct <path> --method X
 data/
-  testset/       # FROZEN. Never modify. chart/, distance/, murky/, lights/, swimthrough/
+  testset/       # FROZEN. Never modify. Footage stays LOCAL ONLY — not
+                 # committed to git. Structure, README, chart_refs.json,
+                 # and manifest.json (documenting what should exist
+                 # locally) are tracked; the actual video/image files
+                 # under chart/, distance/, murky/, lights/, swimthrough/
+                 # are not.
   chart_refs.json
 LOG.md
 PLAN.md
