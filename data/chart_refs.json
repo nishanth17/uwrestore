@@ -1,0 +1,28 @@
+{
+  "_schema": {
+    "description": "Reference chart data for uw.metrics.delta_e (CIEDE2000). This file is a SCHEMA PLACEHOLDER — the values below are not measured data and must be replaced before any ΔE number from it is meaningful. data/testset/chart/ is still empty.",
+    "chart": "Optional. Free-text identity of the physical chart, for provenance only. Not interpreted by the code.",
+    "reference_illuminant": "REQUIRED. The illuminant the reference L/a/b values are relative to: 'D65' or 'D50'. Never assumed. The pipeline works in D65 (sRGB/Rec.709 primaries); D50 references — which is what the published X-Rite ColorChecker tables use — are Bradford-adapted to D65 before comparison, so ΔE measures the pipeline's error and not a white-point mismatch. Mislabelling D50 data as D65 costs roughly 1.0 ΔE of pure bookkeeping error.",
+    "patches": "REQUIRED. Map of patch name -> {L, a, b, region}.",
+    "patches.<name>.L": "REQUIRED. CIELAB L*, relative to reference_illuminant.",
+    "patches.<name>.a": "REQUIRED. CIELAB a*.",
+    "patches.<name>.b": "REQUIRED. CIELAB b*.",
+    "patches.<name>.region": "REQUIRED. Where this patch appears in the frame, as NORMALIZED fractions of frame width/height in [0, 1], origin top-left: {x, y, w, h}. Normalized rather than absolute pixels so one entry stays valid across a 4K master and a downscaled proxy of the same shot. Inset the region from the patch's edges to avoid borders, bevels, and specular highlights. Pixel coordinates pasted here are rejected, not silently misread.",
+    "note_on_lifetimes": "L/a/b are a property of the physical chart and are the same in every shot; region is a property of one specific shot and changes whenever the chart is re-filmed. When more than one chart shot exists, expect this to split into a per-chart reference table plus per-shot regions merged before the call — delta_e takes the merged dict."
+  },
+  "chart": "PLACEHOLDER — replace with the real chart identity",
+  "reference_illuminant": "D65",
+  "patches": {
+    "patch_name": {
+      "L": 0,
+      "a": 0,
+      "b": 0,
+      "region": {
+        "x": 0.0,
+        "y": 0.0,
+        "w": 0.0,
+        "h": 0.0
+      }
+    }
+  }
+}

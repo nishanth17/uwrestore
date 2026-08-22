@@ -1,0 +1,61 @@
+{
+  "_comment": "Frozen test set metadata. Footage itself is NOT committed to git (local only) — this file tracks what exists locally so the test set composition is reproducible/inspectable from the repo alone. Frame counts cross-checked against LOG.md entries and recomputed directly via cv2.VideoCapture.",
+  "clips": [
+    {
+      "category": "chart",
+      "local_path": null,
+      "frame_count": null,
+      "duration_seconds": null,
+      "committed": false,
+      "notes": "Empty as of 2026-08-22 — no chart/reference footage captured yet. This is the blocking item for the Week 1 gate (delta_e cannot be wired into `uw score`, and chart_refs.json patch regions cannot be measured, until a chart clip exists here)."
+    },
+    {
+      "category": "distance",
+      "local_path": "data/testset/distance/DISTANCESHOT.MP4",
+      "frame_count": 353,
+      "duration_seconds": 11.778,
+      "committed": false,
+      "notes": "1920x1080, 29.97 fps. Decodes in the expected landscape orientation."
+    },
+    {
+      "category": "lights",
+      "local_path": "data/testset/lights/LIGHTNIGHTDIVE.MP4",
+      "frame_count": 307,
+      "duration_seconds": 10.244,
+      "committed": false,
+      "notes": "Decodes as 1080x1920 (portrait) via cv2.VideoCapture. Unlike MURKYSHARK.MP4, not confirmed whether this is rotation metadata or an actually-portrait capture — flagged for the same reason: measure regions against the decoded array, not assumptions about player orientation."
+    },
+    {
+      "category": "murky",
+      "local_path": "data/testset/murky/MURKYEEL.MP4",
+      "frame_count": 756,
+      "duration_seconds": 25.225,
+      "committed": false,
+      "notes": "1920x1080, 29.97 fps. Decodes in the expected landscape orientation. Referred to as the 'eel clip' in LOG.md."
+    },
+    {
+      "category": "murky",
+      "local_path": "data/testset/murky/MURKYSHARK.MP4",
+      "frame_count": 292,
+      "duration_seconds": 9.743,
+      "committed": false,
+      "notes": "Container reports 1920x1080, but cv2.VideoCapture decodes it as 1080x1920 (portrait) — rotation metadata is being applied at decode time, per LOG.md. Chart/color regions must be measured against the decoded frame array (H=1920, W=1080 as returned by numpy, i.e. cv2-reported WxH of 1080x1920), not against how the clip appears in a player that respects rotation metadata."
+    },
+    {
+      "category": "murky",
+      "local_path": "data/testset/murky/MURKYSHARK_corrected.mp4",
+      "frame_count": null,
+      "duration_seconds": null,
+      "committed": false,
+      "notes": "Generated artifact (gray-world `uw correct` output on MURKYSHARK.MP4), not source footage — listed for completeness but intentionally excluded from frame-count/duration bookkeeping above. Should not be treated as a frozen test set input; regenerate rather than hand-edit if it goes stale."
+    },
+    {
+      "category": "swimthrough",
+      "local_path": "data/testset/swimthrough/SWIMTHROUGH.MP4",
+      "frame_count": 313,
+      "duration_seconds": 10.444,
+      "committed": false,
+      "notes": "1920x1080, 29.97 fps. Decodes in the expected landscape orientation."
+    }
+  ]
+}

@@ -2,8 +2,15 @@
 __pycache__/
 *.py[cod]
 *.egg-info/
+.pytest_cache/
+
+# Virtual environments
 .venv/
 venv/
+
+# Build/package artifacts
+build/
+dist/
 
 # Data — raw footage and generated outputs
 # Never commit original dive footage or generated renders
@@ -15,29 +22,26 @@ data/output/
 *.mov
 *.mkv
 
-# Keep frozen evaluation/test media tracked
-!data/
-!data/testset/
-!data/testset/**
-!data/testset/**/*.mp4
-!data/testset/**/*.mov
-!data/testset/**/*.mkv
+# All dive footage stays local
+data/testset/**/*.mp4
+data/testset/**/*.MP4
+data/testset/**/*.mov
+data/testset/**/*.MOV
 
-# Depth/model checkpoints — large binaries
+# Model checkpoints / large binaries
 *.pt
 *.pth
 *.ckpt
 models/checkpoints/
 
-# COLMAP working directories — large and regeneratable
+# COLMAP / reconstruction artifacts
 colmap_output/
-colmap_output/**/*.bin
-colmap_output/**/*.db
+*.db
 
 # OS/editor
 .DS_Store
 .vscode/
 .idea/
 
-# Environment files
+# Environment/secrets
 .env
