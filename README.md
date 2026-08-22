@@ -1,7 +1,7 @@
 # uwrestore
 
 Physically-grounded underwater image and video restoration. This is not a
-color filter or a "make it pop" enhancement tool — the goal is to recover
+color filter or a make-colors-pop enhancement tool — the goal is to recover
 the most plausible scene appearance that would have existed without
 underwater degradation (attenuation, backscatter, color cast), by modeling
 the physics of light underwater rather than applying stylistic correction.
@@ -10,18 +10,7 @@ pipeline (a photo is a video with one frame).
 
 ## Status
 
-**Week 1 complete.** In place so far:
-
-- Image/video ingest into a unified `FrameSequence`
-- Linear-light conversion (sRGB EOTF, with the transfer-function assumption
-  explicit per input via `--profile`)
-- Gray-world baseline correction
-- CIEDE2000 ΔE metric implemented, but **not yet chart-validated** —
-  `data/chart_refs.json` is still a schema placeholder, and `data/testset/chart/`
-  is empty, so `uw score` currently reports temporal stability only, with a
-  note that ΔE has no reference data yet.
-
-See `PLAN.md` for the roadmap and `LOG.md` for session-by-session results.
+See `LOG.md` for current progress and session history.
 
 ## Install
 
