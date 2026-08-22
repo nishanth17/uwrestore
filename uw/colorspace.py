@@ -153,14 +153,17 @@ def xyz_to_linear_rgb(xyz: np.ndarray) -> np.ndarray:
 def xyz_to_lab(xyz: np.ndarray, white_xyz: np.ndarray = D65_WHITE_XYZ) -> np.ndarray:
     """CIE XYZ -> CIELAB, relative to `white_xyz`.
 
-    Negative tristimulus ratios are clamped to 0 before the cube root:
-    CIELAB is undefined for negative tristimulus values, and the alternative
-    is a NaN propagating silently into a metric. Values above the white
-    point are NOT clamped — L* > 100 is meaningful for highlights.
+    Ratios are not clamped: since `_LAB_EPSILON` is positive, any negative
+    ratio falls into the linear branch `(kappa*t + 16) / 116`, which is
+    finite and well-defined for negative t (no NaN risk). Clamping negative
+    ratios to 0 would collapse distinct invalid/out-of-gamut inputs to the
+    same Lab coordinates, masking their magnitude and direction. Values
+    above the white point are NOT clamped either — L* > 100 is meaningful
+    for highlights.
     """
     a = _as_triplet_array(xyz, "xyz")
     white = _as_triplet_array(white_xyz, "white_xyz")
-    ratio = np.clip(a / white, 0.0, None)
+    ratio = a / white
     f = np.where(
         ratio > _LAB_EPSILON,
         np.cbrt(ratio),
