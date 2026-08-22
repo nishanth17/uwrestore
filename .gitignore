@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Data — raw footage and generated outputs
+# Never commit original dive footage or generated renders
+data/raw/
+data/output/
+
+# Video files by default
+*.mp4
+*.mov
+*.mkv
+
+# Keep frozen evaluation/test media tracked
+!data/
+!data/testset/
+!data/testset/**
+!data/testset/**/*.mp4
+!data/testset/**/*.mov
+!data/testset/**/*.mkv
+
+# Depth/model checkpoints — large binaries
+*.pt
+*.pth
+*.ckpt
+models/checkpoints/
+
+# COLMAP working directories — large and regeneratable
+colmap_output/
+colmap_output/**/*.bin
+colmap_output/**/*.db
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Environment files
+.env
