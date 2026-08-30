@@ -82,15 +82,24 @@ def _load_image(path: str, profile: str) -> FrameSequence:
     return FrameSequence([frame])
 
 
-def _load_video(path: str, profile: str) -> FrameSequence:
+def _load_video(path: str, profile: str, start: int = 0, count=None) -> FrameSequence:
     cap = cv2.VideoCapture(path)
     if not cap.isOpened():
         raise IOError(f"failed to open video {path!r}")
     fps = cap.get(cv2.CAP_PROP_FPS) or None
     frames = []
     try:
-        index = 0
-        while True:
+        # Seek by grabbing rather than by CAP_PROP_POS_FRAMES: on long-GOP
+        # H.264 the property seek lands on a keyframe and silently returns a
+        # different frame than the one asked for, which would make a frame
+        # range in LOG.md untraceable to the footage it names.
+        for _ in range(start):
+            if not cap.grab():
+                raise IOError(
+                    f"{path!r}: ran out of frames before start index {start}"
+                )
+        index = start
+        while count is None or len(frames) < count:
             ok, bgr = cap.read()
             if not ok:
                 break
@@ -112,11 +121,19 @@ def _load_video(path: str, profile: str) -> FrameSequence:
     finally:
         cap.release()
     if not frames:
-        raise IOError(f"video {path!r} decoded zero frames")
+        raise IOError(
+            f"video {path!r} decoded zero frames"
+            + (f" from start index {start}" if start else "")
+        )
+    if count is not None and len(frames) < count:
+        raise IOError(
+            f"{path!r}: asked for {count} frames from index {start}, got "
+            f"{len(frames)} — the clip ends first"
+        )
     return FrameSequence(frames)
 
 
-def load(path, profile: str = "srgb") -> FrameSequence:
+def load(path, profile: str = "srgb", start: int = 0, count=None) -> FrameSequence:
     """Load an image or video into a FrameSequence, converted to linear RGB.
 
     `profile` states the source transfer function explicitly — one of
@@ -125,14 +142,29 @@ def load(path, profile: str = "srgb") -> FrameSequence:
     flag) must state it. Defaults to "srgb", the common case for
     consumer jpg/png/video — pass profile explicitly for Protune or
     already-linear (RAW-exported) sources.
+
+    `start` / `count` bound the decode to frames [start, start+count). A
+    whole 1080p clip decoded eagerly into float32 is several GB — 756 frames
+    of MURKYEEL is ~18 GB — so anything that only needs an excerpt (temporal
+    scoring works on bounded windows) should say so rather than decode the
+    clip and slice it. `frame_index` in the metadata is always the index in
+    the SOURCE clip, so a window stays traceable to the footage it came from.
+    Callers still only ever see a FrameSequence; this bounds the decode, it
+    does not introduce a second kind of sequence.
     """
     path = str(path)
     if profile not in TRANSFER_FUNCTIONS:
         raise ValueError(f"profile must be one of {TRANSFER_FUNCTIONS}, got {profile!r}")
+    if start < 0:
+        raise ValueError(f"start must be >= 0, got {start}")
+    if count is not None and count <= 0:
+        raise ValueError(f"count must be positive when given, got {count}")
     kind = _classify_path(path)
     if kind == "image":
+        if start:
+            raise ValueError(f"{path!r} is a single image; start must be 0, got {start}")
         return _load_image(path, profile)
-    return _load_video(path, profile)
+    return _load_video(path, profile, start=start, count=count)
 
 
 def _linear_frame_to_srgb_bgr_uint8(frame: Frame) -> np.ndarray:

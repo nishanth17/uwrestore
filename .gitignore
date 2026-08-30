@@ -32,7 +32,14 @@ data/testset/**/*.MOV
 *.pt
 *.pth
 *.ckpt
+*.safetensors
 models/checkpoints/
+checkpoints/
+
+# Vendored third-party model repos (SEA-RAFT, WAFT, ...) — cloned locally per
+# uw/searaft.py / uw/waft.py, never committed. See uw/searaft.py, uw/waft.py
+# docstrings for provenance/commit pinning instead.
+vendor/
 
 # COLMAP / reconstruction artifacts
 colmap_output/
@@ -45,3 +52,10 @@ colmap_output/
 
 # Environment/secrets
 .env
+# Week 2 Phase 1A optical-flow exploration (local artifacts only)
+# Diagnostic renders are derived from local dive footage and must stay local,
+# same rule as the footage itself.
+outputs/
+experiments/week2a_flow/.venv-*/
+experiments/week2a_flow/vendor/
+experiments/week2a_flow/checkpoints/

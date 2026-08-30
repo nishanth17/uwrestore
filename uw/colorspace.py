@@ -200,6 +200,36 @@ def linear_rgb_to_lab(rgb: np.ndarray) -> np.ndarray:
     return xyz_to_lab(linear_rgb_to_xyz(rgb), D65_WHITE_XYZ)
 
 
+def y_to_lstar(y: np.ndarray) -> np.ndarray:
+    """Linear relative luminance Y (white = 1.0) -> CIE L*.
+
+    The scalar special case of xyz_to_lab's L* branch: L* depends only on
+    Y/Yn, never on X or Z, so this exists rather than routing a lone
+    luminance channel through a full XYZ triplet. Used by
+    uw.baselines.clahe's perceptual-lightness pathway.
+
+    Not clamped, for the same reason xyz_to_lab isn't: the linear branch
+    below _LAB_EPSILON is finite and well-defined for negative Y, and
+    L* > 100 is meaningful for Y brighter than reference white (e.g.
+    gray-world/white-patch output, which is deliberately left unclipped).
+    """
+    a = np.asarray(y, dtype=np.float64)
+    f = np.where(a > _LAB_EPSILON, np.cbrt(a), (_LAB_KAPPA * a + 16.0) / 116.0)
+    return 116.0 * f - 16.0
+
+
+def lstar_to_y(lstar: np.ndarray) -> np.ndarray:
+    """CIE L* -> linear relative luminance Y (white = 1.0).
+
+    Exact inverse of y_to_lstar, mirroring lab_to_xyz's `yr` branch
+    (condition on L itself, not on the cubed intermediate) so the two stay
+    consistent with the already-validated Lab round-trip.
+    """
+    a = np.asarray(lstar, dtype=np.float64)
+    fy = (a + 16.0) / 116.0
+    return np.where(a > _LAB_KAPPA * _LAB_EPSILON, fy**3, a / _LAB_KAPPA)
+
+
 def bradford_adaptation_matrix(
     source_white_xyz: np.ndarray, dest_white_xyz: np.ndarray
 ) -> np.ndarray:

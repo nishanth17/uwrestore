@@ -75,7 +75,8 @@ mode (a separate, later concern, not the default).
    under `data/testset/*/` other than READMEs, `.gitkeep`, `chart_refs.json`,
    and `manifest.json`. `manifest.json` documents what footage should exist
    locally (category, path, frame count, notes) without the footage itself
-   being tracked.
+   being tracked. Generated outputs should never be mixed with source data.
+   Use separate output paths for corrected footage, depth maps, and benchmark results.
 
 8. **Lightweight dependencies by default.** Use the standard library and
    already-established project dependencies (numpy, opencv-python) unless
