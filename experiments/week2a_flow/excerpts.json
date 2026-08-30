@@ -1,0 +1,78 @@
+{
+  "_comment": "Excerpt selection for the Week 2 Phase 1A optical-flow bakeoff. Motion measured with OpenCV Farneback at 480px long side \u2014 a proxy for choosing frames only, deliberately not one of the candidate backends.",
+  "strongest_camera_motion_clip": "swimthrough",
+  "motion_ranking": [
+    "swimthrough",
+    "murky_eel",
+    "distance",
+    "lights",
+    "murky_shark"
+  ],
+  "clips": {
+    "swimthrough": {
+      "path": "data/testset/swimthrough/SWIMTHROUGH.MP4",
+      "frame_count": 313,
+      "samples": 62,
+      "median_motion_px_per_frame": {
+        "mean": 10.50518540413149,
+        "median": 9.785498809814452,
+        "p90": 17.2681103515625,
+        "max": 25.8145263671875
+      },
+      "selected_excerpt_start": 195,
+      "selection_rule": "argmax of a 6-sample (~1 s) moving average of the Farneback median motion, clamped so the 8-frame excerpt and MOF's +/-2 frame context fit inside the clip"
+    },
+    "murky_eel": {
+      "path": "data/testset/murky/MURKYEEL.MP4",
+      "frame_count": 756,
+      "samples": 151,
+      "median_motion_px_per_frame": {
+        "mean": 10.091907285222943,
+        "median": 10.27374725341797,
+        "p90": 14.575592041015625,
+        "max": 21.904316711425782
+      },
+      "selected_excerpt_start": 650,
+      "selection_rule": "argmax of a 6-sample (~1 s) moving average of the Farneback median motion, clamped so the 8-frame excerpt and MOF's +/-2 frame context fit inside the clip"
+    },
+    "murky_shark": {
+      "path": "data/testset/murky/MURKYSHARK.MP4",
+      "frame_count": 292,
+      "samples": 58,
+      "median_motion_px_per_frame": {
+        "mean": 0.031796637877565,
+        "median": 0.011232616752386093,
+        "p90": 0.08460856080055237,
+        "max": 0.15479464530944825
+      },
+      "selected_excerpt_start": 2,
+      "selection_rule": "argmax of a 6-sample (~1 s) moving average of the Farneback median motion, clamped so the 8-frame excerpt and MOF's +/-2 frame context fit inside the clip"
+    },
+    "lights": {
+      "path": "data/testset/lights/LIGHTNIGHTDIVE.MP4",
+      "frame_count": 307,
+      "samples": 61,
+      "median_motion_px_per_frame": {
+        "mean": 3.7016445566396246,
+        "median": 3.333440399169922,
+        "p90": 6.293050765991211,
+        "max": 9.525379180908203
+      },
+      "selected_excerpt_start": 85,
+      "selection_rule": "argmax of a 6-sample (~1 s) moving average of the Farneback median motion, clamped so the 8-frame excerpt and MOF's +/-2 frame context fit inside the clip"
+    },
+    "distance": {
+      "path": "data/testset/distance/DISTANCESHOT.MP4",
+      "frame_count": 353,
+      "samples": 70,
+      "median_motion_px_per_frame": {
+        "mean": 6.668570006234305,
+        "median": 5.89483528137207,
+        "p90": 13.044911193847655,
+        "max": 18.934783935546875
+      },
+      "selected_excerpt_start": 260,
+      "selection_rule": "argmax of a 6-sample (~1 s) moving average of the Farneback median motion, clamped so the 8-frame excerpt and MOF's +/-2 frame context fit inside the clip"
+    }
+  }
+}
