@@ -87,6 +87,22 @@ mode (a separate, later concern, not the default).
    learned residual — that's an expected, justified addition at that
    point, not a violation of this rule.
 
+9. **Bounded-memory execution.** No phase may require full-clip state to
+   remain resident in RAM. Per-frame quantities — range, normals,
+   illumination fields, physical estimates, innovations, traces — are
+   streamed to chunked on-disk storage as they are produced; only the active
+   temporal window, the estimator state, and the model currently running stay
+   resident. Persisting a field unsummarised (weeks 5–6 require this) is a
+   statement about what reaches disk, never a licence to accumulate a
+   full-clip array in memory. Invariant 3's explicit `TemporalState` is what
+   crosses a window boundary, not a growing buffer. Heavy models — optical
+   flow, SfM/MVS, feed-forward geometry, later the learned residual — run as
+   separate passes that persist their outputs and exit; nothing downstream may
+   assume two of them coexist in one process, and nothing re-runs geometry.
+   This is a persistence and interface requirement, not a mandate for
+   elaborate memory management: implement the streaming contract, profile, and
+   only build more than that when a measurement says so.
+
 ## Current phase
 
 See `PLAN.md` and `LOG.md` for progress. Current phase:

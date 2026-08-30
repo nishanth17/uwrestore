@@ -1234,6 +1234,14 @@ Minimal, adopted rather than invented. One `.npz` per clip per configuration
 plus a JSON sidecar. No abstraction layer, no package code, no `uw/depth/`
 subpackage until a method is selected.
 
+**Storage layout follows `CLAUDE.md` invariant 9.** "One `.npz` per clip" is the
+logical unit, not necessarily one file: `.npz` cannot be memory-mapped and must
+be materialised whole, so per-frame `(H,W)` fields are written as per-frame or
+per-chunk shards (plain `.npy`, memory-mappable, plus the sidecar) as each frame
+is produced, and read back windowed. The writer must never hold a full-clip
+stack of `(H,W)` float32 fields, and neither must any consumer. Keep the
+small per-clip quantities in the `.npz`/JSON.
+
 Per frame:
 
 ```text
@@ -1515,7 +1523,10 @@ each one closes again once its named failure is explained.
 
 ## What Week 3 persists for Weeks 5–6
 
-Nothing downstream should ever need to re-run geometry.
+Nothing downstream should ever need to re-run geometry — nor assume the geometry
+stack is installed in the same environment, or resident in the same process.
+Week 3 runs its heavy models, writes the range product, and exits; Weeks 5–6
+consume that product.
 
 - per-frame pose, intrinsics, **water path length** (with `path_source`),
   valid mask and confidence for
@@ -1760,6 +1771,35 @@ if full persistence is genuinely impractical may a reduction be stored instead,
 and then its definition and the reason for it must be documented **before** the
 information is discarded. This is the one irreversible decision in Weeks 5–6.
 
+### Persist by streaming, not by accumulating
+
+"Unsummarised, for the whole run" is a statement about **what reaches disk**, not
+about what is held in memory. The two only conflict if the implementation
+accumulates. The contract, per `CLAUDE.md` invariant 9:
+
+```text
+load a bounded frame window
+  -> estimate
+  -> append this frame's fields, state and traces to chunked on-disk storage
+  -> release the tensors
+```
+
+Only the active temporal window, the estimator state and the model currently
+running stay resident. A full-clip array of per-frame spatial fields is never
+constructed — not for persistence, not for analysis. Week 8 reads the traces back
+windowed or memory-mapped; its instruments must be expressible as streaming or
+chunked passes, and any analysis that genuinely needs the whole clip at once
+operates on a reduction *derived from* the retained fields, not on the fields
+themselves held in memory.
+
+Implement the streaming contract first, then profile. On this machine (M4, 24 GB
+unified, shared with the OS) the realistic failure is a single oversized
+intermediate — a full-clip stack, a float64 promotion, an unreleased decoder
+buffer — not steady-state footprint. Do **not** build sliding-window machinery
+more elaborate than a measurement justifies. Record peak RSS per stage in
+`LOG.md` alongside runtime; that number, not a prediction, decides whether
+anything more is needed.
+
 Rationale and the full Week 8 analysis this feeds:
 `experiments/week2b_temporal/TEMPORAL_METRIC_LITERATURE.md`.
 
@@ -1950,6 +1990,14 @@ Determine **what explicit illumination model, if any, is required** when the
 scene is lit partly or primarily by a camera-mounted dive light, and select the
 simplest model that materially improves held-out restoration.
 
+The question is not *which model produces the lowest error*. It is **which is
+the simplest model whose decomposition is actually identifiable from the
+evidence we can collect.** Several terms in this observation model can
+compensate for one another, so a low error is not by itself evidence that the
+recovered parameters mean anything. Staged estimation, the calibration-anchor
+ledger and the identifiability gate below exist to keep those two questions
+apart.
+
 Evidence, formulations, licences and rejected alternatives:
 `experiments/week6_illumination/ILLUMINATION_LANDSCAPE.md`. Do not restate them
 here.
@@ -2031,7 +2079,9 @@ Do not start Week 6B until all of these hold. Every candidate depends on them.
 - **Week 3's restoration-sensitivity thresholds are known.** Without them there
   is no way to tell an illumination win from geometry noise.
 - **Week 5 backscatter and Week 6 attenuation exist on ambient footage**, and
-  their clip scope is declared. They are the null hypothesis.
+  their clip scope is declared. They are the null hypothesis — and, under the
+  staged ladder below, the first rung: the medium estimated on L1 is what L2's
+  illumination fit holds fixed.
 - **The illumination clip has demonstrated camera-to-scene distance variation.**
   This is a hard identifiability precondition, not a preference: medium
   attenuation is only observable if the distance to the scene varies. On a
@@ -2052,6 +2102,13 @@ Static rigid geometry, uniform ambient illumination, **light off**. Same scene
 family as the artificial-light clip where possible. Purpose: establish the
 baseline, and make sure a complex model cannot win merely by fitting easy
 footage. This is the clip family A is scored on.
+
+**Shoot L1 and L2 back-to-back at the same site, in the same water.** The staged
+ladder below transfers L1's medium estimate into L2's fit and holds it fixed;
+that is only sound if the water is the same. Separated by hours, tide or site,
+the transfer is unsupported and the medium has to be re-estimated on L2 with a
+wide bound — which is exactly the joint fit the staging exists to avoid. This is
+an acquisition discipline that buys identifiability for free.
 
 ### L2 — controlled artificial light (mandatory, the primary fitting set)
 
@@ -2113,6 +2170,97 @@ Only what discriminates models:
 
 Not required: an underwater goniophotometer, per-LED calibration (there is one
 torch), a measured volume scattering function, or a spectrometer.
+
+---
+
+## Staged estimation — fit order is part of the model
+
+The observation model is
+
+```text
+observed colour = f( albedo,
+                     surface illumination,
+                     medium attenuation,
+                     ambient backscatter,
+                     active backscatter )
+```
+
+and several of those terms trade off against one another: a dimmer beam with a
+brighter albedo, a stronger `β` with a longer effective path, a light cone
+absorbed into ambient backscatter. Handing an optimiser all of them at once, on
+RGB frames, is a mathematically hostile inverse problem and invites a decomposition
+that renders well and means nothing. **Fit order is therefore a design decision,
+not an implementation detail**, and it is the same for every family with
+physical parameters:
+
+```text
+calibration rig data (measured offset, white-target sweep, chart)
+    -> LOCK camera-light extrinsic, beam profile, falloff form
+
+L1 (ambient, light OFF)
+    -> ESTIMATE medium: beta_att, beta_bs, B_inf     [Weeks 5-6 machinery]
+
+L2 (artificial, ambient minimal), medium held FIXED
+    -> ESTIMATE active illumination: source scaling, ambient level,
+       active-backscatter coefficient
+
+only then, staged outputs as initialisation
+    -> SMALL joint refinement, tightly bounded around the staged solution
+```
+
+Rules:
+
+- **Each stage is fitted on the data that isolates it**, and its result is frozen
+  before the next stage runs. A parameter that was measured (the extrinsic), or
+  fitted on a clip where it was the only free thing (medium on L1), is not
+  re-freed later merely because the joint fit would then score better.
+- **The joint refinement is bounded, and the bound is recorded** — set from the
+  staged fits' own uncertainty. It exists to absorb small cross-stage
+  inconsistency, not to re-solve the problem. If a parameter wants to leave the
+  interval carried from its staged fit, that is a reportable failure of a staged
+  assumption — most likely that L1 and L2 did not see the same water — not a
+  licence to widen the bound.
+- **Report staged and refined parameters side by side.** How far the joint step
+  moved each one is a direct measure of how well the staging held, and it is the
+  cheapest identifiability evidence in the phase.
+- The un-staged, everything-free joint fit is worth running **once, as a
+  diagnostic**, to quantify how much worse the conditioning actually is. It is
+  a measurement, not a candidate.
+
+Families C and D have no staged path for their *appearance* parameters — that is
+exactly why their outputs are tagged non-physical. Their *medium* terms still
+follow the ladder above; a family-C LUT does not get to re-estimate `β`.
+
+### What each anchor buys — the degrees-of-freedom ledger
+
+The controlled acquisitions are not redundancy. Each removes specific degrees of
+freedom **before** anything is jointly fitted, and every degree of freedom removed
+here is one the optimiser cannot use to invent a decomposition. Track them
+explicitly:
+
+```text
+ANCHOR                          WHAT IT REMOVES FROM THE JOINT FIT
+
+known chart albedo              reflectance scale; ties the multiplicative and
+                                additive terms to a point rather than a line
+L1 ambient clip, light off      medium parameters, measured with the torch
+                                absent entirely
+open-water frames, light on     active backscatter, with no object return in
+                                the signal
+white-target sweep              beam profile and falloff, with albedo known
+                                and constant
+chart at multiple ranges        attenuation, via its range dependence
+repeated views of one point     albedo consistency across beam incidence
+                                and range
+measured camera-light offset    the extrinsic -- otherwise the easiest
+                                parameter for a fit to abuse, because small
+                                pose errors mimic beam-profile errors
+```
+
+If an anchor was not acquired, record that in the fit record: **the missing anchor
+names the parameter most likely to come out unidentified**, and that prediction
+should be checked against the identifiability gate below rather than discovered
+afterwards.
 
 ---
 
@@ -2289,6 +2437,13 @@ held-out views                                        -> REJECT OR REGULARISE. D
                                                         mode, observed independently by both
                                                         leading papers
 
+Different initialisations or fit orderings give
+similar images but substantially different
+physical parameters                                   -> NOT IDENTIFIED. Add an anchor, fix a
+                                                        stage, or fall back to a lower-capacity
+                                                        family. Never resolved by picking the run
+                                                        with the lowest error
+
 Geometry uncertainty dominates illumination
 estimation                                            -> STOP. Do not escalate illumination
                                                         complexity. Return to the Week 3 error
@@ -2318,10 +2473,17 @@ predicted_illumination      per-pixel illumination factor at reconstructed point
                             -- ALWAYS persisted, for every family, because it is
                             the one quantity all four can produce
 medium_params               beta_att, beta_bs, B_inf per channel, and whether
-                            they are PHYSICAL or an APPEARANCE FIT
+                            they are PHYSICAL, PHYSICAL-BUT-UNIDENTIFIED or an
+                            APPEARANCE FIT
+identifiability             per physical parameter: the spread across the
+                            multi-start / ordering runs, the tolerance it was
+                            judged against, and the verdict
+staged_vs_refined           each staged parameter, its bound, and how far the
+                            joint refinement moved it
 confidence                  per-pixel where available
 residual                    post-correction residual map
-provenance                  method, config hash, clip, frame range, seed
+provenance                  method, config hash, clip, frame range, seed,
+                            initialisation and fit ordering
 ```
 
 Two hard rules:
@@ -2329,10 +2491,14 @@ Two hard rules:
 - **Preserve full spatial fields where tractable.** Never reduce an illumination
   field to a scalar mean; that hides exactly the local failure this phase
   exists to find. Store at the field's native resolution, downsampled only with
-  the factor recorded.
-- **Tag every medium parameter as physical or appearance.** A family-C `β` and a
-  family-B `β_att` are not the same quantity and must never be averaged,
-  compared or carried into Week 6's physical state as if they were.
+  the factor recorded — written per frame to chunked storage as it is produced,
+  per `CLAUDE.md` invariant 9, never accumulated into a full-clip array.
+- **Tag every medium parameter as physical, physical-but-unidentified, or
+  appearance.** A family-C `β` and a family-B `β_att` are not the same quantity
+  and must never be averaged, compared or carried into Week 6's physical state as
+  if they were. The third tag is not a formality: a parameter that failed the
+  identifiability gate travels with the appearance parameters — usable for
+  restoration, never quoted as a measurement, never transferred to another dive.
 
 ---
 
@@ -2456,6 +2622,57 @@ Before believing any separation result:
 4. **Swap test.** Apply a model fitted on one clip to a different clip of the
    same scene with the same rig. A genuine camera-relative illumination model
    transfers; a memorised one does not.
+5. **Multi-start and ordering sensitivity.** Refit every family that claims
+   physical parameters from at least three materially different
+   initialisations, and under at least two fit orderings — the staged ladder
+   above, plus at least one alternative (medium and active illumination
+   swapped, or the un-staged everything-free diagnostic). Record, per run, the
+   full recovered parameter vector *and* the held-out image error. Fixed seeds,
+   recorded in provenance.
+6. **Parameter spread vs. image spread.** Compare the spread of recovered
+   parameters across those runs against the spread of held-out image error.
+   Similar images from dissimilar parameters is the signature of an
+   unidentified model, and it is invisible to every other test in this phase.
+
+### The identifiability gate
+
+> If materially different initialisations or fit orderings produce similar
+> rendered and held-out images but substantially different physical
+> parameters, **the model is not identified**. Its parameters must not be
+> reported, persisted or transferred as physical. Either constrain the model
+> further — acquire another anchor, tighten a bound, fix a stage — or fall back
+> to a lower-capacity family.
+
+Held-out prediction protects against memorising the training views. It does
+**not** protect against several physically different decompositions that predict
+held-out views equally well. Concretely,
+
+```text
+beta = 0.15    rho = 0.7    L = 1.0
+beta = 0.25    rho = 0.9    L = 1.4
+```
+
+can explain nearly identical measurements over a limited range span. If both fit
+and predict equally well, the conclusion is **not** "run B found the true `β`".
+It is "**the data do not identify `β` at this precision**".
+
+"Materially different" and "similar" need numbers, and the project already has
+the method for producing them: Week 3's **restoration-relevance sensitivity
+test**, applied here to the illumination and medium parameters instead of to
+range. Propagate the observed multi-start parameter spread through the
+restoration calculation and ask whether the restored output moves by more than
+the measured residual noise floor. Two runs whose parameters differ but whose
+restored output does not are a *labelling* problem, not a restoration problem —
+still unidentified, still not physical, but harmless downstream. Two runs whose
+outputs also differ are a live risk to every later stage. Declare both
+thresholds before running the sweep, not after seeing the spread.
+
+An unidentified model is an acceptable outcome, not a failure of the phase. A
+latent that is stable and produces good restoration is still useful; it simply
+is not a measurement. Tag it `PHYSICAL-BUT-UNIDENTIFIED` in the state schema,
+and do not compare it to published water-type coefficients, carry it into Week
+6's physical state, or transfer it to another dive as if it had been measured.
+The honest claim is about the pipeline's output, not about the water.
 
 ---
 
@@ -2517,7 +2734,15 @@ Prefer the **simplest** model that:
    sensitivity section),
 5. behaves temporally under the frozen evaluator, with stable latent parameters,
 6. stays interpretable and debuggable,
-7. improves restoration on actual dive-light footage (L4).
+7. improves restoration on actual dive-light footage (L4),
+8. **is identifiable from the evidence available** — passes the identifiability
+   gate, or has its unidentified parameters explicitly demoted to latent
+   appearance state before selection, not after.
+
+Criterion 8 changes what a win means. Between two families that restore
+comparably, the one whose decomposition survives multi-start and reordering is
+preferred **even if its error is slightly higher**, because its parameters are
+the ones Weeks 6–8 are allowed to reason about physically.
 
 Do not force a winner. All of these are legitimate:
 
@@ -2530,10 +2755,14 @@ Do not force a winner. All of these are legitimate:
 - the learned field D wins on held-out views, which is read as *"enrich B or C"*,
   not *"adopt a NeRF"*,
 - a hybrid — physical beam model plus a low-capacity residual field — is best,
+- a family restores well but is **not identified**, and is adopted with its
+  physical parameters demoted to latent appearance state and that stated
+  plainly,
 - **geometry quality is the limiting factor**, and illumination-model selection
   is deferred with that stated as the reason.
 
-The last outcome is a real possibility and is not a failure of this phase.
+The last two outcomes are real possibilities and are not failures of this
+phase.
 
 ---
 
@@ -2568,8 +2797,16 @@ Proceed to Week 7 when:
 - **geometry sensitivity is measured**, and any family whose advantage does not
   survive plausible geometry perturbation is documented as absorbing geometry
   error,
-- medium parameters are explicitly tagged physical or appearance, and no
-  appearance fit has leaked into Week 6's physical state,
+- **the staged fit ladder was followed**, with each stage's data, bound, and the
+  distance the joint refinement moved each parameter recorded, and the
+  un-staged joint fit run once as a conditioning diagnostic,
+- **multi-start and fit-ordering sensitivity is measured** for every family
+  claiming physical parameters, with the parameter-spread and image-spread
+  thresholds declared beforehand, and an identifiability verdict recorded per
+  parameter,
+- medium parameters are explicitly tagged physical, physical-but-unidentified,
+  or appearance, and neither an appearance fit nor an unidentified parameter has
+  leaked into Week 6's physical state,
 - the frozen Phase 2B temporal stack is unchanged and its numbers are acceptable,
   with physical-state trajectories separately inspected,
 - restoration-relevance is compared against the Week 3 geometry-induced spread,
