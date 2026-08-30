@@ -56,6 +56,43 @@
       "duration_seconds": 10.444,
       "committed": false,
       "notes": "1920x1080, 29.97 fps. Decodes in the expected landscape orientation."
+    },
+    {
+      "category": "week3_geometry",
+      "local_path": null,
+      "frame_count": null,
+      "duration_seconds": null,
+      "committed": false,
+      "notes": "PLANNED, not yet captured. Week 3 controlled geometry clip (C1): rigid textured reef/rock/wreck, deliberate lateral or arc camera motion for real triangulation baseline, diffuse ambient light, NO dive-light sweep, minimal moving animals/vegetation, limited particulate, 20-40 s. Purpose-built for geometry diagnosis -- the existing clips were captured for restoration/temporal evaluation and cannot separate bad parallax from bad camera physics from bad matching from bad scale. Blocks the Week 3 gate."
+    },
+    {
+      "category": "week3_scale",
+      "local_path": null,
+      "frame_count": null,
+      "duration_seconds": null,
+      "committed": false,
+      "notes": "PLANNED, not yet captured. Week 3 scale/calibration clip (C2): same scene family as week3_geometry, plus the colour chart at >=3 MEASURED camera-to-chart distances spanning near/mid/far and >=3 positions in the frame, a rigid known-length scale bar, and enough constraint on the target-plane pose to derive the distance to each reference corner individually (one scalar stand-off is NOT per-pixel range truth). Underwater checkerboard at 2-3 measured distances if practical -- that is what produces residual-vs-(image radius, range) evidence for the refraction test. Also record in-air GoPro intrinsic calibration at the same resolution/FOV/Protune settings. Blocks the Week 3 gate."
+    },
+    {
+      "category": "week3_difficult",
+      "local_path": null,
+      "frame_count": null,
+      "duration_seconds": null,
+      "committed": false,
+      "notes": "OPTIONAL, diagnostic only. Week 3 difficult clip (C3): low-texture sand or smooth panel, some fish/vegetation, normal swim speed, plus an artificial-light pass. Used ONLY to fire conditional challengers and to seed Week 6B. Never used to select the primary geometry method, and never a replacement for week3_geometry."
+    },
+    {
+      "category": "week6b_illumination",
+      "local_path": null,
+      "frame_count": null,
+      "duration_seconds": null,
+      "committed": false,
+      "notes": "PLANNED, not yet captured, needed only at Week 6B. L1 ambient/diffuse control (light off); L2 controlled artificial light (rigidly mounted torch, ambient minimal, same scene points observed under different beam incidence AND at varying camera-to-scene distance -- distance variation is a hard identifiability precondition); L3 mixed ambient+artificial if practical. Calibration: measured camera-to-light rigid offset, chart at >=3 ranges x >=3 frame positions with light on, white/grey planar target sweep (~30-40 frames, varied range and angle, fiducials at corners), a few seconds of open water for the pure-water backscatter bound, and a repeat of the white-target sweep at start and end of dive to test beam-calibration transfer across battery state. L4 (the difficult real clip) is the EXISTING lights/LIGHTNIGHTDIVE.MP4 -- stress only, never the fitting set."
     }
-  ]
+  ],
+  "_roles": {
+    "controlled_new": "week3_geometry, week3_scale, week3_difficult, week6b_illumination -- purpose-built acquisitions that decide WHY methods differ. Selection happens here.",
+    "existing_frozen": "chart, distance, lights, murky, swimthrough -- unchanged, and now additionally serve as the generalisation/realism check applied to the SELECTED method only. A method that wins on the controlled clips and collapses on murky or swimthrough has not won.",
+    "note": "New data for diagnosis, existing data for realism. Adding the controlled acquisitions does not alter any existing clip, metric, or frozen Phase 2A/2B result."
+  }
 }
