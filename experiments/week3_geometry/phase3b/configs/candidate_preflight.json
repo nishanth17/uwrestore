@@ -1,0 +1,124 @@
+{
+  "_comment": "Phase 3B external-candidate accounting. Every fact here was checked against the upstream repository, its dependency files or its packaging metadata during the Phase 3B preflight -- not from memory and not from a paper. This file is the provenance record FINDINGS.md cites; it is a config, not a generated artifact, so it is committed while everything under outputs/ is not.",
+  "_checked_on": "2026-08-31",
+  "_rules_applied": {
+    "native_extension_hard_stop": "If evaluating a candidate requires compiling a candidate-specific C++/CUDA extension, custom PyTorch operator, correlation volume, lietorch, spatial-hashing extension, or any native extension driven by setup.py/CMake on this Mac, the candidate is classified not_practical_local immediately. Ordinary prebuilt wheels and pure-Python dependencies are fine.",
+    "integration_budget": "No source build of a large alternate upstream tree, no custom feature/match export path, no SQLite-injection tooling beyond a single-row camera rewrite on a COPY, no substantial glue code written solely to make an experiment possible.",
+    "device_budget": "At most ONE trivial device-selection adaptation per learned candidate (cuda|cpu -> cuda|mps|cpu, plus float32 instead of AMP as Phase 3A used for every dense model on MPS). No kernel porting, no component replacement, no algorithmic modification."
+  },
+  "loma": {
+    "hypothesis": "3B-1 optional sub-experiment",
+    "upstream": "davnords/LoMa, integrated into COLMAP as a feature/matcher type",
+    "installed_binary": "COLMAP 4.1.1 (Homebrew colmap 4.1.1_3), no CUDA",
+    "evidence": [
+      "libcolmap_feature.dylib of the installed Homebrew colmap 4.1.1_3 exposes exactly SIFT, ALIKED_N16ROT, ALIKED_N32 and matchers SIFT_BRUTEFORCE, SIFT_LIGHTGLUE, ALIKED_BRUTEFORCE, ALIKED_LIGHTGLUE. No LOMA* symbol is present.",
+      "At the time the Phase 3B environment was frozen, COLMAP's newest release was 4.1.1 (2026-07-17).",
+      "CORRECTION MADE DURING FINALISATION: upstream COLMAP 4.2.0 was released 2026-09-01T05:44Z and its notes add 'LoMa learned feature extraction and matching through ONNX, including LOMA_B and LOMA_B128 descriptors, brute-force matching, and multiple dedicated matcher variants'. It also ships the first official macOS ARM asset, colmap-arm64-macos.zip. Homebrew stable remains 4.1.1_3 as of 2026-09-01.",
+      "WITHDRAWN: an earlier version of this record claimed there is no official prebuilt macOS ARM binary at any version. That was false when written -- Homebrew publishes arm64_sonoma / arm64_sequoia / arm64_tahoe bottles for COLMAP, which is how the binary used throughout Weeks 3A and 3B was installed."
+    ],
+    "verdict": "not_practical (for Phase 3B as executed)",
+    "reason": "LoMa is absent from the frozen Phase 3B execution environment (Homebrew COLMAP 4.1.1_3). Changing the COLMAP version mid-phase would create a new environment and invalidate the comparison against Phase 3A's runs, which used the same binary. The branch was terminated at preflight with no troubleshooting spent, and the 2x2 factorial is the primary 3B-1 experiment. NOTE the decision is now environment-scoped, not a claim that LoMa is unreachable: as of COLMAP 4.2.0 it is released and an official macOS ARM binary exists, so a future phase can test it by adopting 4.2.0 as its frozen environment."
+  },
+  "mpsfm": {
+    "hypothesis": "3B-5 weak-parallax / near-planar specialist (CONDITIONAL)",
+    "repo": "https://github.com/cvg/mpsfm",
+    "code_license": "Apache-2.0",
+    "last_push": "2025-07-09",
+    "evidence": [
+      "requirements.txt pins cupy-cuda12x -- a CUDA-only package with no macOS ARM wheel.",
+      "It also requires mmcv, a native extension, and vendors ml-depth-pro as an editable third_party install."
+    ],
+    "verdict_if_triggered": "not_practical_local",
+    "note": "Recorded at preflight so the 3B-5 trigger check is honest about what would follow. It does NOT pre-empt the trigger check: 3B-5 is evaluated for triggering on the evidence from 3B-2, 3B-3 and 3B-4, and only then is this consulted."
+  },
+  "any4d": {
+    "hypothesis": "3B-6A dynamic geometry",
+    "repo": "https://github.com/Any-4D/Any4D",
+    "commit": "aa9f1b0d7ecdf44a6ef8cef93387be0093bdd497",
+    "commit_date": "2025-12-08",
+    "repo_state_note": "Single commit; the README's 12/12 note says 'The inference code will be refined and updated over the next few days' and 'A stronger and more generalizable model checkpoint, along with full training code will be released soon'. No further commits have landed, so what is evaluated is the initial release exactly as published.",
+    "paper": "arXiv:2512.10935, Any4D: Unified Feed-Forward Metric 4D Reconstruction (Karhade, Keetha, Zhang, Gupta, Sharma, Scherer, Ramanan; CMU)",
+    "code_license": "Apache-2.0",
+    "checkpoint": "any4d_4v_combined.pth",
+    "checkpoint_source": "https://huggingface.co/airlabshare/any4d-checkpoint/resolve/main/any4d_4v_combined.pth",
+    "checkpoint_bytes": 7727258559,
+    "checkpoint_license": "NOT STATED. The Hugging Face model repo declares no license field and carries no licence file. A public artifact with no stated terms is not an open-source licence -- the same finding Phase 3A recorded for AMB3R -- so Any4D stays strictly experimental regardless of how it performs, and may not be promoted into a permanent project dependency without clarified terms.",
+    "native_extension_check": {
+      "declared_dependencies": "torch~=2.6.0, torchvision, torchaudio, opencv-python-headless, einops, hydra-core, huggingface_hub, safetensors, trimesh, plyfile, rerun-sdk, utils3d (git), uniception (git, JayKarhade/UniCeption@dev/any4d)",
+      "flash_attn_or_xformers": "absent",
+      "uniception_setup_py": "a bare setup() call -- installing uniception compiles nothing",
+      "curope_cuda_kernel": "present in the uniception fork under uniception/models/libs/croco/curope, but the Any4D model config selects encoder dinov2_large, so the croco encoder and its CUDA kernel are never on the inference path",
+      "verdict": "PASSES the native-extension hard stop at preflight"
+    },
+    "device_handling_upstream": "scripts/demo_inference.py line 433: device = 'cuda' if torch.cuda.is_available() else 'cpu'; line 452: load_moge_model(device='cuda'). Both are in the demo WRAPPER, not in the library.",
+    "adaptation_taken": "None upstream. A project-owned driver (phase3b/scripts/run_any4d.py) calls the released model factory, released hydra config, released preprocessing and released inference entry point directly, selecting MPS -- exactly the pattern Phase 3A used for MapAnything and the VGGT family. No Any4D file is modified.",
+    "recorded_deviations": [
+      "compute_moge_mask=False. The MoGe mask is a visualisation / scene-flow post-processing input, never a model input: the model's REQUIRED_KEYS are {img, data_norm_type} and binary_mask is not in ALLOWED_VIEW_KEYS. With the flag off, load_images produces the image tensor through the identical crop_resize_if_necessary call, so the geometry path is the released one.",
+      "All 48 frames in temporal order rather than the demo's [reference] + +-20 window, so the frame set, order and count match Phase 3A configurations D/E0/E.",
+      "use_amp=False, float32, as Phase 3A used for every dense model on MPS."
+    ],
+    "verdict": "runnable_locally",
+    "verdict_reason": "Installed into experiments/week3_geometry/.venv-any4d (Python 3.13.5, torch 2.6.0, MPS available) with NO native compilation: uniception and utils3d both built as pure py3-none-any wheels. The measured source-pixel -> model-grid map is 294x518 / 518x294 with 0/25 markers lost to crop in both orientations -- essentially MapAnything's grid, and unlike the VGGT family it discards no field of view on the portrait clip."
+  },
+  "vggt_slam_2": {
+    "hypothesis": "3B-6B global / persistent learned geometry",
+    "repo": "https://github.com/MIT-SPARK/VGGT-SLAM",
+    "commit": "35327ac28b7d193df9ccc39ba6346052bb6f1207",
+    "commit_date": "2026-06-29",
+    "version_note": "The repo's main branch is VGGT-SLAM 2.0; VGGT-SLAM 1.0 lives on the version1.0 branch.",
+    "paper": "arXiv:2601.19887, VGGT-SLAM 2.0: Real-time Dense Feed-forward Scene Reconstruction",
+    "code_license": "BSD 2-Clause",
+    "backbone": {
+      "fork": "https://github.com/MIT-SPARK/VGGT_SPARK",
+      "fork_license": "NOASSERTION (GitHub recognises no licence file)",
+      "checkpoint_loaded_by_main_py": "https://huggingface.co/facebook/VGGT-1B/resolve/main/model.pt",
+      "checkpoint_license": "non-commercial -- the same experimental checkpoint Phase 3A configuration E0 used, and the reason E0 was never promoted to a default"
+    },
+    "dependency_findings": [
+      "requirements.txt pins torch==2.3.1 / torchvision==0.18.1; gtsam-develop ships macOS universal2 wheels for cp311-cp314, so GTSAM needs no source build.",
+      "setup.sh additionally installs facebookresearch/perception_models and facebookresearch/sam3. perception_models pins decord==0.6.0, which publishes NO macOS ARM wheel (only macOS x86_64 for py3.6-3.8, manylinux x86_64 and win_amd64), so pip would attempt a CMake/C++ source build of it.",
+      "perception_models pins numpy==2.1.2 while sam3 pins numpy>=1.26,<2 -- the official setup.sh cannot resolve to a consistent environment on ANY platform.",
+      "perception_models is distributed under the FAIR Noncommercial Research License.",
+      "MITIGATION CHECKED: both perception_models and sam3 are imported only inside `if args.run_os:` (open-set semantic search) in main.py and main_realtime.py, so the default SLAM path does not need them and the decord / numpy / licence problems can be avoided by not installing them."
+    ],
+    "device_sites_on_the_default_path": [
+      "main.py:44  device = 'cuda' if torch.cuda.is_available() else 'cpu'",
+      "main.py:79  model = model.to(torch.bfloat16)   -- hardcoded half precision",
+      "vggt_slam/solver.py:301  device = 'cuda' if torch.cuda.is_available() else 'cpu'",
+      "vggt_slam/solver.py:309  dtype = torch.bfloat16 if torch.cuda.get_device_capability()[0] >= 8 else torch.float16  -- an UNCONDITIONAL CUDA call that raises on a machine without CUDA"
+    ],
+    "attribution_warning": "VGGT-SLAM is NOT a clean 'VGGT -> global optimiser' ablation against Phase 3A configuration E0. Its backbone is a fork (VGGT_SPARK) rather than upstream VGGT, and it runs the model in bfloat16 where E0 ran float32 on MPS. Any output difference would therefore measure 'global alignment PLUS a different frontend build PLUS a different numeric precision', and must not be attributed to global alignment alone.",
+    "empirically_verified_on_this_machine": {
+      "unconditional_cuda_call": "vggt_slam/solver.py:309 calls torch.cuda.get_device_capability() unconditionally on the default SLAM path. Executed here it raises AssertionError: 'Torch not compiled with CUDA enabled'. This is a crash, not a slow fallback.",
+      "interpreter_gap": "requirements.txt pins torch==2.3.1, whose macOS arm64 wheels cover cp38-cp312. Neither currently available project interpreter (Python 3.13, 3.14) satisfies that pin. Python 3.11 could of course be installed; the point is that standing up a new interpreter and environment for an optional test is outside the budget once the device blocker already applies.",
+      "decord_wheels": "decord==0.6.0 publishes macosx_10_15_x86_64 (py3.6-3.8), manylinux2010_x86_64 and win_amd64 wheels only -- no macOS ARM wheel at any Python version."
+    },
+    "verdict": "not_practical_local",
+    "verdict_reason": "Assessed at the prescribed pre-installation inspection point. The default SLAM path needs at least four CUDA-specific changes (two device selectors, one hardcoded bfloat16 cast, and one unconditional torch.cuda.get_device_capability() call that raises on a machine without CUDA), which is more than the ONE trivial device-selection adaptation the Phase 3B budget allows. Separately, neither available project interpreter satisfies the pinned torch==2.3.1, and the official install path declares mutually incompatible NumPy requirements (perception_models 2.1.2 vs sam3 <2) while also pulling decord, which has no macOS ARM wheel. Patching around all of that is a macOS port, not an evaluation of the released method. Even had it run, it would not have been a clean VGGT->global-optimiser ablation against configuration E0: different backbone fork, different numeric precision, non-commercial checkpoint."
+  },
+  "cuda_reference_systems": {
+    "_comment": "Recorded for candidate accounting only. These are NOT local execution targets and do NOT count as Phase 3B experiments. No MPS ports, no xformers surgery, no CUDA kernel compilation, no cloud GPU rental in this phase.",
+    "megasam": {
+      "repo": "mega-sam/mega-sam",
+      "license": "Apache-2.0",
+      "status": "pending_cuda / not_practical_local",
+      "reason": "README pins Python 3.10 + CUDA 11.8 + PyTorch 2.0.1 and installs xformers from a prebuilt linux-64 cu11.8 archive, plus DROID-style CUDA ops. No non-CUDA path is documented."
+    },
+    "wildpose": {
+      "status": "pending_cuda",
+      "reason": "Targets dynamic / low-ego-motion pose estimation; recorded as scientifically relevant. Not attempted -- no MPS port is permitted in this phase."
+    },
+    "monst3r": {
+      "status": "pending_cuda / not_practical_local",
+      "reason": "Documented GPU-memory requirements (~23 GB VRAM) and a CUDA-oriented environment make it unsuitable as an overnight local experiment on this 24 GB unified-memory Mac. Forcing it through offloading, aggressive swapping or unsupported MPS modifications is explicitly out of scope."
+    },
+    "gluemap": {
+      "status": "pending_cuda (unchanged from Phase 3A)",
+      "reason": "INSTALL.md: 'GLUEMAP requires CUDA at runtime'; pygluemap.solve_cuda is the augmented bundle adjustment, i.e. the very global-consistency stage the configuration exists to test."
+    },
+    "amb3r": {
+      "status": "pending_cuda, no LICENSE file (unchanged from Phase 3A)",
+      "reason": "spconv-cu118 IS the compact volumetric backend under test and has no CPU/MPS build."
+    }
+  }
+}

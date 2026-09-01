@@ -141,12 +141,29 @@ def map_to_grid(uv: np.ndarray, m: dict) -> np.ndarray:
 # --------------------------------------------------------------------------
 
 def dense_vs_sparse(dense_cfg: str, family: str, classical_cfg: str, clip: str,
-                    maps: dict, min_track_len: int = 3) -> dict | None:
-    model = load_classical(classical_cfg, clip)
+                    maps: dict, min_track_len: int = 3,
+                    model: dict | None = None,
+                    range_root: str | None = None,
+                    frames: set | None = None) -> dict | None:
+    """`model` and `range_root` are ADDITIVE Phase 3B parameters.
+
+    Phase 3B needs the same dense-vs-sparse measurement against a reconstruction
+    that does not live under `outputs/colmap/<config>/` — a global-mapper model,
+    say — and for a dense product that lives under `phase3b/outputs/range/`.
+    `frames` restricts the measurement to a given set of source frame indices,
+    which is what makes a challenger evaluated on a subset of views comparable
+    with a Phase 3A model evaluated on all 48: a per-frame scale max/min over 15
+    samples is not comparable with one over 37 unless both are computed on the
+    same frames. Passing them in avoids duplicating this function. When all three
+    are None (every Phase 3A call site) the reference, the product and the frame
+    set are exactly as before, so no Phase 3A number changes.
+    """
+    if model is None:
+        model = load_classical(classical_cfg, clip)
     if model is None:
         return None
     try:
-        reader = RangeReader(RANGE_ROOT, dense_cfg, clip)
+        reader = RangeReader(range_root or RANGE_ROOT, dense_cfg, clip)
     except FileNotFoundError:
         return None
     obs = classical_observations(model)
@@ -163,6 +180,8 @@ def dense_vs_sparse(dense_cfg: str, family: str, classical_cfg: str, clip: str,
     est_all, ref_all, rad_all, conf_all = [], [], [], []
     n_offered = n_used = 0
     for idx in reader.frame_indices:
+        if frames is not None and idx not in frames:
+            continue
         o = obs.get(idx)
         if o is None:
             continue
@@ -275,10 +294,14 @@ def dense_vs_sparse(dense_cfg: str, family: str, classical_cfg: str, clip: str,
 # --------------------------------------------------------------------------
 
 def dense_vs_dense(cfg_a: str, fam_a: str, cfg_b: str, fam_b: str, clip: str,
-                   maps: dict, stride: int = 4) -> dict | None:
+                   maps: dict, stride: int = 4,
+                   root_a: str | None = None, root_b: str | None = None) -> dict | None:
+    """`root_a`/`root_b` are ADDITIVE Phase 3B parameters: a Phase 3B dense
+    product lives under `phase3b/outputs/range/`. Both default to the Phase 3A
+    root, so no Phase 3A call site changes."""
     try:
-        ra = RangeReader(RANGE_ROOT, cfg_a, clip)
-        rb = RangeReader(RANGE_ROOT, cfg_b, clip)
+        ra = RangeReader(root_a or RANGE_ROOT, cfg_a, clip)
+        rb = RangeReader(root_b or RANGE_ROOT, cfg_b, clip)
     except FileNotFoundError:
         return None
     common = sorted(set(ra.frame_indices) & set(rb.frame_indices))

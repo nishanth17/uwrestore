@@ -1714,3 +1714,107 @@ the initial image pair (config B gave 48/48 and 3/48 on byte-identical reruns);
 and the pose falsification control was initially a no-op because VGGT anchors its
 world frame to camera 0. `scripts/check_completeness.py` now separates "a run
 died", "a run used superseded settings" and "a method failed".
+
+---
+
+## Week 3 Phase 3B — targeted geometry failure analysis (2026-08-31)
+
+**Six pre-registered hypotheses** (`experiments/week3_geometry/phase3b/PHASE3B.md`,
+written before any run), full report in `phase3b/FINDINGS.md`.
+
+**Answer: NO. Phase 3B does not change the Phase 3A architecture.** MapAnything
+(dense range) + COLMAP/SIFT (sparse cross-check) is frozen as the provisional
+integration path. Nothing was simultaneously large, repeatable, attributable,
+restoration-relevant and deployable.
+
+**Camera metadata, read for the first time.** All six clips are one GoPro HERO9
+Black, one lens serial, one firmware. Five share an identical capture mode (Wide,
+digital zoom off, HyperSmooth Boost, ZFOV 105.383°); only `cenote_01` differs.
+`wreck_01`'s portrait decode is `OREN = R` — a rotation flag with identical FOV —
+so the 44 % vertical FOV loss Phase 3A found there is a **VGGT-family
+preprocessing artefact, not a footage property**, and the classical arm has no
+FOV confound on that clip. **EIS is on in every clip** (`EISE = Y`) with output
+projection `PRJT = GPRO`: a real, previously unrecorded confound for every Phase
+3A geometry number, now documented but not resolved.
+
+**The load-bearing result: within these six clips, instability tracks SIFT
+observation density much more closely than the tested parallax proxies.** Four independent perturbations
+— matcher, mapper, central camera model, frame schedule — agree about which clips
+are stable. `swimthrough_02` has the *lowest* median triangulation angle in the
+set (5.23°) and is the most stable under all of them (mapper 0.0 %, camera model
+0.4-0.5 %); `wreck_01` has the *largest* baseline/depth ratio (0.276) and moves
+~9 % under every one. Stable clips carry 4 358-14 440 observations/image;
+unstable ones 1 099-2 099. This is consistent with an under-constrained /
+self-calibration regime; it does **not** establish observation density as the
+causal variable, and a global median triangulation angle cannot exclude a local
+parallax-topology failure within a clip. Under the one perturbation family applied
+identically to four clips (the four central camera models), the two
+high-observation clips hold their focal to **1.026x** and **1.056x** while the two
+low-texture clips *from the same camera and capture mode* spread **1.113x** and
+**1.294x**; across all Phase 3B arms `wreck_05` spans 1 236-1 780 px and
+`wreck_01` 1 104-1 430 px, and imposing `wreck_07`'s intrinsics on either costs no
+registration and lengthens its tracks. **So a large
+part of Phase 3A's cross-family disagreement on the low-texture clips is the
+classical reference's own ill-conditioning, not only the dense candidates.**
+
+**Noise floors, measured in the units that decide things.** Mapper-only runs on a
+fixed database and Any4D on MPS are *exactly* reproducible (0.00 %, bitwise).
+Whole-pipeline reruns are not: `wreck_07` 0.01 %, but `wreck_05` 2.1-6.5 % median
+/ 6.7-19.1 % range swing, and 10.2-32.9 % at reduced frame counts. Mechanism
+identified — identical 52 745 keypoints, **29 differing verified matches out of
+65 756 (0.04 %)** move `wreck_05`'s range field 3.3 % median. This completes Phase
+3A limitation #8 and reframes its `wreck_05` column.
+
+**Per-hypothesis.** 3B-1 `interesting_but_not_material`: the A→B track gain is
+**the matcher (LightGlue), not ALIKED** — +51.5 %/+41.3 % at fixed features,
+−7.9 %/−16.9 % at fixed matcher, and ALIKED+brute-force collapses registration to
+32/48 and 26/48. 3B-2 `failure_not_repaired`: global SfM is identical to
+incremental on high-texture footage (0.0 %) and differs 9-14 % on low-texture;
+`view_graph_calibrator` upgraded 0/391 pairs and produced 15 degenerate frames on
+`wreck_03` while reporting the *best* reprojection error. 3B-3
+`failure_not_repaired`: well-conditioned clips are stable to every central camera
+model (≤1.5 %), weak clips move 8-24 %; the equal-capacity fisheye changes
+`wreck_05` by 0.8 %, so it is **capacity, not projection family**. 3B-4
+`failure_not_repaired`/`not_identifiable`: `cenote_01` reconstructs the same world
+from 13 frames as from 48 (1.0-1.1 %, at its own noise) — weak temporal baseline
+does **not** explain the Phase 3A disagreement. 3B-5 `not_triggered` on the
+pre-registered rule. 3B-6A Any4D `interesting_but_not_material`: at matched view
+count it cuts MapAnything's scale wander 7.05×→2.57× and range swing
+129.5 %→72.8 % — real and view-count-controlled — but stays far outside the
+restoration budget, is worse than every arm on the easy control, costs 10.8× the
+runtime and 3.4× the memory, cannot process 48
+views (62 GB attention buffer), emits no usable validity signal, and its
+checkpoint states no licence — and the comparison is Any4D vs MapAnything, not
+MapAnything ± a dynamic head, so the mechanism is not isolated. 3B-6B VGGT-SLAM
+2.0 `not_practical_local`. LoMa `not_practical` **for Phase 3B as executed** —
+absent from the frozen Homebrew 4.1.1_3 environment. (Correction at finalisation:
+upstream COLMAP **4.2.0** shipped 2026-09-01 *with* LoMa (`LOMA_B`, `LOMA_B128`)
+and the first official `colmap-arm64-macos.zip`; Homebrew stable is still
+4.1.1_3. Changing COLMAP mid-phase would have created a new environment, so the
+decision stands, but LoMa is testable by a future phase that adopts 4.2.0. An
+earlier claim that no prebuilt macOS ARM binary existed was wrong — Homebrew
+arm64 bottles are how this project's COLMAP was installed.) MP-SfM
+`not_practical_local` had it triggered.
+
+**New operational guards for Weeks 5-6.** (1) `< ~2 000 SIFT observations/image`
+is a **heuristic warning trigger learned from this dataset, not a validity
+boundary** — below it, the classical geometry on these clips stopped being
+identified, so treat it as a flag to check and do not use configuration A as a
+structural cross-check on a flagged clip without the check in (2). (2) The
+detector is one extra `global_mapper` run on the same database (seconds;
+disagreement is 0.0 % exactly when the clip is well conditioned). (3)
+MapAnything's dynamic failure on `wreck_03` is **view-count-independent** (16
+views reproduces it: 25.0 % vs 25.2 % median, 7.05× vs 6.30× scale wander), so
+shortening the window is not a workaround. Two conditional fallbacks, neither on
+by default: SIFT+LightGlue as a *correspondence-strengthening* option when
+ordinary SIFT matching is specifically diagnosed as weak (it is **not** a
+registration-failure fallback — the large rescues in this phase belong to the
+ALIKED cell), and
+`global_mapper` as a second opinion — `view_graph_calibrator` explicitly not
+adopted.
+
+**C2 unchanged and reinforced:** required for definitive objective geometry
+validation and for resolving refraction, **not** a blocker to downstream pipeline
+development. Phase 3B shows an independent metric anchor would resolve both sides
+of the Phase 3A disagreement at once, since the reference itself is unidentified
+on exactly the clips where that disagreement was largest.

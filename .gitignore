@@ -67,3 +67,15 @@ experiments/week3_geometry/.venv-*/
 experiments/week3_geometry/vendor/
 experiments/week3_geometry/checkpoints/
 experiments/week3_geometry/build/
+
+# Week 3 Phase 3B (local artifacts only). `outputs/` above already matches any
+# directory of that name, but the Phase 3B path is named explicitly so the rule
+# survives any future narrowing of that pattern. Everything generated beneath it
+# is heavy or derived: COLMAP databases and sparse models, .ply/.npz/.pt tensor
+# dumps, checkpoint caches, symlinked frame schedules, logs. Small curated JSON
+# summaries that the report cites are force-added individually with `git add -f`,
+# never by relaxing this rule.
+experiments/week3_geometry/phase3b/outputs/
+experiments/week3_geometry/phase3b/vendor/
+experiments/week3_geometry/phase3b/checkpoints/
+experiments/week3_geometry/phase3b/.venv-*/
