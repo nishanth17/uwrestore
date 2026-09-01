@@ -1,0 +1,132 @@
+{
+  "_comment": "Phase 3A candidates H, I and J \u2014 the final predeclared additions to the geometry landscape. Each was dispositioned by the RELEASE GATE first: official runnable inference code AND official pretrained weights must both exist before any attempt to execute. Nothing here was reproduced from a manuscript, no missing component was implemented, no unofficial reproduction was substituted, and no published benchmark number is treated as a measurement on this project's footage. After these three, the Phase 3A model landscape is FROZEN.",
+  "_naming": "Two distinct 2026 methods are called Wat3R/WAT3R. `Wat3R-Ren` (Ren et al., ECCV 2026 Oral) is configuration E, which WAS executed. `WAT3R-Xu` (Xu et al.) is configuration J below. They are never referred to as just 'Wat3R'.",
+  "_status_vocabulary": {
+    "executed": "ran on the Phase 3A clips and produced comparable output",
+    "paper_only / not_released": "official implementation or required weights unavailable",
+    "pending_cuda": "faithful released implementation exists but requires an unsupported CUDA runtime",
+    "integration_failed": "a supposedly supported path was attempted but could not be made to execute within bounded effort",
+    "executed_but_invalid": "ran, but conventions/numerics failed validation strongly enough that comparison would mislead"
+  },
+  "H_seavggt": {
+    "name": "SeaVGGT",
+    "status": "paper_only / not_released",
+    "hypothesis": "Does physics-driven / self-supervised underwater adaptation of a VGGT-family model improve restoration-relevant geometry relative to vanilla VGGT and the other underwater-adapted methods? Sits on the underwater ADAPTATION axis (VGGT -> SeaVGGT), alongside VGGT -> Wat3R-Ren.",
+    "not_a_refraction_experiment": "Self-supervised radiometric/physics-aware adaptation is not non-central refractive ray geometry. Configuration C remains the explicit flat-port camera-model experiment.",
+    "paper": {
+      "venue": "OpenReview submission (title: 'Underwater Visual Geometry Estimation with Self-...'); no accepted venue confirmed at inspection time",
+      "claimed_base_architecture": "VGGT",
+      "claimed_adaptation": "self-supervised adaptation of a pretrained depth model to underwater conditions with no ground-truth annotations, using cyclic consistency between original and reconstructed images under the underwater image-formation model, plus input-conditioned prototype refinement across water types",
+      "claimed_result": "13.47% RMSE reduction versus the VGGT baseline under unseen water conditions (FLSea, USOD10K, SQUID)",
+      "note": "These are the AUTHORS' claims, restated for the record. They are not measurements on this project's footage and are not used in any ranking."
+    },
+    "repository": {
+      "url": "https://github.com/lqzhao/SeaVGGT",
+      "commit": "78a3a7d0fbabb58ab3e987924da7f020d01bdb9f",
+      "commit_date": "2026-08-20",
+      "stars_at_inspection": 2,
+      "license": "NO LICENSE FILE. GitHub reports no licence. README content is the single line '# SeaVGGT'."
+    },
+    "release_gate_evidence": [
+      "demo.py imports `uw_model`, `dataset` and a top-level `vggt` package. NONE of the three exists anywhere in the repository \u2014 the released code does not import, let alone run.",
+      "The only checkpoint reference is a hard-coded local training artifact: `model_path = \"checkpoints/epoch_01_best_rmse_0.6133_24proto_sota.pth\"`. There is no `checkpoints/` directory, no download URL and no Hugging Face reference.",
+      "The GitHub releases API returns zero releases, so no weights are attached there either.",
+      "The only weights the code CAN fetch are vanilla `facebook/VGGT-1B` (demo.py line 236), i.e. the baseline, not SeaVGGT."
+    ],
+    "disposition": "Required pretrained weights are not publicly available and the released code is incomplete. Under the release gate this stops here. Implementing the missing modules would be a hand-written reproduction, which is not a controlled evaluation of the published method."
+  },
+  "I_water_vggt": {
+    "name": "Water-VGGT",
+    "status": "paper_only / not_released",
+    "secondary_blocker": "pending_cuda",
+    "hypothesis": "Does explicitly conditioning feed-forward geometry on learned water-condition / water-optics information improve spatial range structure on underwater footage?",
+    "repository": {
+      "url": "https://github.com/awhitewhale/watervggt",
+      "commit": "f8f03eb74fc137b8eecdc2aac9729b7135706f14",
+      "commit_date": "2026-03-30",
+      "license": "MIT (LICENSE file present, 'Copyright (c) 2026 awhitewhale')"
+    },
+    "what_the_paper_claims": "A 'Water Condition Vector' representing refractive parameters, visibility, scattering intensity and spectral attenuation, driving an 'alternatingly conditioned Transformer backbone' that adapts feature interactions and geometric reasoning, plus condition-aware prediction modules.",
+    "what_the_released_code_actually_does": [
+      "`vggt/` in the repository is a copy of the VANILLA VGGT package (dependency/, heads/, layers/, models/, utils/).",
+      "demo.py constructs a plain `VGGT()` and loads `https://huggingface.co/facebook/VGGT-1B/resolve/main/model.pt` \u2014 vanilla VGGT-1B weights. There is NO code path anywhere that loads a Water-VGGT geometry checkpoint, and the README's OneDrive 'pretrained Water-VGGT model' link has nothing in the code that would consume it.",
+      "The only Water-VGGT-specific component actually wired in is `wcv_init()`, which runs the committed `pre/wcv_pre.pth` (20 MB, in-repo) over an input directory and writes IMAGE files to another directory. The released pipeline is therefore 'WCV image-space preprocessing -> unmodified vanilla VGGT'.",
+      "The custom modules that would constitute the conditioned backbone (`attention.py::NonLocalSparseAttention`, `deform_conv.py::DCN_layer`, `swing_transformer.py`) are not imported by demo.py at all \u2014 they are orphaned files.",
+      "README states verbatim: 'Note: Training and testing code will be released upon acceptance of the paper.'"
+    ],
+    "camera_model_finding": "IMPORTANT: whatever the paper claims about refraction, the RELEASED implementation does not alter ray geometry, does not predict refractive parameters at inference, and does not model a non-central projection. The WCV is an image-space module feeding an unmodified CENTRAL pinhole VGGT. Water-VGGT must therefore NOT be described as 'refraction-aware SfM' on the strength of this release. Configuration C remains the only clean central-vs-flat-port experiment in this bakeoff.",
+    "hardware_evidence": [
+      "demo.py raises unconditionally without CUDA: `raise ValueError(\"CUDA is not available. Check your environment.\")`",
+      "wcv.py: `model = wcv_pre().cuda()` then `nn.DataParallel(model, device_ids=[0,1])` \u2014 requires TWO CUDA devices.",
+      "Absolute filesystem paths at root: `/testdata`, `/pre/wcv_pre.pth`, `/testsavedir`."
+    ],
+    "disposition": "Recorded as paper_only / not_released on the PRIMARY ground that the released inference path does not instantiate the published method \u2014 it runs stock VGGT-1B after an image-preprocessing step, and the authors state the testing code is unreleased. The CUDA/two-GPU gate is a separate, independent blocker. Running it as shipped would have produced vanilla VGGT numbers under a Water-VGGT label, which is exactly the 'executed_but_invalid' trap.",
+    "official_checkpoint_inspected": {
+      "verdict": "The officially distributed 'pretrained Water-VGGT model' IS vanilla VGGT-1B, byte for byte.",
+      "how": "The README's OneDrive link was followed manually and the artifact inspected directly (experiments/week3_geometry/scripts/inspect_checkpoint.py, loaded with weights_only=True). No architecture or inference code was written to do this.",
+      "artifact": {
+        "filename": "model.pt",
+        "size_bytes": 5026874952,
+        "sha256": "d15bf50a8615c8225ed48b51ea5cac673d82442ec0309036df555a053253afe0",
+        "container": "torch pickle; root object IS the state dict",
+        "n_tensors": 1797,
+        "n_parameters": 1256537516,
+        "dtypes": "all torch.float32"
+      },
+      "module_inventory": {
+        "aggregator": 1210,
+        "track_head": 394,
+        "camera_head": 69,
+        "point_head": 62,
+        "depth_head": 62
+      },
+      "water_vggt_specific_modules_present": {
+        "wcv": 0,
+        "water": 0,
+        "condition": 0,
+        "sft": 0,
+        "igm": 0,
+        "dcn": 0,
+        "deform": 0,
+        "swin": 0,
+        "nonlocal": 0,
+        "note": "ZERO tensors match any of the claimed Water-VGGT components. The inventory is exactly vanilla VGGT's."
+      },
+      "identity_test_vs_facebook_VGGT_1B": {
+        "compared_against": "facebook/VGGT-1B model.safetensors from the local HF cache",
+        "keys_only_in_downloaded": 0,
+        "keys_only_in_vggt1b": 0,
+        "bitwise_identical_tensors": "1797/1797",
+        "max_abs_difference": 0.0,
+        "conclusion": "The checkpoint is not merely 'VGGT-like' or 'VGGT-initialised' \u2014 every one of its 1797 tensors is numerically identical to facebook/VGGT-1B. It contains no underwater adaptation of any kind."
+      },
+      "licensing_observation": "facebook/VGGT-1B is a NON-COMMERCIAL checkpoint. It is being redistributed here via an MIT-licensed repository's README as 'the pretrained Water-VGGT model'. Recorded as an observed fact; this project neither relies on nor propagates that redistribution.",
+      "effect_on_status": "Status remains paper_only / not_released, now on ARTIFACT evidence rather than code inspection alone. Executing the released pipeline would have produced vanilla VGGT-1B numbers under a Water-VGGT label - identical to configuration E0, which this bakeoff already ran as its control."
+    }
+  },
+  "J_wat3r_xu": {
+    "name": "WAT3R-Xu",
+    "status": "paper_only / not_released",
+    "hypothesis": "Does explicitly coupling feed-forward underwater geometry with degradation adaptation / image-formation cues produce better restoration-relevant geometry than the other underwater feed-forward methods?",
+    "paper": {
+      "arxiv": "2607.21023",
+      "version_date": "2026-07-23 (v1)",
+      "title": "WAT3R: Feedforward Underwater 3D Reconstruction",
+      "authors": "Jiayi Xu, Jiahao Lu, Ziqiang Zheng, Yihao Tan, Yaolong Zhu, Yuan Liu, Sai-Kit Yeung",
+      "paper_license": "CC BY 4.0",
+      "base_architecture": "Pi3 (NOT VGGT), with the original point-prediction head replaced by a DPT head to remove grid artifacts",
+      "geometry_outputs": "pixel-aligned 3D point maps, relative camera poses (SE(3)), depth maps",
+      "additional_outputs": "restored/clean images via a neural degradation-adaptation module, plus water-parameter estimates (attenuation beta_att, backscatter beta_bs, background light B_inf)"
+    },
+    "release_gate_evidence": [
+      "The arXiv abstract page carries no code repository, no weights statement and no code-availability statement.",
+      "The full arXiv HTML text contains no code-release, GitHub, or 'code will be released' statement.",
+      "The project page https://xujiayi777.github.io/WAT3R.github.io/ shows a 'Code' label in its header that is NOT a functional hyperlink \u2014 no URL, no repository, no checkpoint download.",
+      "A GitHub search for 'WAT3R' returns 12 repositories; the only relevant one is LSXI7/Wat3R (Ren et al., configuration E). The remainder are a T-cell receptor pipeline, a drink-water reminder app, a school KML file and profile configs. No Xu et al. repository exists."
+    ],
+    "not_an_ablation_partner": "Wat3R-Ren adapts VGGT by cross-domain semi-supervised training; WAT3R-Xu builds on Pi3 with a degradation-adaptation module. They differ in base architecture AND in strategy, so even if WAT3R-Xu were runnable, Wat3R-Ren vs WAT3R-Xu would be a comparison of two different underwater-geometry SYSTEMS, never a clean architectural ablation.",
+    "week_boundary_note": "Its water-parameter and clean-image outputs overlap Weeks 5-6. They are recorded here as prior art only. Phase 3A evaluates geometry, and nothing in this entry licenses starting attenuation inversion or backscatter removal.",
+    "disposition": "No official runnable inference code and no released weights. Stops at the release gate. Not reproduced, not substituted with Wat3R-Ren, and its published numbers are not used as measurements on this project's footage."
+  },
+  "_landscape_frozen": "With H, I and J dispositioned, the Phase 3A model landscape is frozen. No further geometry model may be added, no GPU infrastructure rented, and no CUDA-to-MPS research port undertaken."
+}

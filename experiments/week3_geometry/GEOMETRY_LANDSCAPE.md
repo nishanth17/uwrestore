@@ -456,3 +456,98 @@ project's rule is to say what changed rather than quietly restate.
    input. The project already treats non-reproducibility as disqualifying for a
    measurement instrument (FlowIt was dropped for exactly this). Verify before
    trusting any number.
+
+---
+
+## 9. Addendum — verified release/integration facts from the Phase 3A execution pass (2026-08-31)
+
+This section records only what **executing** the plan established, and corrects
+earlier statements that turned out to be wrong. Nothing above is silently
+rewritten.
+
+### 9.1 Corrections to §2, §3 and §6
+
+**COLMAP ONNX (§2, §8 open item 2) — settled, no source build needed.** The
+Homebrew build (`colmap 4.1.1_3`) already links ONNX Runtime
+(`libcolmap_feature.dylib -> /opt/homebrew/opt/onnxruntime/lib/libonnxruntime.1.dylib`),
+and `onnxruntime` is a declared Homebrew dependency of the formula. Configuration
+B therefore ran on the prebuilt binary. One correction to the plan's wording: the
+installed build exposes the extractor types `SIFT`, **`ALIKED_N16ROT`** and
+**`ALIKED_N32`** — there is no bare `ALIKED` value — and the matcher types
+`SIFT_BRUTEFORCE`, `SIFT_LIGHTGLUE`, `ALIKED_BRUTEFORCE`, `ALIKED_LIGHTGLUE`.
+`LoMa` is **not** present in this build, so the Phase 3B low-texture challenger
+"COLMAP LoMa matchers (free, same binary)" is **not** free here and would need a
+source build.
+
+**`colmap_underwater` on macOS ARM (§8 open item 1) — settled: it builds and
+runs.** `the-sauer/colmap_underwater` at commit `5b73ae1a` (2024-10-29,
+`COLMAP_VERSION 3.10-dev`) configures and builds against current Homebrew
+dependencies — including Eigen 5 and Ceres 2.2 — with `-DGUI_ENABLED=OFF
+-DCUDA_ENABLED=OFF -DTESTS_ENABLED=OFF`. One correction to the README's "no extra
+dependency" claim in practice: it additionally needs FreeImage (mainline 4.x has
+moved to OpenImageIO), and **two files in its bundled PoissonRecon mesher fail to
+compile under current clang** because of genuine upstream bugs — `Ply.h` uses
+`p.value` on a member that does not exist, and `SparseMatrix.inl::SetZero`
+references `m_N`/`m_M` on a class whose members are `rows`/`_maxEntriesPerRow`.
+The three-line fix is kept as
+`configs/colmap_underwater_poissonrecon_build_fix.patch`. That code is in the
+surface mesher and is never invoked by Phase 3A.
+
+Also better than assumed: the fork **does** expose `--random_seed` on every
+stage, and exposes `--ImageReader.camera_refrac_model`,
+`--ImageReader.camera_refrac_params`, `--Mapper.enable_refraction`,
+`--Mapper.ba_refine_refrac_params` and `--TwoViewGeometry.enable_refraction`, so
+the paired refraction experiment is a flag change inside one binary exactly as
+designed. FLATPORT takes 8 parameters in the order
+`Nx, Ny, Nz, int_dist, int_thick, na, ng, nw` (read from
+`src/colmap/sensor/models_refrac.h` and `src/colmap/tools/example_refrac.cc`),
+with lengths in the reconstruction's length unit.
+
+**MapAnything on MPS (§6) — confirmed by measurement, not by assumption.** It
+runs on MPS in float32 with `memory_efficient_inference=True`: 48 views at
+518-resolution cost 140–234 s and peaked at **10.3–10.8 GB** of MPS driver
+memory on the 24 GB M4. The second-pass note that MPS support had landed was
+correct.
+
+### 9.2 New candidates added by amendment during execution, and their status
+
+Three amendments arrived after the landscape was frozen. All were dispositioned
+by the release/hardware gates; full evidence is in
+`configs/underwater_challengers.json` and `configs/amb3r_provenance.json`.
+
+| candidate | role | status | decisive evidence |
+|---|---|---|---|
+| **E0. vanilla VGGT** | the non-underwater-adapted paired control that makes Wat3R-Ren interpretable | **executed** | `facebookresearch/vggt` @ `a288dd0f`. Code licence permits commercial use except military (2025-07-29 update); the **`facebook/VGGT-1B` checkpoint is non-commercial** and `VGGT-1B-Commercial` is gated behind an application form that was not requested. Experimental control only. |
+| **G. AMB3R** | feed-forward frontend **plus an explicit compact 3D backend** | **pending_cuda** | `HengyiWang/amb3r` @ `92c4081f`. **No LICENSE file.** Supported install pins `torch 2.5.0+cu118`, cu118 `torch-scatter` wheels, `pytorch3d`, `flash-attn`, and **`spconv-cu118`** — which *is* the volumetric backend under test, so an MPS substitution would not be testing AMB3R. Its frontend is literally VGGT (`from vggt.models.vggt import VGGT`), but instantiated with `return_depth_feat=True` from its own `checkpoints/VGGT.pt`, so VGGT→AMB3R would measure "backend **plus** retrained frontend", not the backend alone. |
+| **H. SeaVGGT** | physics/self-supervised underwater adaptation of VGGT | **paper_only / not_released** | `lqzhao/SeaVGGT` @ `78a3a7d0`. **No LICENSE file**, README is one line, **0 GitHub releases.** `demo.py` imports `uw_model`, `dataset` and a top-level `vggt` package, **none of which exist in the repository**. Its only checkpoint reference is a hard-coded local training artifact (`checkpoints/epoch_01_best_rmse_0.6133_24proto_sota.pth`) with no download path. The only fetchable weights are vanilla `facebook/VGGT-1B`. |
+| **I. Water-VGGT** | water-condition-aware geometry ("Water Condition Vector") | **paper_only / not_released** (secondary: pending_cuda) | `awhitewhale/watervggt` @ `f8f03eb7`, MIT. The repo's `vggt/` is a copy of **vanilla** VGGT; `demo.py` builds `VGGT()` and loads `facebook/VGGT-1B`. **No code path loads any Water-VGGT geometry checkpoint.** The only wired-in custom component is `wcv_init()`, an image→image preprocessing pass using the committed `pre/wcv_pre.pth`; the modules that would form the conditioned backbone (`NonLocalSparseAttention`, `DCN_layer`, `swing_transformer`) are never imported. README: *"Training and testing code will be released upon acceptance of the paper."* Separately it hard-`raise`s without CUDA and wants `DataParallel(device_ids=[0,1])`, i.e. two GPUs. **The official checkpoint was downloaded and inspected: all 1 797 tensors are BITWISE IDENTICAL to `facebook/VGGT-1B` (max abs diff 0.0), with zero Water-VGGT-specific modules present.** |
+| **J. WAT3R-Xu** | geometry coupled with degradation adaptation / image-formation cues | **paper_only / not_released** | arXiv 2607.21023 (Xu et al., 2026-07-23, paper CC-BY-4.0). No code statement in the abstract, none in the full HTML text, and the project page `xujiayi777.github.io/WAT3R.github.io` shows a "Code" label that is **not a functional link**. A GitHub search for `WAT3R` returns only `LSXI7/Wat3R` (Ren et al.) plus unrelated repositories. Its base is **Pi3**, not VGGT — so even if released it would never have been a clean ablation partner for Wat3R-Ren. |
+
+**Correction to §3.3.** That section listed the second Wat3R (Xu et al.) as
+"code release not confirmed" and put it on a watchlist. That remains true as of
+2026-08-31 and is now backed by direct checks of the arXiv abstract, the arXiv
+full text, the project page and GitHub search. §3.3's characterisation of its
+architecture needs one fix: it is built on **Pi3**, and its outputs include
+restored images **and** explicit water parameters (β_att, β_bs, B∞).
+
+**Correction to the naming used throughout this document.** §3.3 already flagged
+that two July 2026 papers are both called Wat3R. From Phase 3A onward the
+project uses **`Wat3R-Ren`** (Ren et al., ECCV 2026 Oral, executed as
+configuration E) and **`WAT3R-Xu`** (Xu et al., configuration J) everywhere, and
+never the bare name in any comparison table.
+
+### 9.3 What the landscape did NOT anticipate
+
+The single most consequential integration fact of the execution pass is not in
+any of the tables above: **VGGT and Wat3R-Ren discard ~44% of the vertical
+field of view on a portrait clip.** Their shared `load_and_preprocess_images`
+"crop" branch resizes to width 518 and centre-crops the height to 518, which on
+a 1080×1920 decode throws away 203 px top and bottom after resizing; MapAnything
+preserves essentially the whole frame in both orientations. This was found by
+*measuring* the preprocessing rather than reading it
+(`scripts/calibrate_preprocess.py`), and it means the models do not see the same
+scene on portrait footage. Nothing in the landscape pass would have surfaced it.
+
+**Scope freeze.** With H, I and J dispositioned, the Phase 3A model landscape is
+frozen. No further geometry model may be added, no GPU infrastructure rented,
+and no CUDA-to-MPS research port undertaken.

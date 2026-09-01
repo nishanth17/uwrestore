@@ -1589,3 +1589,128 @@ murkiest one) are both now measured rather than assumed — Week 3 can begin
 once reviewed. The single most informative unrun experiment in the project
 remains the 30-second drift test (Week 8's actual gate); nothing this
 session changes that.
+
+---
+
+## 2026-08-31 — Week 3 Phase 3A: multi-view geometry bakeoff
+
+Durable conclusions only. Full report: `experiments/week3_geometry/FINDINGS.md`.
+
+**Representative dataset.** Six development clips, frozen before any geometry
+method was run (`experiments/week3_geometry/configs/phase3a_clips.json`):
+`wreck_07` (anchor, high-texture arc), `wreck_05` (lower-texture lateral glide),
+`cenote_01` (ambient-lit cavern, widest near/far span), `swimthrough_02`
+(ordinary reef swim-through), `wreck_01` (low-texture near-planar, portrait),
+`wreck_03` (dynamic diver). 48 frames each, one shared extraction at a 1280 px
+long side, resampled in linear light. The `frozen_eval` suite was not touched and
+**the selected method has not yet been run against it** — that realism check is
+outstanding.
+
+**Candidates tested.** Executed: A COLMAP·SIFT, B COLMAP·ALIKED_N32+LightGlue,
+C_off/C_on `colmap_underwater` refraction off/on, D MapAnything, E0 vanilla VGGT,
+E Wat3R-Ren. Not executed: F GLUEMAP and G AMB3R (`pending_cuda`, no CUDA on this
+machine); H SeaVGGT, I Water-VGGT, J WAT3R-Xu (`paper_only / not_released` — see
+`configs/underwater_challengers.json` for the per-candidate evidence). One is worth
+knowing beyond this week: Water-VGGT is better classified **`release_incomplete`**
+than not-released — code and an official checkpoint ARE published, and both were
+inspected. The advertised "pretrained Water-VGGT model" has a **model state
+bitwise identical, tensor for tensor, to `facebook/VGGT-1B`** (1797/1797 tensors,
+max abs difference 0.0, zero Water-VGGT-specific modules). The *files* are not
+byte-identical - different containers - and its released pipeline preprocesses
+pixels before VGGT, so its output would not equal our E0 control; what is
+established is that its geometry model carries no underwater adaptation.
+
+**Selected range path (provisional): MapAnything.** Chosen on licence, validity
+signalling, memory cost and verified output semantics — **not** on geometric
+accuracy, where vanilla VGGT edges it on four of six clips. It is the only dense
+candidate with Apache-2.0 code *and* an Apache-2.0 checkpoint, the only one
+emitting an explicit mask, the cheapest in memory (10.3–10.8 GB), and its
+`depth_along_ray == ‖pts3d_cam‖` was verified to 1.1e-5 so the conversion to the
+project's canonical range quantity is exact. **Named condition:** its scale
+collapses on dynamic content (6.6× per-frame scale wander, 130 % range swing on
+`wreck_03`); Week 5 must guard against that.
+
+**Selected cross-check: configuration A, ordinary COLMAP with SIFT.** It
+registered 48/48 on four clips and ≥46/48 on the other two, at 37–252 s per clip
+on CPU. **Configuration B is retired as a default, with a caveat worth keeping.** On the
+high-texture wreck it agrees with A to 0.95 % and buys nothing; on the
+*low-texture* wreck it yields 40 % longer tracks (8.25 vs 5.91) and 11 % more
+points, both still registering 48/48. So correspondence is not the classical
+bottleneck, but a learned matcher does measurably improve triangulation
+conditioning where SIFT is starved — at an 18-28x CPU runtime penalty. Reopen it
+only on an observed weak-triangulation failure (the Phase 3B trigger).
+
+**Refraction conclusion — not a null, a non-identifiability.** Three findings,
+each attributed by measurement rather than assumed. The third alone is decisive:
+**C_on is not a reproducible instrument** — identical seed and settings give
+44, 16, 44 registered frames across three runs of one clip, and a 22x point-count
+spread on another. PLAN.md requires a refraction effect to exceed run-to-run
+spread; nothing here comes close, so no refraction claim is admissible from this
+data whatever the physics. (A, by contrast, is stable to <=4%; C_off to 1-25%.)
+The other two findings: (1) the
+refractive fork fails to initialise on 3 of 6 clips **even with the refractive
+indices set to 1.0**, i.e. with refraction physically disabled — so that failure
+is the implementation's initialisation, not flat-port physics; (2) where it does
+reconstruct, with the port parameters *fixed*, bundle adjustment drives the scene
+to ~10⁶ times the port stand-off, where the modelled refraction is numerically
+negligible. The fitted off/on scale ratio ranges over 0.08 to 197 across clips.
+**Refractive geometry is retired as a cross-check** and the refraction question is
+reclassified as blocked on metric scale.
+
+**Underwater adaptation (VGGT → Wat3R-Ren): condition-specific, no material
+win.** Better on one wreck (3.5 % vs 4.8 %), tied on a second and on the reef
+swim-through, and **clearly worse on the cenote** (20.1 % vs 13.1 %, the worst
+dense result anywhere). Per the standing rule this is not a reason to look for
+another underwater-adapted model.
+
+**Determinism.** All three dense models (MapAnything, VGGT, Wat3R-Ren) are
+**bitwise reproducible** across repeat runs on MPS float32 with a fixed seed —
+zero run-to-run spread, identical validity masks. So every dense-vs-dense
+difference reported is method difference with no noise floor to clear, and the
+standing "differences must exceed run-to-run variability" rule is satisfied
+trivially for the learned arm.
+
+**Important failure modes.** Dynamic foreground subject breaks MapAnything's
+scale far more than the VGGT family's. Low SIFT contrast is a real footage
+property, not a method failure — `wreck_05` yields ~1 100 features/frame against
+`wreck_07`'s ~4 400 on the same camera. VGGT and Wat3R-Ren **discard ~44 % of the
+vertical field of view on portrait clips** (measured, not read from source), so
+they and MapAnything are not seeing the same scene there. Confidence is close to
+uncalibrated: MapAnything's low-confidence pixels are only 1.07× worse than its
+high-confidence ones.
+
+**Key error-budget result (the most reusable artifact).** With coefficients
+freely fitted in-clip, a global range scale error is absorbed **exactly**
+(max |ΔJ/J| = 4.5e-13 over a sweep to s = 3.2) and costs nothing. A *local*
+error is not: the local relative range error at which worst-channel restored
+radiance error reaches 5 % is 31 % @1 m, 12 % @3 m and 8.5 % @8 m in clear
+oceanic water; 9.4 % @3 m and 6.1 % @8 m coastal; and collapses to 1.0 % @8 m and
+0.3 % @12 m in turbid water. Because β differs per channel, a local range error
+is a **spatially varying colour error**, not a brightness offset.
+
+**Is controlled acquisition required? C2 yes, C1 no — but it does not block
+downstream work.** Phase 3A selects MapAnything + COLMAP/SIFT as the provisional
+integration path; Weeks 5-6 can proceed on it now. Independent C2 data is
+required before claiming objective geometry accuracy or resolving refraction, but
+is **not** a blocker for pipeline development. C1 is not justified as a separate
+acquisition — reconstruction is not what is failing — but note that registration
+success does not establish well-conditioned parallax, so C2 should be shot with
+deliberate lateral/arc motion and subsume C1's role. C2 must also **measure** the
+camera-to-interface distance and port thickness rather than assuming them: a 25x
+change in the assumed stand-off moves the refractive reconstruction's implied
+scale 172x and its recovered focal 3x, so the refraction answer is currently
+dominated by an unmeasured parameter. Adding another geometry model, or renting
+CUDA for F/G, buys more disagreement between unanchored hypotheses and should
+wait.
+
+**Deployable path.** MapAnything on MPS plus a COLMAP/SIFT cross-check, both
+fully local (~4 min and ~1 min per 48-frame clip), Apache-2.0 / BSD, no CUDA.
+Nothing observed justifies making CUDA a permanent project requirement.
+
+**Two configuration errors of mine, both caught and both corrected before they
+reached a conclusion.** Forcing `Mapper.multiple_models=0` makes COLMAP break out
+of its initialisation loop after one trial, turning each run into a lottery on
+the initial image pair (config B gave 48/48 and 3/48 on byte-identical reruns);
+and the pose falsification control was initially a no-op because VGGT anchors its
+world frame to camera 0. `scripts/check_completeness.py` now separates "a run
+died", "a run used superseded settings" and "a method failed".

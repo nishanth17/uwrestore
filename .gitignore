@@ -59,3 +59,11 @@ outputs/
 experiments/week2a_flow/.venv-*/
 experiments/week2a_flow/vendor/
 experiments/week2a_flow/checkpoints/
+
+# Week 3 geometry bakeoff (local artifacts only) — same rule as Week 2:
+# heavy environments, vendored geometry repos, checkpoints and reconstructions
+# are rebuilt/cloned from the pinned commits in FINDINGS.md, never committed.
+experiments/week3_geometry/.venv-*/
+experiments/week3_geometry/vendor/
+experiments/week3_geometry/checkpoints/
+experiments/week3_geometry/build/

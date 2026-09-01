@@ -1,0 +1,84 @@
+{
+  "_comment": "Week 3 Phase 3A representative bakeoff subset. FIXED BEFORE any geometry method was run (see FINDINGS.md §1 and LOG.md). Every configuration A-F sees exactly these clips, these frame ranges and this extraction resolution. This file is the experiment definition, not footage, so it is committed; the frames it names are extracted locally into gitignored outputs/. These are DEVELOPMENT clips, not a held-out test set -- they were inspected during selection. The frozen_eval clips (distance_shot, light_night_dive, murky_eel, murky_shark, swimthrough_01) were deliberately NOT used here and remain conceptually separate.",
+  "_selection_basis": "Manifest metadata + Stage 1 mechanical inspection (outputs/stage1/clip_inspection.json) + 8-12 frame contact sheets. No optical flow, SfM or learned geometry was run to rank clips. Motion/parallax character below is a contact-sheet judgement to be CONFIRMED or REFUTED by the bakeoff, not a measurement.",
+  "extraction": {
+    "n_frames": 48,
+    "long_side": 1280,
+    "resample": "cv2.INTER_AREA in LINEAR light (uw.colorspace.srgb_to_linear -> resize -> linear_to_srgb), then written as 8-bit sRGB PNG",
+    "format": "png",
+    "why_srgb_png": "COLMAP and every third-party geometry model expect ordinary display-referred images. The linear-light invariant governs the resample itself (area-averaging radiance), not the interchange encoding. No restoration measurement is made from these files.",
+    "sampling": "np.linspace(start, end, n_frames) rounded to unique integer source frame indices; the source index is preserved in the filename so nothing is silently renumbered."
+  },
+  "clips": [
+    {
+      "id": "wreck_07",
+      "role_in_bakeoff": "anchor / bring-up clip; clean rigid wreck with arc motion",
+      "start": 8,
+      "end": 206,
+      "why": "Highest-texture wreck in the dev set (median Laplacian variance 111, 4000/4000 GFTT corners, 0.91 grid coverage). Camera arcs around an encrusted superstructure so the same rigid object is seen from materially different viewpoints, then closes to near range in the last third -- viewpoint change plus a near/mid range span, which is what both triangulation and the radius x range refraction test need. No diver, ambient light only, 0.42 stops of illumination variation across the sample.",
+      "motion": "arc/orbit around a rigid structure, closing to near range late in the clip",
+      "visibility": "good; median R/G 0.14, RMS contrast 0.78",
+      "confounds": "none major; some suspended particulate"
+    },
+    {
+      "id": "wreck_05",
+      "role_in_bakeoff": "second wreck, different range and texture regime",
+      "start": 8,
+      "end": 214,
+      "why": "Deliberately unlike wreck_07: a long lateral glide along a hull edge and deck truss at roughly constant mid range, with much lower texture (Laplacian variance 23.6 vs 111) and lower contrast. Tests whether a method that works on the high-texture arc survives a lower-texture near-lateral sweep. The clip sweeps out and returns to a similar viewpoint, so it also carries a natural revisit.",
+      "motion": "lateral glide along the wreck, with an out-and-back sweep",
+      "visibility": "moderate; hazier than wreck_07, RMS contrast 0.51",
+      "confounds": "possible rotation-dominant segments -- low-parallax risk is part of why this clip is here"
+    },
+    {
+      "id": "cenote_01",
+      "role_in_bakeoff": "geometry-rich cavern / stalactite swimthrough",
+      "start": 15,
+      "end": 378,
+      "why": "The only cenote clip lit by ambient daylight through the cavern opening rather than a diver's torch (cenote_02..05 all carry a moving artificial source), so it isolates the geometry question from the moving-light radiometric confound that Week 6B owns. Stalactite ceiling gives dense near-field 3D relief while the open water below is effectively at infinity -- the widest near/far range span in the subset, which is exactly where range-dependent shape error should show up.",
+      "motion": "lateral translation under and along the ceiling formation, foreground pole passing through frame",
+      "visibility": "clear water with a visible halocline; low absolute luminance (0.077)",
+      "confounds": "halocline refraction layer within the water column itself; strong luminance range top-to-bottom of frame; 59.94 fps so 48 frames spans only ~6 s"
+    },
+    {
+      "id": "swimthrough_02",
+      "role_in_bakeoff": "ordinary reef swim-through -- the normal-diving realism case",
+      "start": 6,
+      "end": 169,
+      "why": "Representative of ordinary diver-held reef footage: forward swim with lateral drift through a coral channel, good visibility, ambient light. Non-rigid vegetation (gorgonians) and a distant diver make it the realistic-but-not-extreme case. Highest texture in the whole dev set (Laplacian variance 656).",
+      "motion": "forward swim-through with lateral drift; mostly forward translation, so parallax is weakest near the direction of travel",
+      "visibility": "very good; median R/G 0.38",
+      "confounds": "an in-clip GoPro auto-white-balance shift around frames ~140-166 (visible in the contact sheet as a warm cast); swaying soft coral; distant diver"
+    },
+    {
+      "id": "wreck_01",
+      "role_in_bakeoff": "low-texture / difficult case",
+      "start": 1600,
+      "end": 2100,
+      "why": "This 97 s clip's second half is an extended close pass over a mottled, encrusted low-relief surface with no resolvable large-scale structure -- repetitive, low-contrast, self-similar texture at close range. That is the named low-texture failure hypothesis. The 1600-2100 window sits wholly inside that section, well clear of the candidate content transitions the cut scan flagged at frames 865 and 885.",
+      "motion": "slow close-range pass over a near-planar surface; very little viewpoint change relative to scene relief",
+      "visibility": "moderate, but scene relief is minimal",
+      "confounds": "portrait decode (1080x1920 from a 1920x1080 container with rotation side-data); near-planar scene, so triangulation is ill-conditioned by construction; occasional fish"
+    },
+    {
+      "id": "wreck_03",
+      "role_in_bakeoff": "dynamic-subject / stress case",
+      "start": 25,
+      "end": 596,
+      "why": "A large wreck with a diver occupying a substantial fraction of the frame across much of the clip, plus exhaust bubbles, haze and the largest scene-range span of the wreck clips (distant hull to near foreground). Included specifically to see which methods are broken by a large moving foreground subject and which absorb it, and to see whether dense learned range collapses on bubbles.",
+      "motion": "sustained travel along and around the wreck with substantial viewpoint change",
+      "visibility": "moderate to poor; visibly hazy in several sampled frames, 2.09 stops of illumination variation",
+      "confounds": "large moving diver, exhaust bubbles, haze, illumination swing"
+    }
+  ],
+  "not_selected_but_considered": {
+    "wreck_02": "strong sun backlight and silhouetted structure; 3.27 stops of illumination variation would confound the radiometric axis with the geometric one",
+    "wreck_10": "diver enters mid-clip and the final frames are heavily blurred/hazy",
+    "wreck_11": "good orbit around a superstructure, but overlaps wreck_07's role; kept as the first alternate",
+    "wreck_08": "dive-light interior shot, 0.029 median luminance -- an illumination case that belongs to Week 6B, not to a geometry bakeoff",
+    "wreck_04": "7.08 stops of illumination variation and three candidate cut frames",
+    "swimthrough_03": "near-duplicate of swimthrough_02's role, with a closer diver",
+    "cenote_02..05": "all carry a moving diver torch; artificial-light geometry is a Week 6B concern",
+    "turtle/whaleshark/sealion/murky_*": "open-water and encounter footage with little rigid static structure; geometrically uninformative for this question"
+  }
+}

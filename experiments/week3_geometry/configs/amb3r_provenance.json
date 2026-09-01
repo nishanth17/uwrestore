@@ -1,0 +1,68 @@
+{
+  "_comment": "Configuration G (AMB3R) provenance and configuration inspection. EXECUTION STATUS: pending_cuda. Per the Phase 3A hardware rule, only the upstream-supported execution path may be attempted; AMB3R's supported path is CUDA-only and this machine (Apple M4, MPS, no CUDA) cannot provide it. No MPS port was attempted and no CUDA-specific dependency was substituted. Everything below was established by reading the released repository at the pinned commit, not by running it.",
+  "config_letter": "G",
+  "status": "pending_cuda",
+  "role": "feed-forward geometry frontend PLUS an explicit compact 3D backend — tests whether explicit learned 3D/geometric reasoning buys global and spatial consistency beyond a plain feed-forward frontend.",
+  "hypothesis_distinct_from": {
+    "D_mapanything": "general-purpose feed-forward dense geometry as a range supplier",
+    "E0_E_vggt_wat3r": "effect of underwater-specific domain adaptation",
+    "F_gluemap": "learned local geometry plus CLASSICAL global optimisation"
+  },
+  "paper": {
+    "title": "AMB3R: Accurate Feed-forward Metric-scale 3D Reconstruction with Backend",
+    "authors": "Hengyi Wang, Lourdes Agapito",
+    "venue": "CVPR 2026 (Highlight)",
+    "arxiv": "2511.20343"
+  },
+  "repository": {
+    "url": "https://github.com/HengyiWang/amb3r",
+    "commit": "92c4081f910f98e683503092b85301861519175e",
+    "commit_date": "2026-06-05",
+    "license": "NO LICENSE FILE PRESENT IN THE REPOSITORY AT THIS COMMIT. A public repository is not an open-source licence. Under the Phase 3A licensing rule this keeps AMB3R strictly experimental: its code and checkpoint must not be promoted into permanent project dependencies, and no licence may be claimed for it."
+  },
+  "checkpoint": {
+    "distribution": "Google Drive file 14x0WW2rUE_he2hUEouP6ywSRnlJDeLel, to be placed at ./checkpoints/amb3r.pt",
+    "license": "not stated alongside the checkpoint",
+    "additional_weights": "amb3r/frontend.py defaults to ckpt_path='./checkpoints/VGGT.pt' — a separate frontend checkpoint is expected, so 'the AMB3R checkpoint' is not a single file."
+  },
+  "architecture_as_read": {
+    "frontend": "amb3r/frontend.py imports `from vggt.models.vggt import VGGT` and constructs `VGGT(return_depth_feat=metric_scale)`. The frontend IS VGGT — which is what makes VGGT -> AMB3R a meaningful paired comparison.",
+    "backend": "amb3r/backend.py — a sparse/compact volumetric representation with a point transformer, using `torch_scatter.scatter_mean` and `pytorch3d.ops.knn_points/knn_gather`, over spconv voxels.",
+    "causal_caveat": "VGGT -> AMB3R does NOT isolate the backend alone. AMB3R's frontend is a VGGT variant instantiated with `return_depth_feat=True` and loaded from its own checkpoint, so the frontend WEIGHTS and an extra depth-feature output path differ from vanilla VGGT too. Any AMB3R-vs-VGGT difference must therefore be attributed to 'explicit backend plus retrained frontend', not to the backend on its own. This is exactly the confound the amendment asked to be documented rather than claimed away."
+  },
+  "output_conventions_as_read": {
+    "source": "demo.py and amb3r/model.py at the pinned commit; NOT verified by execution.",
+    "world_points": "res[-1]['world_points'], (B, nimgs, H, W, 3) — world-frame point map",
+    "world_points_conf": "res[-1]['world_points_conf'], (B, nimgs, H, W, 1). demo.py maps it to a sigmoid-like score as (conf-1)/conf, so the raw values are >= 1 and are NOT a probability.",
+    "depth": "res[-1]['depth'] is exposed in model.py; its planar-vs-along-ray semantics were NOT confirmed by reading alone and MUST be checked numerically before any comparison, exactly as was done for MapAnything, VGGT and Wat3R.",
+    "pose": "res[-1]['pose'] is named c2w in demo.py, i.e. camera-to-world (T_wc in this project's naming).",
+    "iterative": "model(views) returns a LIST of results; demo.py reads res[0] (frontend-only) and res[-1] (after the backend). The 0 vs -1 pair is itself the frontend/backend ablation and should be recorded if AMB3R is ever run.",
+    "metric_scale": "constructor flag metric_scale=True. Metric-scale claims must not be treated as correct on underwater footage without independent evidence; this project has none."
+  },
+  "input_configuration_as_read": {
+    "resolution": "demo.py uses resolution=(518, 392) with disable_crop=False",
+    "batching": "amb3r.datasets.Demo with num_seq=1, full_video=True, kf_every=1, max_images=N; sequence-oriented",
+    "precision": "torch.autocast(device_type='cuda', dtype=torch.bfloat16); the model's own `prepare()` casts the frontend aggregator and most backend parameters to bf16",
+    "voxel_resolutions": "default [0.01] in AMB3R.__init__ — a METRIC voxel size, so the backend's spatial discretisation is tied to the metric-scale claim"
+  },
+  "why_not_run_here": {
+    "machine": "Apple M4, 10 cores, 24 GB unified memory, macOS 26.6.2, no CUDA and no NVIDIA GPU",
+    "upstream_supported_install": [
+      "conda python=3.9",
+      "torch==2.5.0 torchvision==0.20.0 torchaudio==2.5.0 --index-url https://download.pytorch.org/whl/cu118",
+      "torch-scatter==2.1.2 -f https://data.pyg.org/whl/torch-2.5.0+cu118.html",
+      "pytorch3d @ V0.7.8 --no-build-isolation",
+      "flash-attn==2.7.3 --no-build-isolation",
+      "spconv-cu118==2.3.8",
+      "xformers==0.0.28.post2"
+    ],
+    "blocking_facts": [
+      "spconv-cu118 is a CUDA-only sparse-convolution build and is the compact volumetric backend itself — the component configuration G exists to test. There is no CPU/MPS equivalent in that package, so an MPS port would not be testing AMB3R's backend.",
+      "torch-scatter is installed from a cu118 wheel index; flash-attn is CUDA-only; pytorch3d's CUDA ops back knn_points.",
+      "demo.py calls model.cuda() and torch.autocast(device_type='cuda', dtype=torch.bfloat16) unconditionally.",
+      "No non-CUDA runtime is documented anywhere in the repository."
+    ],
+    "decision": "Provenance and configuration recorded; execution marked pending_cuda; Phase 3A continued without blocking, per the stated hardware rule. Substituting the CUDA-specific dependencies would have changed the thing under test."
+  },
+  "what_running_it_would_require": "One short session on a CUDA host (>= 16 GB VRAM is a guess, not a measurement, since no profiling was possible) with the pinned CUDA 11.8 / PyTorch 2.5.0 environment, running the SAME six clips, the SAME frame ranges and the SAME Stage 2 conversion path, plus the numerical depth-semantics check before any comparison. Batch it with configuration F (GLUEMAP), which is blocked on the same hardware — but note their environments are NOT compatible (GLUEMAP's supported recipe is CUDA 12.4 / PyTorch 2.4.1), so they need two pinned environments in one session, not one."
+}
