@@ -166,12 +166,6 @@ without understanding why it applies here.
   chart-referenced ground truth, targeting the specific failures catalogued
   in the week 7 stress test.
 
-## Model routing
+## Logistics
 
-**Opus 5** — architecture decisions, physics equations, restoration
-algorithm design, evaluation methodology, interpreting failures, choosing
-between competing approaches. Bring in Opus before any major architectural
-change.
-
-**Sonnet 5** — scaffolding, CLI, I/O, tests, mechanical implementation of
-already-decided designs.
+Use separate passes/agents for research, implementation, and adversarial review when useful. 
