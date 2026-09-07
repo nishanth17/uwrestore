@@ -52,37 +52,13 @@ colmap_output/
 
 # Environment/secrets
 .env
-# Week 2 Phase 1A optical-flow exploration (local artifacts only)
-# Diagnostic renders are derived from local dive footage and must stay local,
-# same rule as the footage itself.
+# Experiment scratch dirs (any week/phase, any nesting depth) — local-only
+# artifacts: diagnostic renders, vendored model/geometry repos, heavy
+# per-experiment virtualenvs, checkpoints, COLMAP DBs/sparse models,
+# .ply/.npz/.pt dumps, build output. `vendor/`, `checkpoints/`, `outputs/`,
+# and `build/` above already match these at any depth, so only the
+# `.venv-*` naming convention needs restating here. New weeks/phases need no
+# new entries. Small curated JSON summaries a report cites are force-added
+# individually with `git add -f`, never by relaxing this rule.
 outputs/
-experiments/week2a_flow/.venv-*/
-experiments/week2a_flow/vendor/
-experiments/week2a_flow/checkpoints/
-
-# Week 3 geometry bakeoff (local artifacts only) — same rule as Week 2:
-# heavy environments, vendored geometry repos, checkpoints and reconstructions
-# are rebuilt/cloned from the pinned commits in FINDINGS.md, never committed.
-experiments/week3_geometry/.venv-*/
-experiments/week3_geometry/vendor/
-experiments/week3_geometry/checkpoints/
-experiments/week3_geometry/build/
-
-# Week 3 Phase 3B (local artifacts only). `outputs/` above already matches any
-# directory of that name, but the Phase 3B path is named explicitly so the rule
-# survives any future narrowing of that pattern. Everything generated beneath it
-# is heavy or derived: COLMAP databases and sparse models, .ply/.npz/.pt tensor
-# dumps, checkpoint caches, symlinked frame schedules, logs. Small curated JSON
-# summaries that the report cites are force-added individually with `git add -f`,
-# never by relaxing this rule.
-experiments/week3_geometry/phase3b/outputs/
-experiments/week3_geometry/phase3b/vendor/
-experiments/week3_geometry/phase3b/checkpoints/
-experiments/week3_geometry/phase3b/.venv-*/
-
-# Week 4A monocular depth bakeoff — heavy environments, vendored model repos and
-# local artifacts. `outputs/` and `vendor/` above already match most of this;
-# the venvs are named explicitly, same pattern as Weeks 2A and 3.
-experiments/week4_mono/.venv-*/
-experiments/week4_mono/vendor/
-experiments/week4_mono/outputs/
+experiments/**/.venv-*/
