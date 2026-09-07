@@ -38,7 +38,7 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", 
 if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
 
-from experiments.week3_geometry.scripts import compare as cmp  # noqa: E402
+from experiments.week3_geometry.phase3a.scripts import compare as cmp  # noqa: E402
 from experiments.week3_geometry.phase3b.scripts.sparse_metrics import (  # noqa: E402
     compare_sparse,
     compare_trajectories,
@@ -47,8 +47,9 @@ from experiments.week3_geometry.phase3b.scripts.sparse_metrics import (  # noqa:
 )
 
 W3 = os.path.join(REPO_ROOT, "experiments", "week3_geometry")
+W3_PHASE3A = os.path.join(W3, "phase3a")
 P3B = os.path.join(W3, "phase3b")
-A3 = os.path.join(W3, "outputs", "colmap")          # Phase 3A runs (read only)
+A3 = os.path.join(W3_PHASE3A, "outputs", "colmap")          # Phase 3A runs (read only)
 B3 = os.path.join(P3B, "outputs", "colmap")         # Phase 3B runs
 OUT = os.path.join(P3B, "outputs", "analysis")
 
@@ -63,9 +64,9 @@ P3B_RANGE = os.path.join(P3B, "outputs", "range")
 #: with "three times as many views". These products are the same models on the
 #: same frames Any4D actually saw. Phase 3A's own outputs are untouched.
 P3B_RANGE_16V = os.path.join(P3B, "outputs", "range_16v")
-P3A_RANGE = os.path.join(W3, "outputs", "range")
+P3A_RANGE = os.path.join(W3_PHASE3A, "outputs", "range")
 P3B_DENSE = {"Y_any4d": "any4d"}
-STAGE6 = os.path.join(W3, "outputs", "stage6", "comparison.json")
+STAGE6 = os.path.join(W3_PHASE3A, "outputs", "stage6", "comparison.json")
 
 
 def merged_preprocess_maps() -> dict:

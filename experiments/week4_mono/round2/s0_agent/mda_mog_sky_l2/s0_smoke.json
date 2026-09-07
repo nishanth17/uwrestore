@@ -1,0 +1,460 @@
+{
+  "checkpoint": "checkpoints/MDA/DA3_MOG_Sky_LogL2.ckpt",
+  "config": "src/depth_anything_3/configs/da3-giant-cam-mog-sky.yaml",
+  "env": {
+    "cuda_available": false,
+    "device": "mps",
+    "mps_available": true,
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "python": "3.13.5",
+    "torch": "2.14.0"
+  },
+  "images": {
+    "difficult": {
+      "component_medians": [
+        0.9456,
+        0.9318,
+        0.9197,
+        0.9341
+      ],
+      "component_separation_median_maxminusmin": 0.03435662388801575,
+      "depth_shape": [
+        1,
+        1,
+        280,
+        504
+      ],
+      "entropy_max_possible": 1.3862943611198906,
+      "entropy_median": 1.2437409162521362,
+      "mog_weight_shape": [
+        1,
+        1,
+        280,
+        504,
+        4
+      ],
+      "n_mixture_components": 4,
+      "path": "/Users/nishanthmohan/code/uwrestore/experiments/week3_geometry/outputs/frames/wreck_05/f000113.png",
+      "raw_pred_keys": [
+        "depth",
+        "depth_conf",
+        "depth_inference",
+        "extrinsics",
+        "indices",
+        "intrinsics",
+        "mog_weight",
+        "mog_weight_full",
+        "pose_enc_list",
+        "sky_mask"
+      ],
+      "returned_keys": [
+        "depth",
+        "depth_conf",
+        "extra_depth",
+        "images",
+        "pose_enc",
+        "raw_preds",
+        "sky_mask",
+        "transparent_mask",
+        "views"
+      ],
+      "rss_gb": 10.539,
+      "runtime_s": 1.925,
+      "sky_mask_frac": 0.26724773645401,
+      "sky_note": "use_sky_mask=True is the demo.py default; sky pixels are pushed to 2x the max valid depth (da3_wrapper.py:275-296). Underwater there is no sky, so a non-trivial fraction here is itself a finding, not a nuisance.",
+      "stats_depth_mode": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 6.792367935180664,
+        "mean": 2.4702089959799887,
+        "median": 0.9337819218635559,
+        "min": 0.4364226758480072,
+        "name": "depth(mode)",
+        "shape": [
+          1,
+          1,
+          280,
+          504
+        ]
+      },
+      "top1_minus_top2_median": 0.07023361325263977,
+      "top1_prob_median": 0.3976476490497589,
+      "view_dim_L": 1,
+      "view_tensor_shape": [
+        1,
+        1,
+        3,
+        280,
+        504
+      ],
+      "chosen_candidate_hist": [
+        28207,
+        4927,
+        1400,
+        29377,
+        15175,
+        17273,
+        18697,
+        4307,
+        12778,
+        8979
+      ],
+      "chosen_candidate_labels": [
+        "mean[0]",
+        "mean[1]",
+        "mean[2]",
+        "mean[3]",
+        "mid[0,1]",
+        "mid[0,2]",
+        "mid[0,3]",
+        "mid[1,2]",
+        "mid[1,3]",
+        "mid[2,3]"
+      ],
+      "chosen_candidate_midpoint_frac": 0.5471159297052154,
+      "chosen_candidate_note": "index is into the candidate set (expert means then pairwise midpoints), not the mixture components; the reported depth is LBFGS-refined from the winning candidate. Relabelled post-hoc from mog_inference.py:109-163; counts are unchanged."
+    },
+    "ordinary": {
+      "component_medians": [
+        0.6467,
+        0.6098,
+        0.5905,
+        0.6345
+      ],
+      "component_separation_median_maxminusmin": 0.03704275190830231,
+      "depth_shape": [
+        1,
+        1,
+        280,
+        504
+      ],
+      "entropy_max_possible": 1.3862943611198906,
+      "entropy_median": 1.2425750494003296,
+      "mog_weight_shape": [
+        1,
+        1,
+        280,
+        504,
+        4
+      ],
+      "n_mixture_components": 4,
+      "path": "/Users/nishanthmohan/code/uwrestore/experiments/week3_geometry/outputs/frames/wreck_07/f000109.png",
+      "raw_pred_keys": [
+        "depth",
+        "depth_conf",
+        "depth_inference",
+        "extrinsics",
+        "indices",
+        "intrinsics",
+        "mog_weight",
+        "mog_weight_full",
+        "pose_enc_list",
+        "sky_mask"
+      ],
+      "returned_keys": [
+        "depth",
+        "depth_conf",
+        "extra_depth",
+        "images",
+        "pose_enc",
+        "raw_preds",
+        "sky_mask",
+        "transparent_mask",
+        "views"
+      ],
+      "rss_gb": 10.539,
+      "runtime_s": 2.28,
+      "sky_mask_frac": 0.001055839005857706,
+      "sky_note": "use_sky_mask=True is the demo.py default; sky pixels are pushed to 2x the max valid depth (da3_wrapper.py:275-296). Underwater there is no sky, so a non-trivial fraction here is itself a finding, not a nuisance.",
+      "stats_depth_mode": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 5.877077102661133,
+        "mean": 0.9010240133380826,
+        "median": 0.6294640600681305,
+        "min": 0.22351548075675964,
+        "name": "depth(mode)",
+        "shape": [
+          1,
+          1,
+          280,
+          504
+        ]
+      },
+      "top1_minus_top2_median": 0.06380103528499603,
+      "top1_prob_median": 0.39354822039604187,
+      "view_dim_L": 1,
+      "view_tensor_shape": [
+        1,
+        1,
+        3,
+        280,
+        504
+      ],
+      "chosen_candidate_hist": [
+        19312,
+        3047,
+        2361,
+        19794,
+        34919,
+        24158,
+        21917,
+        3664,
+        5965,
+        5983
+      ],
+      "chosen_candidate_labels": [
+        "mean[0]",
+        "mean[1]",
+        "mean[2]",
+        "mean[3]",
+        "mid[0,1]",
+        "mid[0,2]",
+        "mid[0,3]",
+        "mid[1,2]",
+        "mid[1,3]",
+        "mid[2,3]"
+      ],
+      "chosen_candidate_midpoint_frac": 0.6845663265306122,
+      "chosen_candidate_note": "index is into the candidate set (expert means then pairwise midpoints), not the mixture components; the reported depth is LBFGS-refined from the winning candidate. Relabelled post-hoc from mog_inference.py:109-163; counts are unchanged."
+    },
+    "portrait": {
+      "component_medians": [
+        0.8584,
+        0.8574,
+        0.8598,
+        0.8651
+      ],
+      "component_separation_median_maxminusmin": 0.007750988006591797,
+      "depth_shape": [
+        1,
+        1,
+        504,
+        280
+      ],
+      "entropy_max_possible": 1.3862943611198906,
+      "entropy_median": 1.2558470964431763,
+      "mog_weight_shape": [
+        1,
+        1,
+        504,
+        280,
+        4
+      ],
+      "n_mixture_components": 4,
+      "path": "/Users/nishanthmohan/code/uwrestore/experiments/week3_geometry/outputs/frames/wreck_01/f001855.png",
+      "raw_pred_keys": [
+        "depth",
+        "depth_conf",
+        "depth_inference",
+        "extrinsics",
+        "indices",
+        "intrinsics",
+        "mog_weight",
+        "mog_weight_full",
+        "pose_enc_list",
+        "sky_mask"
+      ],
+      "returned_keys": [
+        "depth",
+        "depth_conf",
+        "extra_depth",
+        "images",
+        "pose_enc",
+        "raw_preds",
+        "sky_mask",
+        "transparent_mask",
+        "views"
+      ],
+      "rss_gb": 10.539,
+      "runtime_s": 1.307,
+      "sky_mask_frac": 0.0,
+      "sky_note": "use_sky_mask=True is the demo.py default; sky pixels are pushed to 2x the max valid depth (da3_wrapper.py:275-296). Underwater there is no sky, so a non-trivial fraction here is itself a finding, not a nuisance.",
+      "stats_depth_mode": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 1.3267346620559692,
+        "mean": 0.8762712793069936,
+        "median": 0.8608857989311218,
+        "min": 0.5793865919113159,
+        "name": "depth(mode)",
+        "shape": [
+          1,
+          1,
+          504,
+          280
+        ]
+      },
+      "top1_minus_top2_median": 0.1581718772649765,
+      "top1_prob_median": 0.419271856546402,
+      "view_dim_L": 1,
+      "view_tensor_shape": [
+        1,
+        1,
+        3,
+        504,
+        280
+      ],
+      "chosen_candidate_hist": [
+        6447,
+        2820,
+        10498,
+        1435,
+        2337,
+        5873,
+        102763,
+        4994,
+        971,
+        2982
+      ],
+      "chosen_candidate_labels": [
+        "mean[0]",
+        "mean[1]",
+        "mean[2]",
+        "mean[3]",
+        "mid[0,1]",
+        "mid[0,2]",
+        "mid[0,3]",
+        "mid[1,2]",
+        "mid[1,3]",
+        "mid[2,3]"
+      ],
+      "chosen_candidate_midpoint_frac": 0.8497732426303855,
+      "chosen_candidate_note": "index is into the candidate set (expert means then pairwise midpoints), not the mixture components; the reported depth is LBFGS-refined from the winning candidate. Relabelled post-hoc from mog_inference.py:109-163; counts are unchanged."
+    },
+    "public": {
+      "component_medians": [
+        1.0059,
+        0.9923,
+        0.9848,
+        0.9979
+      ],
+      "component_separation_median_maxminusmin": 0.007503032684326172,
+      "depth_shape": [
+        1,
+        1,
+        280,
+        504
+      ],
+      "entropy_max_possible": 1.3862943611198906,
+      "entropy_median": 1.1221675872802734,
+      "mog_weight_shape": [
+        1,
+        1,
+        280,
+        504,
+        4
+      ],
+      "n_mixture_components": 4,
+      "path": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg",
+      "raw_pred_keys": [
+        "depth",
+        "depth_conf",
+        "depth_inference",
+        "extrinsics",
+        "indices",
+        "intrinsics",
+        "mog_weight",
+        "mog_weight_full",
+        "pose_enc_list",
+        "sky_mask"
+      ],
+      "returned_keys": [
+        "depth",
+        "depth_conf",
+        "extra_depth",
+        "images",
+        "pose_enc",
+        "raw_preds",
+        "sky_mask",
+        "transparent_mask",
+        "views"
+      ],
+      "rss_gb": 10.539,
+      "runtime_s": 2.205,
+      "sky_mask_frac": 0.0,
+      "sky_note": "use_sky_mask=True is the demo.py default; sky pixels are pushed to 2x the max valid depth (da3_wrapper.py:275-296). Underwater there is no sky, so a non-trivial fraction here is itself a finding, not a nuisance.",
+      "stats_depth_mode": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 1.537920355796814,
+        "mean": 1.0074687189352858,
+        "median": 0.9997706413269043,
+        "min": 0.5329467058181763,
+        "name": "depth(mode)",
+        "shape": [
+          1,
+          1,
+          280,
+          504
+        ]
+      },
+      "top1_minus_top2_median": 0.34218013286590576,
+      "top1_prob_median": 0.5614286065101624,
+      "view_dim_L": 1,
+      "view_tensor_shape": [
+        1,
+        1,
+        3,
+        280,
+        504
+      ],
+      "chosen_candidate_hist": [
+        7752,
+        4068,
+        5876,
+        6745,
+        4504,
+        4234,
+        61687,
+        3196,
+        9196,
+        33862
+      ],
+      "chosen_candidate_labels": [
+        "mean[0]",
+        "mean[1]",
+        "mean[2]",
+        "mean[3]",
+        "mid[0,1]",
+        "mid[0,2]",
+        "mid[0,3]",
+        "mid[1,2]",
+        "mid[1,3]",
+        "mid[2,3]"
+      ],
+      "chosen_candidate_midpoint_frac": 0.8268069727891156,
+      "chosen_candidate_note": "index is into the candidate set (expert means then pairwise midpoints), not the mixture components; the reported depth is LBFGS-refined from the winning candidate. Relabelled post-hoc from mog_inference.py:109-163; counts are unchanged."
+    }
+  },
+  "impl_category": "B",
+  "impl_category_notes": [
+    "device placement mps (model_choice.py hardcodes cuda-or-cpu)",
+    "official helpers choose_model / prepare_views / DA3Wrapper.inference called with a one-element file list, exactly the demo.py:304 mono path",
+    "no changes to model math, resolution (512 long edge = demo.py default), checkpoint or operators"
+  ],
+  "license_code": "Apache-2.0 (vendor/MDA/LICENSE)",
+  "mixture_caveat": "These are mixture weights of a trained NLL objective. They are NOT called calibrated confidence pre-C2; they are exploratory failure-signalling evidence only.",
+  "mixture_semantics": "model/mog_inference.py _prepare_inputs: preds['depth'] is a list of N component depth maps [B,L,H,W]; preds['depth_conf'] matching; preds['mog_weight'] is [B,L,H,W,N] LOG mixing weights. find_gmm_mode_gpu_chunk selects the mode -> preds['indices'], preds['depth_inference'].",
+  "model": "mda_mog_sky_l2",
+  "n1_checks": {
+    "N1a_view_dim_L": 1,
+    "N1b_bitwise_identical": true,
+    "N1b_repeat_max_abs_diff": 0.0,
+    "N1c_A_alone_vs_A_in_pair_max_abs_diff": 12.887432098388672,
+    "N1c_note": "a non-zero value proves cross-view attention is active, so running one image at a time is what makes N=1 real",
+    "N1c_pair_shape": [
+      1,
+      2,
+      280,
+      504
+    ],
+    "N1d_A_after_B_identical_to_A": true,
+    "N1d_max_abs_diff": 0.0
+  },
+  "native_representation": "z-depth (projective), multi-hypothesis mixture",
+  "native_representation_evidence": "utils/geometry.py:275 unproject(coordinates, z, intrinsics) returns ray_directions * z with UNNORMALISED K^-1 rays (:291); the parameter is named z. Identical to DA3, whose convention Round-2 Part A established from the same code.",
+  "patch_size": 14,
+  "repo": "sy000/MDA",
+  "size_long_edge": 512
+}

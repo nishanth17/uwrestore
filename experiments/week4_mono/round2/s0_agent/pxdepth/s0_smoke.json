@@ -1,0 +1,232 @@
+{
+  "alignment_family_required": "affine_log1p_depth (NEW - not one of the four frozen Round-1 families)",
+  "env": {
+    "cuda_available": false,
+    "device": "cpu",
+    "mps_available": true,
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "python": "3.13.5",
+    "torch": "2.11.0"
+  },
+  "images": {
+    "difficult": {
+      "coverage_finite_frac": 1.0,
+      "mask_gt_0p5_frac": 0.8302407272432782,
+      "moge2_loaded": false,
+      "out_shape": [
+        672,
+        1176
+      ],
+      "path": "/Users/nishanthmohan/code/uwrestore/experiments/week3_geometry/outputs/frames/wreck_05/f000113.png",
+      "rss_gb": 5.141,
+      "run_aspect": 1.75,
+      "run_wh": [
+        1176,
+        672
+      ],
+      "runtime_s": 77.163,
+      "source_aspect": 1.777778,
+      "source_wh": [
+        1280,
+        720
+      ],
+      "stats_mask_prob": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 1.0,
+        "mean": 0.8449695819497697,
+        "median": 0.999968409538269,
+        "min": 0.012018845416605473,
+        "name": "mask",
+        "shape": [
+          672,
+          1176
+        ]
+      },
+      "stats_native": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 1.0450294017791748,
+        "mean": 0.35147481639801104,
+        "median": 0.10098189115524292,
+        "min": -0.018856093287467957,
+        "name": "depth_log1p_affine_invariant",
+        "shape": [
+          672,
+          1176
+        ]
+      }
+    },
+    "ordinary": {
+      "coverage_finite_frac": 1.0,
+      "mask_gt_0p5_frac": 0.931462838111435,
+      "moge2_loaded": false,
+      "out_shape": [
+        672,
+        1176
+      ],
+      "path": "/Users/nishanthmohan/code/uwrestore/experiments/week3_geometry/outputs/frames/wreck_07/f000109.png",
+      "rss_gb": 5.141,
+      "run_aspect": 1.75,
+      "run_wh": [
+        1176,
+        672
+      ],
+      "runtime_s": 36.77,
+      "source_aspect": 1.777778,
+      "source_wh": [
+        1280,
+        720
+      ],
+      "stats_mask_prob": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 1.0,
+        "mean": 0.9228326434846797,
+        "median": 0.9999163150787354,
+        "min": 0.13535979390144348,
+        "name": "mask",
+        "shape": [
+          672,
+          1176
+        ]
+      },
+      "stats_native": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 0.9393011927604675,
+        "mean": 0.4547163095661349,
+        "median": 0.5074847042560577,
+        "min": -0.01827125810086727,
+        "name": "depth_log1p_affine_invariant",
+        "shape": [
+          672,
+          1176
+        ]
+      }
+    },
+    "portrait": {
+      "coverage_finite_frac": 1.0,
+      "mask_gt_0p5_frac": 1.0,
+      "moge2_loaded": false,
+      "out_shape": [
+        1176,
+        672
+      ],
+      "path": "/Users/nishanthmohan/code/uwrestore/experiments/week3_geometry/outputs/frames/wreck_01/f001855.png",
+      "rss_gb": 5.141,
+      "run_aspect": 0.571429,
+      "run_wh": [
+        672,
+        1176
+      ],
+      "runtime_s": 53.012,
+      "source_aspect": 0.5625,
+      "source_wh": [
+        720,
+        1280
+      ],
+      "stats_mask_prob": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 1.0,
+        "mean": 0.999998578522837,
+        "median": 0.9999994039535522,
+        "min": 0.999346911907196,
+        "name": "mask",
+        "shape": [
+          1176,
+          672
+        ]
+      },
+      "stats_native": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 1.0943886041641235,
+        "mean": 0.440813413307916,
+        "median": 0.4124701917171478,
+        "min": -0.03310147300362587,
+        "name": "depth_log1p_affine_invariant",
+        "shape": [
+          1176,
+          672
+        ]
+      }
+    },
+    "public": {
+      "coverage_finite_frac": 1.0,
+      "mask_gt_0p5_frac": 1.0,
+      "moge2_loaded": false,
+      "out_shape": [
+        672,
+        1176
+      ],
+      "path": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg",
+      "rss_gb": 5.141,
+      "run_aspect": 1.75,
+      "run_wh": [
+        1176,
+        672
+      ],
+      "runtime_s": 51.859,
+      "source_aspect": 1.777778,
+      "source_wh": [
+        1280,
+        720
+      ],
+      "stats_mask_prob": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 1.0,
+        "mean": 0.999995843494603,
+        "median": 1.0,
+        "min": 0.9983059167861938,
+        "name": "mask",
+        "shape": [
+          672,
+          1176
+        ]
+      },
+      "stats_native": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 1.0494558811187744,
+        "mean": 0.5590310127329021,
+        "median": 0.5637831091880798,
+        "min": -0.04395470768213272,
+        "name": "depth_log1p_affine_invariant",
+        "shape": [
+          672,
+          1176
+        ]
+      }
+    }
+  },
+  "impl_category": "B",
+  "impl_category_notes": [
+    "device placement mps; model math, checkpoint (strict=True) and operators unchanged",
+    "the released scripts/infer.py is BROKEN as published: line 74 does `from pxdepth.inference import parse_size, resize_image, resize_map` but no module `pxdepth.inference` exists and none of those three names is defined anywhere in the repo.  The preprocessing helper is therefore reimplemented here to the repo's OWN documented policy (scripts/infer.py:26-32: --input-size 1022x770, --resize-by-area default True => preserve source aspect ratio at that pixel area), rounded to the encoder patch size required by PXDepth.py:210.",
+    "NATIVE path only: forward(), never infer(); MoGe-2 is never loaded"
+  ],
+  "input_area_policy": {
+    "area_px": 786940,
+    "aspect": "source-preserving",
+    "rounded_to": 14
+  },
+  "license_code": "UNDECLARED - no LICENSE file in the released repo",
+  "license_disposition": "research-only (undeclared; not invented)",
+  "license_weights": "UNDECLARED - the HF model card README.md is 0 bytes",
+  "model": "pxdepth",
+  "moge2_role": "solves only the two affine parameters (a,b) in infer(); forward() is unaffected. Recorded as an OPTIONAL deployment-style diagnostic, never a primary result.",
+  "n_parameters": 686969854,
+  "native_gauge": "affine in log1p-depth: depth = expm1(a*d_native + b); 2-DOF, scale AND shift unknown",
+  "native_gauge_evidence": "PXDepth.py:226 returns {'depth_log1p_affine_invariant', 'mask'}; model/inference.py:189 solves (a,b) via solve_depth_affine and :195 `depth = torch.expm1(scale*pred + shift)`.",
+  "native_intrinsics_or_fov": null,
+  "native_point_geometry_independent_of_moge2": false,
+  "native_point_geometry_note": "no point map is produced by the network; scripts/infer.py obtains intrinsics either from --fov-x or from the MoGe-2 reference.",
+  "native_representation": "depth_log1p_affine_invariant",
+  "native_underlying_quantity": "z-depth (projective), not ray range",
+  "native_underlying_quantity_evidence": "scripts/infer.py:121 back-projects the recovered depth with utils3d.pt.depth_map_to_point_map(depth, intrinsics), which multiplies unnormalised K^-1 rays by the scalar.",
+  "patch_size": 14,
+  "repo": "yuanzhy29/PXDepth"
+}

@@ -19,7 +19,7 @@ PY=.venv/bin/python
 P3B=experiments/week3_geometry/phase3b
 OUT=$P3B/outputs/colmap
 DB=$P3B/outputs/db
-FRAMES=experiments/week3_geometry/outputs/frames
+FRAMES=experiments/week3_geometry/phase3a/outputs/frames
 METHODS=$P3B/configs/phase3b_methods.json
 
 echo "===== 3B extras: repeat runs $(date +%H:%M:%S) ====="
@@ -38,7 +38,7 @@ $PY -m experiments.week3_geometry.phase3b.scripts.run_mapper \
     || echo "  -> nonzero exit"
 
 for sched in S25 S13; do
-  $PY -m experiments.week3_geometry.scripts.run_colmap \
+  $PY -m experiments.week3_geometry.phase3a.scripts.run_colmap \
       --config A --clip "wreck_05_${sched}" \
       --frames-root "$P3B/outputs/frames_schedules" \
       --methods "$METHODS" --out-root "$OUT" --repeat 1 --overwrite \

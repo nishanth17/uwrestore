@@ -25,7 +25,7 @@ Three things it does that matter:
 Usage:
     .venv/bin/python -m experiments.week3_geometry.phase3b.scripts.run_mapper \
         --db  .../3b3_wreck_05_opencv.db \
-        --images experiments/week3_geometry/outputs/frames/wreck_05 \
+        --images experiments/week3_geometry/phase3a/outputs/frames/wreck_05 \
         --out .../colmap/M_opencv/wreck_05/run0 \
         --mapper incremental --config-label M_opencv --clip wreck_05
 """
@@ -46,7 +46,7 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", 
 if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
 
-from experiments.week3_geometry.scripts.run_colmap import (  # noqa: E402
+from experiments.week3_geometry.phase3a.scripts.run_colmap import (  # noqa: E402
     binary_version,
     parse_cameras_txt,
     parse_images_txt,

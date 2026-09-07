@@ -62,3 +62,6 @@ colmap_output/
 # individually with `git add -f`, never by relaxing this rule.
 outputs/
 experiments/**/.venv-*/
+
+# Pre-repair snapshots of Week-4 result files (local provenance, not tracked)
+experiments/week4_mono/archive/

@@ -1,0 +1,60 @@
+{
+  "artifacts_needed": "one native point map + depth + intrinsics per frame for the 288 frozen frames; plus the wreck_07 thin-structure subset",
+  "env": {
+    "cuda_available": false,
+    "device": "cpu",
+    "mps_available": true,
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "python": "3.13.5",
+    "torch": "2.11.0"
+  },
+  "environment_required": "one CUDA GPU with compute capability >= 7.0, so NATTEN selects a fused FNA backend instead of materialising the score matrix",
+  "images": {},
+  "impl_category": "B",
+  "impl_category_notes": [
+    "device placement: cpu (NATTEN exposes no MPS backend; natten.backends.choose_backend -> 'flex-fna' on cpu, NotImplementedError on mps)",
+    "no model math, resolution, checkpoint or operator changes"
+  ],
+  "license_code": "MIT (Microsoft), vendor/surge/LICENSE",
+  "license_weights": "CC BY-NC 4.0 (per model card) -> research-only",
+  "model": "surge_large",
+  "n_neighborhood_attention_2d_blocks": 15,
+  "n_parameters": 365881283,
+  "repo": "karimknaebel/surge-large",
+  "runtime_gate": {
+    "attention_operator": "natten 0.21.6 neighborhood_attention_generic (nad.py:359), kernel_size 9, 15 blocks over a 4-level x2 upsampling pyramid whose base grid is set by num_tokens (max = 2802 -> 39x70, deepest level 624x1120)",
+    "conclusion": "see status/status_reason below",
+    "cpu_compiled_flex": "REFUSED by NATTEN on two independent gates. (1) backends/configs/checks.py:695-699 -- \"Flex Attention (compiled) only supports CUDA devices with compute capability 70 or higher\" (utils/environment.py:61 gates on get_device_cc()). (2) checks.py:723-728 -- compiled flex accepts only FP16/BF16; FP32 is explicitly excluded. Enabling it would require overriding two library capability gates and/or dropping the model to half precision, and natten.allow_flex_compile() itself warns \"we cannot verify Flex's correctness in all scenarios ... your results may be affected significantly\". Not adopted: that is a numerically unverified attention-implementation change, which reference-implementation integrity forbids.",
+    "cpu_uncompiled_flex": "the only NATTEN-sanctioned path on this machine; torch warns it 'will use an unfused implementation that materializes the full scores matrix'. In-model per-block cost at num_tokens=max: 0.40-0.84 s at 39x70x1024, 6.0 s at 78x140x512, growing ~4x per pyramid level.",
+    "cpu_uncompiled_flex_measured": {
+      "command": "/usr/bin/time -l round2/.venv-surge_large/bin/python -u round2/scripts/s0_surge.py",
+      "input": "one 1280x720 frozen frame, the release default inference path (model.infer(img) with no overrides)",
+      "involuntary_context_switches": 12578078,
+      "machine_ram_bytes": 25769803776,
+      "max_rss_bytes": 18477170688,
+      "not_attempted_and_why": [
+        "lowering the input long side below the frozen 1280 -- that is changing model input resolution merely to make memory fit, and \u00a72 also forbids resampling the frozen footage",
+        "natten.allow_flex_compile() + half precision -- a numerically unverified attention-implementation change, which the library itself warns about",
+        "porting the CUDA FNA kernels to MPS, or substituting an unofficial implementation"
+      ],
+      "outcome": "KILLED by the OS before the first image completed",
+      "page_faults": 94722,
+      "page_reclaims": 211030822,
+      "peak_memory_footprint_bytes": 148477076456,
+      "reading": "system time exceeded user time 2.2x and the peak footprint reached ~138 GB on a 24 GB machine: the unfused flex path materialises the full neighborhood-attention score matrix and the process spent most of its life paging before jetsam killed it. Two earlier attempts died the same way; the third was run alone to rule out contention.",
+      "system_seconds": 805.29,
+      "user_seconds": 361.77,
+      "wall_seconds": 931.53
+    },
+    "mps": "REFUSED by NATTEN. choose_backend raises NotImplementedError; NATTEN_LOG_LEVEL=DEBUG gives verbatim: \"Can't run Flex Attention; tensor is not on a CUDA, ROCm, or CPU device: mps\". All CUTLASS/Hopper/Blackwell FNA backends are CUDA-only."
+  },
+  "status": "pending_cuda",
+  "status_reason": "SurGe's Neighborhood Attention has no backend that both runs on this machine and is numerically the released one. NATTEN refuses MPS outright and refuses compiled flex on two independent gates; the one sanctioned path, uncompiled CPU flex, was measured above to need ~138 GB of memory footprint and was killed by the OS at 931 s on a 24 GB machine.",
+  "stopped_at": "S0 gate, first sanity inference -- no S1-S6 stage was entered",
+  "to_resume": [
+    "on a CUDA machine: pip install natten==0.21.6 built for that CUDA version",
+    "round2/.venv-surge_large/bin/python round2/scripts/s0_surge.py   (S0 gate)",
+    "then run_inference.py --model surge_large over the 288 frozen frames",
+    "then the \u00a718 thin-structure test at the wreck_07 crane lattice, which is where a LOCAL-SURFACE specialist is most likely to differ"
+  ]
+}

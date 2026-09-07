@@ -20,7 +20,7 @@ OUT=experiments/week3_geometry/phase3b/outputs/colmap
 
 run () {  # config clip repeat
   echo "=== $1 $2 run$3 $(date +%H:%M:%S) ==="
-  $PY -m experiments.week3_geometry.scripts.run_colmap \
+  $PY -m experiments.week3_geometry.phase3a.scripts.run_colmap \
       --config "$1" --clip "$2" --repeat "$3" \
       --methods "$METHODS" --out-root "$OUT" --overwrite \
       || echo "  -> nonzero exit"

@@ -1,0 +1,320 @@
+{
+  "checkpoint_keys_total": 607,
+  "checkpoint_keys_unloaded": 86,
+  "checkpoint_keys_unloaded_all_refiner": true,
+  "checkpoint_keys_unloaded_sample": [
+    "refiner.bottleneck_stage.0.conv1.bias",
+    "refiner.bottleneck_stage.0.conv1.weight",
+    "refiner.bottleneck_stage.0.conv2.bias",
+    "refiner.bottleneck_stage.0.conv2.weight",
+    "refiner.bottleneck_stage.0.norm1.bias"
+  ],
+  "env": {
+    "cuda_available": false,
+    "device": "mps",
+    "mps_available": true,
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "python": "3.13.5",
+    "torch": "2.14.0"
+  },
+  "images": {
+    "difficult": {
+      "coverage_finite_frac": 0.7599424913194445,
+      "intrinsics_normalized": [
+        [
+          0.4857129156589508,
+          0.0,
+          0.5
+        ],
+        [
+          0.0,
+          0.8634896278381348,
+          0.5
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "mask_frac": 0.7599424913194445,
+      "max_abs_depth_minus_pointnorm": 13.162092208862305,
+      "max_abs_depth_minus_pointz": 0.0,
+      "median_range_over_z": 1.167701244354248,
+      "out_shape_depth": [
+        720,
+        1280
+      ],
+      "out_shape_points": [
+        720,
+        1280,
+        3
+      ],
+      "path": "/Users/nishanthmohan/code/uwrestore/experiments/week3_geometry/outputs/frames/wreck_05/f000113.png",
+      "rss_gb": 2.571,
+      "run_wh": [
+        1280,
+        720
+      ],
+      "runtime_s": 2.308,
+      "source_wh": [
+        1280,
+        720
+      ],
+      "stats_depth": {
+        "dtype": "float32",
+        "finite_frac": 0.7599424913194445,
+        "max": 40.12632751464844,
+        "mean": 4.334712633847116,
+        "median": 2.623880386352539,
+        "min": 1.5307025909423828,
+        "name": "depth",
+        "shape": [
+          720,
+          1280
+        ]
+      },
+      "stats_range": {
+        "dtype": "float32",
+        "finite_frac": 0.7599424913194445,
+        "max": 46.2556037902832,
+        "mean": 5.091800039535554,
+        "median": 3.003767490386963,
+        "min": 2.2462072372436523,
+        "name": "||points||",
+        "shape": [
+          720,
+          1280
+        ]
+      }
+    },
+    "ordinary": {
+      "coverage_finite_frac": 0.9047732204861111,
+      "intrinsics_normalized": [
+        [
+          0.5195639133453369,
+          0.0,
+          0.5
+        ],
+        [
+          0.0,
+          0.9236692190170288,
+          0.5
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "mask_frac": 0.9047732204861111,
+      "max_abs_depth_minus_pointnorm": 11.248590469360352,
+      "max_abs_depth_minus_pointz": 0.0,
+      "median_range_over_z": 1.1406277418136597,
+      "out_shape_depth": [
+        720,
+        1280
+      ],
+      "out_shape_points": [
+        720,
+        1280,
+        3
+      ],
+      "path": "/Users/nishanthmohan/code/uwrestore/experiments/week3_geometry/outputs/frames/wreck_07/f000109.png",
+      "rss_gb": 2.571,
+      "run_wh": [
+        1280,
+        720
+      ],
+      "runtime_s": 4.613,
+      "source_wh": [
+        1280,
+        720
+      ],
+      "stats_depth": {
+        "dtype": "float32",
+        "finite_frac": 0.9047732204861111,
+        "max": 27.397905349731445,
+        "mean": 6.159948555988167,
+        "median": 3.8152525424957275,
+        "min": 1.9489563703536987,
+        "name": "depth",
+        "shape": [
+          720,
+          1280
+        ]
+      },
+      "stats_range": {
+        "dtype": "float32",
+        "finite_frac": 0.9047732204861111,
+        "max": 37.8089714050293,
+        "mean": 7.268798760064225,
+        "median": 4.049525260925293,
+        "min": 2.344172477722168,
+        "name": "||points||",
+        "shape": [
+          720,
+          1280
+        ]
+      }
+    },
+    "portrait": {
+      "coverage_finite_frac": 1.0,
+      "intrinsics_normalized": [
+        [
+          0.9705551862716675,
+          0.0,
+          0.5
+        ],
+        [
+          0.0,
+          0.5459372997283936,
+          0.5
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "mask_frac": 1.0,
+      "max_abs_depth_minus_pointnorm": 0.46837639808654785,
+      "max_abs_depth_minus_pointz": 0.0,
+      "median_range_over_z": 1.1433323621749878,
+      "out_shape_depth": [
+        1280,
+        720
+      ],
+      "out_shape_points": [
+        1280,
+        720,
+        3
+      ],
+      "path": "/Users/nishanthmohan/code/uwrestore/experiments/week3_geometry/outputs/frames/wreck_01/f001855.png",
+      "rss_gb": 2.571,
+      "run_wh": [
+        720,
+        1280
+      ],
+      "runtime_s": 2.254,
+      "source_wh": [
+        720,
+        1280
+      ],
+      "stats_depth": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 1.041505217552185,
+        "mean": 0.7946200990991849,
+        "median": 0.7858558297157288,
+        "min": 0.5985482335090637,
+        "name": "depth",
+        "shape": [
+          1280,
+          720
+        ]
+      },
+      "stats_range": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 1.5094963312149048,
+        "mean": 0.9260399546908835,
+        "median": 0.8445443212985992,
+        "min": 0.753223180770874,
+        "name": "||points||",
+        "shape": [
+          1280,
+          720
+        ]
+      }
+    },
+    "public": {
+      "coverage_finite_frac": 1.0,
+      "intrinsics_normalized": [
+        [
+          0.7132465839385986,
+          0.0,
+          0.5
+        ],
+        [
+          0.0,
+          1.2679939270019531,
+          0.5
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "mask_frac": 1.0,
+      "max_abs_depth_minus_pointnorm": 1.1017107963562012,
+      "max_abs_depth_minus_pointz": 0.0,
+      "median_range_over_z": 1.0862717628479004,
+      "out_shape_depth": [
+        720,
+        1280
+      ],
+      "out_shape_points": [
+        720,
+        1280,
+        3
+      ],
+      "path": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg",
+      "rss_gb": 2.571,
+      "run_wh": [
+        1280,
+        720
+      ],
+      "runtime_s": 2.261,
+      "source_wh": [
+        1280,
+        720
+      ],
+      "stats_depth": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 6.9443440437316895,
+        "mean": 4.590817535566942,
+        "median": 4.459166526794434,
+        "min": 2.4460015296936035,
+        "name": "depth",
+        "shape": [
+          720,
+          1280
+        ]
+      },
+      "stats_range": {
+        "dtype": "float32",
+        "finite_frac": 1.0,
+        "max": 7.128086566925049,
+        "mean": 5.007332948607962,
+        "median": 5.028611660003662,
+        "min": 2.632110118865967,
+        "name": "||points||",
+        "shape": [
+          720,
+          1280
+        ]
+      }
+    }
+  },
+  "impl_category": "B",
+  "impl_category_notes": [
+    "official from_pretrained model_kwargs override refiner=None (v2.py:84-111 documents model_kwargs as config override)",
+    "import-only flex_gemm stub at round2/shims/ to satisfy the module-level import at v3.py:14 -> sparse_unet.py:14; every stub symbol raises on construction, so it cannot silently execute",
+    "no changes to model math, resolution, checkpoint or operators"
+  ],
+  "model": "moge3_vitl",
+  "model_keys_missing_from_checkpoint": [],
+  "n_parameters": 330901544,
+  "num_tokens_range": [
+    1200,
+    3600
+  ],
+  "repo": "Ruicheng/moge-3-vitl",
+  "step0_refiner_never_executes_evidence": "v3.py:121 raises if refine_steps>0 without a refiner; v3.py:168 `if refine_steps > 0:` guards the entire refinement loop, so at refine_steps=0 no refiner tensor is touched.",
+  "step3_blocker": "moge/model/modules/sparse_unet.py:14 requires flex_gemm.ops.NeighborCache; FlexGEMM is Triton-powered (pyproject: triton>=3.2.0) and Triton has no macOS distribution. No CUDA device on this machine.",
+  "step3_guard_check": "ValueError: Refiner is not enabled but refine_steps > 0.",
+  "step3_status": "pending_cuda"
+}

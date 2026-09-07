@@ -1,0 +1,1562 @@
+{
+  "clips": {
+    "wreck_07": {
+      "frames": [
+        37,
+        109,
+        177
+      ],
+      "range_scale": [
+        5.841685125341339,
+        51.1807308883788
+      ],
+      "sheets": [
+        "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000037_sheet.png",
+        "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000109_sheet.png",
+        "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000177_sheet.png"
+      ],
+      "crops": [
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000037_mapanything_n1_crop1_4.png",
+          "arm": "mapanything_n1",
+          "frame": 37,
+          "tile": [
+            1,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.2737404280591469
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000037_mapanything_n1_crop1_5.png",
+          "arm": "mapanything_n1",
+          "frame": 37,
+          "tile": [
+            1,
+            5
+          ],
+          "median_abs_rel_disagreement": 0.25978548104869703
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000037_mapanything_n1_crop2_5.png",
+          "arm": "mapanything_n1",
+          "frame": 37,
+          "tile": [
+            2,
+            5
+          ],
+          "median_abs_rel_disagreement": 0.2563587468522399
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000037_mapanything_n1_crop1_6.png",
+          "arm": "mapanything_n1",
+          "frame": 37,
+          "tile": [
+            1,
+            6
+          ],
+          "median_abs_rel_disagreement": 0.2477277083384945
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000037_da3mono_large_crop4_3.png",
+          "arm": "da3mono_large",
+          "frame": 37,
+          "tile": [
+            4,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.32767344498694306
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000037_da3mono_large_crop4_4.png",
+          "arm": "da3mono_large",
+          "frame": 37,
+          "tile": [
+            4,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.32140155013010485
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000037_da3mono_large_crop1_9.png",
+          "arm": "da3mono_large",
+          "frame": 37,
+          "tile": [
+            1,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.2861050730875625
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000037_da3mono_large_crop3_4.png",
+          "arm": "da3mono_large",
+          "frame": 37,
+          "tile": [
+            3,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.2800249886271955
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000109_mapanything_n1_crop0_8.png",
+          "arm": "mapanything_n1",
+          "frame": 109,
+          "tile": [
+            0,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.30221866584242313
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000109_mapanything_n1_crop0_9.png",
+          "arm": "mapanything_n1",
+          "frame": 109,
+          "tile": [
+            0,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.2979447206336988
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000109_mapanything_n1_crop0_7.png",
+          "arm": "mapanything_n1",
+          "frame": 109,
+          "tile": [
+            0,
+            7
+          ],
+          "median_abs_rel_disagreement": 0.297472879391979
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000109_mapanything_n1_crop1_9.png",
+          "arm": "mapanything_n1",
+          "frame": 109,
+          "tile": [
+            1,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.2945496559099562
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000109_da3mono_large_crop1_2.png",
+          "arm": "da3mono_large",
+          "frame": 109,
+          "tile": [
+            1,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.3429054904113714
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000109_da3mono_large_crop2_2.png",
+          "arm": "da3mono_large",
+          "frame": 109,
+          "tile": [
+            2,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.34281971182580784
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000109_da3mono_large_crop0_1.png",
+          "arm": "da3mono_large",
+          "frame": 109,
+          "tile": [
+            0,
+            1
+          ],
+          "median_abs_rel_disagreement": 0.33678174263229077
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000109_da3mono_large_crop3_2.png",
+          "arm": "da3mono_large",
+          "frame": 109,
+          "tile": [
+            3,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.3257357120376997
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000177_mapanything_n1_crop0_6.png",
+          "arm": "mapanything_n1",
+          "frame": 177,
+          "tile": [
+            0,
+            6
+          ],
+          "median_abs_rel_disagreement": 0.07857276773973451
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000177_mapanything_n1_crop1_0.png",
+          "arm": "mapanything_n1",
+          "frame": 177,
+          "tile": [
+            1,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.07439072789888082
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000177_mapanything_n1_crop4_0.png",
+          "arm": "mapanything_n1",
+          "frame": 177,
+          "tile": [
+            4,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.06635350219557604
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000177_mapanything_n1_crop1_6.png",
+          "arm": "mapanything_n1",
+          "frame": 177,
+          "tile": [
+            1,
+            6
+          ],
+          "median_abs_rel_disagreement": 0.06619387595305509
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000177_da3mono_large_crop0_8.png",
+          "arm": "da3mono_large",
+          "frame": 177,
+          "tile": [
+            0,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.2346828147201997
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000177_da3mono_large_crop4_7.png",
+          "arm": "da3mono_large",
+          "frame": 177,
+          "tile": [
+            4,
+            7
+          ],
+          "median_abs_rel_disagreement": 0.21331678998997683
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000177_da3mono_large_crop1_8.png",
+          "arm": "da3mono_large",
+          "frame": 177,
+          "tile": [
+            1,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.1998117393485568
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_07_f000177_da3mono_large_crop0_3.png",
+          "arm": "da3mono_large",
+          "frame": 177,
+          "tile": [
+            0,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.19873854382877595
+        }
+      ]
+    },
+    "wreck_05": {
+      "frames": [
+        39,
+        113,
+        183
+      ],
+      "range_scale": [
+        13.433043767042651,
+        71.71587188982282
+      ],
+      "sheets": [
+        "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000039_sheet.png",
+        "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000113_sheet.png",
+        "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000183_sheet.png"
+      ],
+      "crops": [
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000039_mapanything_n1_crop0_9.png",
+          "arm": "mapanything_n1",
+          "frame": 39,
+          "tile": [
+            0,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.16696281897155152
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000039_mapanything_n1_crop1_8.png",
+          "arm": "mapanything_n1",
+          "frame": 39,
+          "tile": [
+            1,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.1525314404893371
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000039_mapanything_n1_crop1_9.png",
+          "arm": "mapanything_n1",
+          "frame": 39,
+          "tile": [
+            1,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.14937448612644597
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000039_mapanything_n1_crop3_9.png",
+          "arm": "mapanything_n1",
+          "frame": 39,
+          "tile": [
+            3,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.14050677813425558
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000039_da3mono_large_crop1_9.png",
+          "arm": "da3mono_large",
+          "frame": 39,
+          "tile": [
+            1,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.3295611505083175
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000039_da3mono_large_crop2_2.png",
+          "arm": "da3mono_large",
+          "frame": 39,
+          "tile": [
+            2,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.3177995284033775
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000039_da3mono_large_crop2_8.png",
+          "arm": "da3mono_large",
+          "frame": 39,
+          "tile": [
+            2,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.3172799381217115
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000039_da3mono_large_crop2_3.png",
+          "arm": "da3mono_large",
+          "frame": 39,
+          "tile": [
+            2,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.31497331855628874
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000113_mapanything_n1_crop1_3.png",
+          "arm": "mapanything_n1",
+          "frame": 113,
+          "tile": [
+            1,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.4384835705303889
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000113_mapanything_n1_crop2_1.png",
+          "arm": "mapanything_n1",
+          "frame": 113,
+          "tile": [
+            2,
+            1
+          ],
+          "median_abs_rel_disagreement": 0.3559906630506181
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000113_mapanything_n1_crop1_2.png",
+          "arm": "mapanything_n1",
+          "frame": 113,
+          "tile": [
+            1,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.2723941189093946
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000113_mapanything_n1_crop2_0.png",
+          "arm": "mapanything_n1",
+          "frame": 113,
+          "tile": [
+            2,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.24032626913239974
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000113_da3mono_large_crop4_6.png",
+          "arm": "da3mono_large",
+          "frame": 113,
+          "tile": [
+            4,
+            6
+          ],
+          "median_abs_rel_disagreement": 0.625615406517414
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000113_da3mono_large_crop4_5.png",
+          "arm": "da3mono_large",
+          "frame": 113,
+          "tile": [
+            4,
+            5
+          ],
+          "median_abs_rel_disagreement": 0.6097252522580257
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000113_da3mono_large_crop4_7.png",
+          "arm": "da3mono_large",
+          "frame": 113,
+          "tile": [
+            4,
+            7
+          ],
+          "median_abs_rel_disagreement": 0.6038869403806126
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000113_da3mono_large_crop4_8.png",
+          "arm": "da3mono_large",
+          "frame": 113,
+          "tile": [
+            4,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.5626750231583655
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000183_mapanything_n1_crop4_0.png",
+          "arm": "mapanything_n1",
+          "frame": 183,
+          "tile": [
+            4,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.2220837107005067
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000183_mapanything_n1_crop4_1.png",
+          "arm": "mapanything_n1",
+          "frame": 183,
+          "tile": [
+            4,
+            1
+          ],
+          "median_abs_rel_disagreement": 0.17176501483967227
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000183_mapanything_n1_crop3_7.png",
+          "arm": "mapanything_n1",
+          "frame": 183,
+          "tile": [
+            3,
+            7
+          ],
+          "median_abs_rel_disagreement": 0.15015527548385887
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000183_mapanything_n1_crop4_2.png",
+          "arm": "mapanything_n1",
+          "frame": 183,
+          "tile": [
+            4,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.13005913044583584
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000183_da3mono_large_crop1_3.png",
+          "arm": "da3mono_large",
+          "frame": 183,
+          "tile": [
+            1,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.3022578841522748
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000183_da3mono_large_crop0_4.png",
+          "arm": "da3mono_large",
+          "frame": 183,
+          "tile": [
+            0,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.2993003055341852
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000183_da3mono_large_crop1_4.png",
+          "arm": "da3mono_large",
+          "frame": 183,
+          "tile": [
+            1,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.29711735223640784
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_05_f000183_da3mono_large_crop0_0.png",
+          "arm": "da3mono_large",
+          "frame": 183,
+          "tile": [
+            0,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.2933280492702829
+        }
+      ]
+    },
+    "cenote_01": {
+      "frames": [
+        69,
+        200,
+        324
+      ],
+      "range_scale": [
+        4.804078589943772,
+        11.26182638581442
+      ],
+      "sheets": [
+        "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000069_sheet.png",
+        "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000200_sheet.png",
+        "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000324_sheet.png"
+      ],
+      "crops": [
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000069_mapanything_n1_crop4_5.png",
+          "arm": "mapanything_n1",
+          "frame": 69,
+          "tile": [
+            4,
+            5
+          ],
+          "median_abs_rel_disagreement": 0.6139674039435538
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000069_mapanything_n1_crop4_4.png",
+          "arm": "mapanything_n1",
+          "frame": 69,
+          "tile": [
+            4,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.6064748548214532
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000069_mapanything_n1_crop4_6.png",
+          "arm": "mapanything_n1",
+          "frame": 69,
+          "tile": [
+            4,
+            6
+          ],
+          "median_abs_rel_disagreement": 0.5814409481500877
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000069_mapanything_n1_crop4_3.png",
+          "arm": "mapanything_n1",
+          "frame": 69,
+          "tile": [
+            4,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.5739162763952526
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000069_da3mono_large_crop0_9.png",
+          "arm": "da3mono_large",
+          "frame": 69,
+          "tile": [
+            0,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.4302757141522956
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000069_da3mono_large_crop1_9.png",
+          "arm": "da3mono_large",
+          "frame": 69,
+          "tile": [
+            1,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.3842909702248135
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000069_da3mono_large_crop0_8.png",
+          "arm": "da3mono_large",
+          "frame": 69,
+          "tile": [
+            0,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.3462562533723846
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000069_da3mono_large_crop2_9.png",
+          "arm": "da3mono_large",
+          "frame": 69,
+          "tile": [
+            2,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.3222811270358513
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000200_mapanything_n1_crop4_6.png",
+          "arm": "mapanything_n1",
+          "frame": 200,
+          "tile": [
+            4,
+            6
+          ],
+          "median_abs_rel_disagreement": 0.16226444206781404
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000200_mapanything_n1_crop4_7.png",
+          "arm": "mapanything_n1",
+          "frame": 200,
+          "tile": [
+            4,
+            7
+          ],
+          "median_abs_rel_disagreement": 0.12147685748142567
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000200_mapanything_n1_crop4_8.png",
+          "arm": "mapanything_n1",
+          "frame": 200,
+          "tile": [
+            4,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.10983419904380382
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000200_mapanything_n1_crop4_5.png",
+          "arm": "mapanything_n1",
+          "frame": 200,
+          "tile": [
+            4,
+            5
+          ],
+          "median_abs_rel_disagreement": 0.10499001894076719
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000200_da3mono_large_crop0_9.png",
+          "arm": "da3mono_large",
+          "frame": 200,
+          "tile": [
+            0,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.30986717319334844
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000200_da3mono_large_crop1_9.png",
+          "arm": "da3mono_large",
+          "frame": 200,
+          "tile": [
+            1,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.24897770747680262
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000200_da3mono_large_crop0_8.png",
+          "arm": "da3mono_large",
+          "frame": 200,
+          "tile": [
+            0,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.18611036623870128
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000200_da3mono_large_crop2_9.png",
+          "arm": "da3mono_large",
+          "frame": 200,
+          "tile": [
+            2,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.18181114129255393
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000324_mapanything_n1_crop2_9.png",
+          "arm": "mapanything_n1",
+          "frame": 324,
+          "tile": [
+            2,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.9966138186844462
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000324_mapanything_n1_crop1_9.png",
+          "arm": "mapanything_n1",
+          "frame": 324,
+          "tile": [
+            1,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.9934578033541794
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000324_mapanything_n1_crop3_9.png",
+          "arm": "mapanything_n1",
+          "frame": 324,
+          "tile": [
+            3,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.914169166869214
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000324_mapanything_n1_crop1_8.png",
+          "arm": "mapanything_n1",
+          "frame": 324,
+          "tile": [
+            1,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.8995668012690579
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000324_da3mono_large_crop1_5.png",
+          "arm": "da3mono_large",
+          "frame": 324,
+          "tile": [
+            1,
+            5
+          ],
+          "median_abs_rel_disagreement": 0.27116777016088617
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000324_da3mono_large_crop1_4.png",
+          "arm": "da3mono_large",
+          "frame": 324,
+          "tile": [
+            1,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.268929063401528
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000324_da3mono_large_crop4_9.png",
+          "arm": "da3mono_large",
+          "frame": 324,
+          "tile": [
+            4,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.26460197287358356
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/cenote_01_f000324_da3mono_large_crop0_3.png",
+          "arm": "da3mono_large",
+          "frame": 324,
+          "tile": [
+            0,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.24515598434588884
+        }
+      ]
+    },
+    "swimthrough_02": {
+      "frames": [
+        30,
+        89,
+        145
+      ],
+      "range_scale": [
+        5.80684328474778,
+        21.852558170214596
+      ],
+      "sheets": [
+        "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000030_sheet.png",
+        "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000089_sheet.png",
+        "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000145_sheet.png"
+      ],
+      "crops": [
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000030_mapanything_n1_crop0_4.png",
+          "arm": "mapanything_n1",
+          "frame": 30,
+          "tile": [
+            0,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.1923935404515851
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000030_mapanything_n1_crop2_8.png",
+          "arm": "mapanything_n1",
+          "frame": 30,
+          "tile": [
+            2,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.16926256549450186
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000030_mapanything_n1_crop1_9.png",
+          "arm": "mapanything_n1",
+          "frame": 30,
+          "tile": [
+            1,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.1416408688283066
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000030_mapanything_n1_crop2_2.png",
+          "arm": "mapanything_n1",
+          "frame": 30,
+          "tile": [
+            2,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.12159344359001623
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000030_da3mono_large_crop0_0.png",
+          "arm": "da3mono_large",
+          "frame": 30,
+          "tile": [
+            0,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.7510131945837635
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000030_da3mono_large_crop1_0.png",
+          "arm": "da3mono_large",
+          "frame": 30,
+          "tile": [
+            1,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.7471251957518742
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000030_da3mono_large_crop3_8.png",
+          "arm": "da3mono_large",
+          "frame": 30,
+          "tile": [
+            3,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.2869384721179208
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000030_da3mono_large_crop4_9.png",
+          "arm": "da3mono_large",
+          "frame": 30,
+          "tile": [
+            4,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.26909656864447923
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000089_mapanything_n1_crop0_4.png",
+          "arm": "mapanything_n1",
+          "frame": 89,
+          "tile": [
+            0,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.12720275712120138
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000089_mapanything_n1_crop0_3.png",
+          "arm": "mapanything_n1",
+          "frame": 89,
+          "tile": [
+            0,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.11404813644525559
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000089_mapanything_n1_crop1_3.png",
+          "arm": "mapanything_n1",
+          "frame": 89,
+          "tile": [
+            1,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.11299245039009823
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000089_mapanything_n1_crop1_6.png",
+          "arm": "mapanything_n1",
+          "frame": 89,
+          "tile": [
+            1,
+            6
+          ],
+          "median_abs_rel_disagreement": 0.10970646918594308
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000089_da3mono_large_crop4_9.png",
+          "arm": "da3mono_large",
+          "frame": 89,
+          "tile": [
+            4,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.30243815420782294
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000089_da3mono_large_crop3_9.png",
+          "arm": "da3mono_large",
+          "frame": 89,
+          "tile": [
+            3,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.2096632017646383
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000089_da3mono_large_crop4_8.png",
+          "arm": "da3mono_large",
+          "frame": 89,
+          "tile": [
+            4,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.15367697187146812
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000089_da3mono_large_crop4_6.png",
+          "arm": "da3mono_large",
+          "frame": 89,
+          "tile": [
+            4,
+            6
+          ],
+          "median_abs_rel_disagreement": 0.14275427531112933
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000145_mapanything_n1_crop4_2.png",
+          "arm": "mapanything_n1",
+          "frame": 145,
+          "tile": [
+            4,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.32207078341568396
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000145_mapanything_n1_crop4_0.png",
+          "arm": "mapanything_n1",
+          "frame": 145,
+          "tile": [
+            4,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.31607904122509484
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000145_mapanything_n1_crop3_0.png",
+          "arm": "mapanything_n1",
+          "frame": 145,
+          "tile": [
+            3,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.29666245053588247
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000145_mapanything_n1_crop2_0.png",
+          "arm": "mapanything_n1",
+          "frame": 145,
+          "tile": [
+            2,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.2899041204012813
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000145_da3mono_large_crop0_1.png",
+          "arm": "da3mono_large",
+          "frame": 145,
+          "tile": [
+            0,
+            1
+          ],
+          "median_abs_rel_disagreement": 0.46484139882180614
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000145_da3mono_large_crop2_4.png",
+          "arm": "da3mono_large",
+          "frame": 145,
+          "tile": [
+            2,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.39406773854462446
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000145_da3mono_large_crop1_4.png",
+          "arm": "da3mono_large",
+          "frame": 145,
+          "tile": [
+            1,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.3739154017229127
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/swimthrough_02_f000145_da3mono_large_crop3_6.png",
+          "arm": "da3mono_large",
+          "frame": 145,
+          "tile": [
+            3,
+            6
+          ],
+          "median_abs_rel_disagreement": 0.30922877966050544
+        }
+      ]
+    },
+    "wreck_01": {
+      "frames": [
+        1674,
+        1855,
+        2026
+      ],
+      "range_scale": [
+        5.505734132382994,
+        14.254555025244157
+      ],
+      "sheets": [
+        "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001674_sheet.png",
+        "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001855_sheet.png",
+        "experiments/week4_mono/outputs/s6/inspect/wreck_01_f002026_sheet.png"
+      ],
+      "crops": [
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001674_mapanything_n1_crop7_0.png",
+          "arm": "mapanything_n1",
+          "frame": 1674,
+          "tile": [
+            7,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.19701039963734768
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001674_mapanything_n1_crop8_0.png",
+          "arm": "mapanything_n1",
+          "frame": 1674,
+          "tile": [
+            8,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.19671217939197863
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001674_mapanything_n1_crop7_1.png",
+          "arm": "mapanything_n1",
+          "frame": 1674,
+          "tile": [
+            7,
+            1
+          ],
+          "median_abs_rel_disagreement": 0.19347750945848852
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001674_mapanything_n1_crop8_1.png",
+          "arm": "mapanything_n1",
+          "frame": 1674,
+          "tile": [
+            8,
+            1
+          ],
+          "median_abs_rel_disagreement": 0.18682396040879007
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001674_da3mono_large_crop0_0.png",
+          "arm": "da3mono_large",
+          "frame": 1674,
+          "tile": [
+            0,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.4126225009959117
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001674_da3mono_large_crop0_1.png",
+          "arm": "da3mono_large",
+          "frame": 1674,
+          "tile": [
+            0,
+            1
+          ],
+          "median_abs_rel_disagreement": 0.3938196725211102
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001674_da3mono_large_crop0_4.png",
+          "arm": "da3mono_large",
+          "frame": 1674,
+          "tile": [
+            0,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.3886141699519032
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001674_da3mono_large_crop0_2.png",
+          "arm": "da3mono_large",
+          "frame": 1674,
+          "tile": [
+            0,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.387403428181674
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001855_mapanything_n1_crop1_1.png",
+          "arm": "mapanything_n1",
+          "frame": 1855,
+          "tile": [
+            1,
+            1
+          ],
+          "median_abs_rel_disagreement": 0.32852929308368894
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001855_mapanything_n1_crop2_3.png",
+          "arm": "mapanything_n1",
+          "frame": 1855,
+          "tile": [
+            2,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.32825014408948394
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001855_mapanything_n1_crop2_2.png",
+          "arm": "mapanything_n1",
+          "frame": 1855,
+          "tile": [
+            2,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.3279723851612715
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001855_mapanything_n1_crop1_2.png",
+          "arm": "mapanything_n1",
+          "frame": 1855,
+          "tile": [
+            1,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.3278736898686434
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001855_da3mono_large_crop0_0.png",
+          "arm": "da3mono_large",
+          "frame": 1855,
+          "tile": [
+            0,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.22311549611632914
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001855_da3mono_large_crop0_1.png",
+          "arm": "da3mono_large",
+          "frame": 1855,
+          "tile": [
+            0,
+            1
+          ],
+          "median_abs_rel_disagreement": 0.203003411023212
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001855_da3mono_large_crop0_4.png",
+          "arm": "da3mono_large",
+          "frame": 1855,
+          "tile": [
+            0,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.1922006801220379
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f001855_da3mono_large_crop0_2.png",
+          "arm": "da3mono_large",
+          "frame": 1855,
+          "tile": [
+            0,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.18997110327115563
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f002026_mapanything_n1_crop5_4.png",
+          "arm": "mapanything_n1",
+          "frame": 2026,
+          "tile": [
+            5,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.05104091375576858
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f002026_mapanything_n1_crop9_0.png",
+          "arm": "mapanything_n1",
+          "frame": 2026,
+          "tile": [
+            9,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.04746671619352456
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f002026_mapanything_n1_crop4_4.png",
+          "arm": "mapanything_n1",
+          "frame": 2026,
+          "tile": [
+            4,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.0465703890889968
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f002026_mapanything_n1_crop5_3.png",
+          "arm": "mapanything_n1",
+          "frame": 2026,
+          "tile": [
+            5,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.046369435522341435
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f002026_da3mono_large_crop6_2.png",
+          "arm": "da3mono_large",
+          "frame": 2026,
+          "tile": [
+            6,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.39001016978070746
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f002026_da3mono_large_crop6_3.png",
+          "arm": "da3mono_large",
+          "frame": 2026,
+          "tile": [
+            6,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.3899572563909506
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f002026_da3mono_large_crop5_2.png",
+          "arm": "da3mono_large",
+          "frame": 2026,
+          "tile": [
+            5,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.38407968248920804
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_01_f002026_da3mono_large_crop7_2.png",
+          "arm": "da3mono_large",
+          "frame": 2026,
+          "tile": [
+            7,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.3822176093416902
+        }
+      ]
+    },
+    "wreck_03": {
+      "frames": [
+        110,
+        317,
+        511
+      ],
+      "range_scale": [
+        14.325154123794169,
+        46.2624114292272
+      ],
+      "sheets": [
+        "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000110_sheet.png",
+        "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000317_sheet.png",
+        "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000511_sheet.png"
+      ],
+      "crops": [
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000110_mapanything_n1_crop0_3.png",
+          "arm": "mapanything_n1",
+          "frame": 110,
+          "tile": [
+            0,
+            3
+          ],
+          "median_abs_rel_disagreement": 0.18897751233984733
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000110_mapanything_n1_crop0_2.png",
+          "arm": "mapanything_n1",
+          "frame": 110,
+          "tile": [
+            0,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.16168027576623537
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000110_mapanything_n1_crop0_8.png",
+          "arm": "mapanything_n1",
+          "frame": 110,
+          "tile": [
+            0,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.16127421864633504
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000110_mapanything_n1_crop0_4.png",
+          "arm": "mapanything_n1",
+          "frame": 110,
+          "tile": [
+            0,
+            4
+          ],
+          "median_abs_rel_disagreement": 0.15324105700977592
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000110_da3mono_large_crop4_9.png",
+          "arm": "da3mono_large",
+          "frame": 110,
+          "tile": [
+            4,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.2956877371145406
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000110_da3mono_large_crop3_8.png",
+          "arm": "da3mono_large",
+          "frame": 110,
+          "tile": [
+            3,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.28757259363551024
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000110_da3mono_large_crop4_8.png",
+          "arm": "da3mono_large",
+          "frame": 110,
+          "tile": [
+            4,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.2711019812537569
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000110_da3mono_large_crop2_2.png",
+          "arm": "da3mono_large",
+          "frame": 110,
+          "tile": [
+            2,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.2693210259136723
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000317_mapanything_n1_crop0_0.png",
+          "arm": "mapanything_n1",
+          "frame": 317,
+          "tile": [
+            0,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.13880463957541406
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000317_mapanything_n1_crop4_9.png",
+          "arm": "mapanything_n1",
+          "frame": 317,
+          "tile": [
+            4,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.1343245782276693
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000317_mapanything_n1_crop0_2.png",
+          "arm": "mapanything_n1",
+          "frame": 317,
+          "tile": [
+            0,
+            2
+          ],
+          "median_abs_rel_disagreement": 0.1308861044293968
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000317_mapanything_n1_crop0_1.png",
+          "arm": "mapanything_n1",
+          "frame": 317,
+          "tile": [
+            0,
+            1
+          ],
+          "median_abs_rel_disagreement": 0.13079089323780319
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000317_da3mono_large_crop3_5.png",
+          "arm": "da3mono_large",
+          "frame": 317,
+          "tile": [
+            3,
+            5
+          ],
+          "median_abs_rel_disagreement": 1.6456075928311606
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000317_da3mono_large_crop2_5.png",
+          "arm": "da3mono_large",
+          "frame": 317,
+          "tile": [
+            2,
+            5
+          ],
+          "median_abs_rel_disagreement": 1.5960510207850092
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000317_da3mono_large_crop4_5.png",
+          "arm": "da3mono_large",
+          "frame": 317,
+          "tile": [
+            4,
+            5
+          ],
+          "median_abs_rel_disagreement": 1.4893395901977564
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000317_da3mono_large_crop0_8.png",
+          "arm": "da3mono_large",
+          "frame": 317,
+          "tile": [
+            0,
+            8
+          ],
+          "median_abs_rel_disagreement": 0.4341193422089926
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000511_mapanything_n1_crop2_7.png",
+          "arm": "mapanything_n1",
+          "frame": 511,
+          "tile": [
+            2,
+            7
+          ],
+          "median_abs_rel_disagreement": 0.2832533020848992
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000511_mapanything_n1_crop2_6.png",
+          "arm": "mapanything_n1",
+          "frame": 511,
+          "tile": [
+            2,
+            6
+          ],
+          "median_abs_rel_disagreement": 0.28257280579710964
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000511_mapanything_n1_crop0_9.png",
+          "arm": "mapanything_n1",
+          "frame": 511,
+          "tile": [
+            0,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.2820902169992621
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000511_mapanything_n1_crop2_9.png",
+          "arm": "mapanything_n1",
+          "frame": 511,
+          "tile": [
+            2,
+            9
+          ],
+          "median_abs_rel_disagreement": 0.27915515765073207
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000511_da3mono_large_crop4_5.png",
+          "arm": "da3mono_large",
+          "frame": 511,
+          "tile": [
+            4,
+            5
+          ],
+          "median_abs_rel_disagreement": 0.3056178011287567
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000511_da3mono_large_crop0_0.png",
+          "arm": "da3mono_large",
+          "frame": 511,
+          "tile": [
+            0,
+            0
+          ],
+          "median_abs_rel_disagreement": 0.28993370447048206
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000511_da3mono_large_crop4_6.png",
+          "arm": "da3mono_large",
+          "frame": 511,
+          "tile": [
+            4,
+            6
+          ],
+          "median_abs_rel_disagreement": 0.24446206110215607
+        },
+        {
+          "path": "experiments/week4_mono/outputs/s6/inspect/wreck_03_f000511_da3mono_large_crop3_5.png",
+          "arm": "da3mono_large",
+          "frame": 511,
+          "tile": [
+            3,
+            5
+          ],
+          "median_abs_rel_disagreement": 0.22676964228449942
+        }
+      ]
+    }
+  },
+  "what_to_look_for": [
+    "backscatter or particles turned into depth structure",
+    "marine snow",
+    "caustics",
+    "animal boundaries",
+    "artificial-light regions",
+    "far-field range collapse",
+    "thin structures",
+    "colour pumping across frames"
+  ]
+}

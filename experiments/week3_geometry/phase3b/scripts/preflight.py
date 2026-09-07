@@ -34,6 +34,7 @@ if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
 
 W3 = os.path.join(REPO_ROOT, "experiments", "week3_geometry")
+W3_PHASE3A = os.path.join(W3, "phase3a")
 P3B = os.path.join(W3, "phase3b")
 OUT = os.path.join(P3B, "outputs", "preflight")
 
@@ -245,7 +246,7 @@ def main() -> int:
           f" | any LOMA symbol: "
           f"{any(v for k, v in caps['feature_and_matcher_symbols_present'].items() if k.startswith('LOMA'))}")
 
-    clips = json.load(open(os.path.join(W3, "configs", "phase3a_clips.json")))["clips"]
+    clips = json.load(open(os.path.join(W3_PHASE3A, "configs", "phase3a_clips.json")))["clips"]
     manifest = json.load(open(os.path.join(REPO_ROOT, "data", "testset", "manifest.json")))
     by_id = {c["id"]: c for c in manifest["clips"]}
 

@@ -1597,7 +1597,7 @@ session changes that.
 Durable conclusions only. Full report: `experiments/week3_geometry/FINDINGS.md`.
 
 **Representative dataset.** Six development clips, frozen before any geometry
-method was run (`experiments/week3_geometry/configs/phase3a_clips.json`):
+method was run (`experiments/week3_geometry/phase3a/configs/phase3a_clips.json`):
 `wreck_07` (anchor, high-texture arc), `wreck_05` (lower-texture lateral glide),
 `cenote_01` (ambient-lit cavern, widest near/far span), `swimthrough_02`
 (ordinary reef swim-through), `wreck_01` (low-texture near-planar, portrait),
@@ -1906,7 +1906,7 @@ pycolmap-backed COLMAP *export* import made optional (importing pycolmap
 alongside torch aborts on macOS with a duplicate libomp). FoundationGeo needed a
 hard-coded `device='cuda'` moved off a CUDA-less host, where it only chooses
 where uninitialised parameters land before a strict `load_state_dict` overwrites
-every one. Patches in `experiments/week4_mono/patches/`. None touches weights,
+every one. Patches in `experiments/week4_mono/round1/patches/`. None touches weights,
 structure or any numerical path.
 
 **Deliberate non-modifications, each replacing an easy wrong patch.** `moge` is
@@ -1919,7 +1919,7 @@ their difference is the ray correction plus whatever focal and shift each
 recovered separately. The backend calls `forward()` and applies one frozen
 solution to both arms, which is what FREEZE C3 requires.
 
-**Artifacts:** `experiments/week4_mono/results/S0_SEMANTICS_RUNTIME.md`,
+**Artifacts:** `experiments/week4_mono/round1/results/S0_SEMANTICS_RUNTIME.md`,
 `S0_results.json`; raw per-model records in `outputs/s0/`.
 
 **Next:** S1 determinism and noise floor. No downstream delta smaller than the
@@ -2146,11 +2146,11 @@ range deformation.
 34 GB, one model per process, strictly N=1.
 
 ```
-bash experiments/week4_mono/scripts/run_s4_survivors.sh
+bash experiments/week4_mono/round1/scripts/run_s4_survivors.sh
 PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
-  -m experiments.week4_mono.scripts.s4_analysis --overwrite
+  -m experiments.week4_mono.round1.scripts.s4_analysis --overwrite
 PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
-  -m experiments.week4_mono.scripts.s4_report --overwrite
+  -m experiments.week4_mono.round1.scripts.s4_report --overwrite
 ```
 
 Runtimes: mapanything 1920 s, da3mono 517 s, wat3r 2673 s, metricanything 4668 s.
@@ -2244,9 +2244,9 @@ SEA-RAFT correspondence computed once per clip, frozen epistemic partition.
 
 ```
 PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
-  -m experiments.week4_mono.scripts.s5_temporal --overwrite
+  -m experiments.week4_mono.round1.scripts.s5_temporal --overwrite
 PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
-  -m experiments.week4_mono.scripts.s5_report --overwrite
+  -m experiments.week4_mono.round1.scripts.s5_report --overwrite
 ```
 
 S5 applies the frozen S2 policy before measuring, so it is already in physical range
@@ -2309,13 +2309,13 @@ Persisted: `results/S5_TEMPORAL.md`, `results/S5_results.json`.
 
 ```
 PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
-  -m experiments.week4_mono.scripts.s6_restoration --overwrite
+  -m experiments.week4_mono.round1.scripts.s6_restoration --overwrite
 PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
-  -m experiments.week4_mono.scripts.s6_temporal --overwrite
+  -m experiments.week4_mono.round1.scripts.s6_temporal --overwrite
 PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
-  -m experiments.week4_mono.scripts.s6_inspect --overwrite
+  -m experiments.week4_mono.round1.scripts.s6_inspect --overwrite
 PYTHONPATH=$PWD .venv/bin/python \
-  -m experiments.week4_mono.scripts.s6_report --overwrite
+  -m experiments.week4_mono.round1.scripts.s6_report --overwrite
 ```
 
 **Config.** Arms `week3_reference` (Week-3 persisted multi-view range) vs
@@ -2441,3 +2441,537 @@ skipped (323 + 34 Week-4).
 **Next: C2 acquisition.** Every remaining Week-4 question is blocked on it — the
 reference-architecture confound, scale at inference, and whether either finalist's
 range error is inside the restoration budget in absolute rather than relative terms.
+
+---
+
+## Week 4A — ROUND 2: correctness repair + bounded SOTA challenger bakeoff
+
+Still **PRE-C2**. The Week-3 range product remains a provisional multi-view
+hypothesis; disagreement with it is not error, and no objective Week-4 winner is
+declared here. Same frozen footage as Round 1 (`wreck_07, wreck_05, cenote_01,
+swimthrough_02, wreck_01, wreck_03`, 48 frames each, 288 per model, no
+resampling). All artifacts under `experiments/week4_mono/round2/`.
+
+### R2 Parts A–C — correctness repair (`R2_PARTS_ABC_CORRECTNESS.md`)
+
+**A.** DA3 defines `P = t + D·R·K⁻¹p`, and `K⁻¹[u,v,1]ᵀ` has z-component 1, so
+`da3mono_large`'s scalar `D` is **camera-axis z-depth, not ray range** — the
+Round-1 "unresolved" verdict was wrong, and it was wrong because it was decided
+by residual instead of by source. Refit in native z with the frozen camera model
+(`ρ = ‖K⁻¹p‖`, `z_ref = r_ref/ρ`), affine `z_ref = s·z_DA3 + t` at the frozen
+clip-level scope. **B.** DA v2 refit in native disparity (`q_ref = a·q_DAv2 + b`);
+still clearly eliminated, so stopped there per §4. **C.** FoundationGeo C1/C2
+mechanism check under one common coordinate treatment.
+
+### R2 Part D — grid-map defect (`R2_PART_D_GRIDMAP_DEFECT.md`)
+
+Source-grid and network-input-grid models were being mapped through the same
+transform. Repaired for the four source-grid arms (`dav2_small`,
+`foundationgeo_11`, `metricanything_pointmap`, `moge2_vitl`); the three
+network-grid arms (`mapanything_n1`, `wat3r_n1`, `da3mono_large`) are bitwise
+unchanged and serve as controls. Every load-bearing Round-1 number affected by
+A or D is republished OLD vs CORRECTED.
+
+### R2 S0 / S2 (`R2_S0_SEMANTICS_RUNTIME.md`, `R2_S2_alignment_policy.json`)
+
+S0 gate resolved native representation, gauge, N=1 strictness and licence per
+challenger from source, not from residuals. S2 keeps the frozen policy — common
+policy, representation-specific transform, never one universal `a·d+b`;
+clip-level fit for E1, per-frame fit diagnostic only, no helper model's scale.
+`surge_large` = `pending_cuda`; `hyden`, `pointdit_l_512` = `pending_checkpoint`.
+
+### R2 S5 temporal (`R2_S5_TEMPORAL.md`, `R2_S5_results.json`)
+
+Nine arms, each frame still inferred independently, read under FREEZE C7
+(`d'_t = s_t·d_t` is consistent under `β'_t = β/s_t`, so constant clip-wide scale
+may be benign; frame-varying scale is not). `mda_mog_sky_l2` fails exactly the
+non-absorbable part: `f2f_log_mad` 0.174 vs 0.079 next-worst, wander 11.1 vs 2.8,
+while its local surface stability (0.0174) is third best. MoGe-3 Step 0 is
+temporally **worse** than MoGe-2 (0.0794 vs 0.0679) despite winning S3 — recorded
+as a trade-off, not resolved. Corrected DA3 has the best local stability of all
+nine (0.0119 / p95 0.0268).
+
+### R2 thin-structure test, §18 triggered (`R2_THIN_STRUCTURE.md`, `R2_thin_structure_results.json`)
+
+Six `wreck_07` frames, annotation from the **image** (veiling is monotone in
+range) rather than from the reference, because grading thin structure against a
+multi-view product would grade every model against the failure under test. Tier A
+= openings photometrically indistinguishable from the water column; Tier B
+recesses reported separately (all arms ≈ 0 there — a clean control). Evaluated at
+source resolution with the frozen S2 gauge; no inference re-run.
+
+- The **provisional reference is itself blind to thin structure** (gap +0.000,
+  41 % of members erased), and `mapanything_n1` reproduces that blindness exactly
+  (+0.006, 45 % erased, Tier-A coverage 0.752). Its failure mode is a *missing
+  member*, not a false surface. Any metric computed against the reference is
+  therefore blind in this region — carried into the §19 reduction.
+- **Corrected `da3mono_large` (+0.411, 4 % erased) is materially better at the
+  lattice than MapAnything**, reversing Round-1 S6's "fills the lattice with a
+  solid opaque surface" — that observation was an artefact of our own z-vs-range
+  convention and fitting family, not of the model. A §26 correctness-repair
+  headline.
+- `moge2_vitl` (+1.619) and `metricanything_pointmap` (+1.333) separate the
+  lattice most strongly, erase no members and have the best edge localisation —
+  but place the far anchor at 175 m and 85 m against ~31 m. How much of the
+  margin is acuity and how much is far-field expansion **cannot be settled
+  pre-C2**; a C2 range measurement on the water column beside the crane would.
+
+Visual inspection performed and mandatory (CLAUDE.md invariant 5):
+`outputs/thin/{overlay_f*.png, ranges_f000059.png, ranges_f000109.png,
+crane_f000109.png}`. It corrected one numeric reading — `wat3r_n1`'s +0.446 is
+large-scale near/far separation, not lattice acuity; the crop shows a smooth blob.
+
+`armio.Arm` gained an optional `downsample` (default unchanged at
+`EVAL_DOWNSAMPLE = 4`) so this stage could sample at stride 1; every primary
+stage still uses the frozen grid. `pytest tests/` 359 passed, 1 skipped.
+
+### Round 2 — S1 determinism, runtime, memory (§15)
+
+`R2_S1_DETERMINISM.md` + `R2_S1_results.json`. Frozen Round-1 protocol, unchanged:
+same four frames (`wreck_07/f000105`, `wreck_05/f000109`, `cenote_01/f000193`,
+`wreck_01/f001845` — the portrait trap), three within-process repeats plus an
+independent fresh process, compared on `canonical_range` where emitted and on the
+native field otherwise.
+
+Both runnable challengers are **bitwise reproducible within and across processes**,
+`p99_rel = 0.000e+00`, valid masks identical, on all four frames — matching all
+seven Round-1 arms. MoGe-3 Step 0: 4.10 s/frame median (4.05–4.86), 9.1 s load,
+3.06 GB peak RSS, source grid 1280×720 with its own deterministic mask (coverage
+0.913/0.767/1.000/1.000). MDA: 2.82 s/frame (1.80–3.30), 14.6 s load, **10.35 GB
+peak RSS** — the largest footprint of any arm run in this project, above both
+ViT-G-class multi-view models, while predicting on the *smallest* grid (504×280).
+MDA's §12 mixture record (component depths, probabilities, chosen component,
+entropy, margin) reproduces bitwise with the depth; per §12 that is not called
+calibrated confidence.
+
+MoGe-3 Step 0 is the slowest arm in the bakeoff (2.0× MoGe-2, 14× DA v2) while
+doing strictly less work than its released configuration — Step 3 adds to that.
+
+Four arms never reached S1, recorded rather than omitted: `pointdit_l512`
+`pending_checkpoint` (released checkpoint ships without the gated DINOv3 encoder)
+— which **blocks** §15's explicit requirement to test the single-step all-zero path
+directly, the one place a nonzero floor was plausible; `hyden_mogev2_metric`
+`pending_checkpoint` (gated repo, 401); `surge_large` `pending_cuda` (NATTEN 0.21.6
+refuses MPS and refuses compiled flex on two gates; the sanctioned CPU path needed
+~138 GB and was OS-killed at 931 s); `moge3_vitl` Step 3 `pending_cuda` (Triton has
+no macOS distribution). `pxdepth` S1 is queued behind its own 288-frame CPU
+inference rather than run concurrently. §19 must report these as *untested*, not
+eliminated.
+
+### Round 2 — S4 appearance invariance, recomputed after Parts A–D (§20)
+
+`R2_S4_APPEARANCE.md` + `R2_S4_results.json`. Part D's grid-map defect and Part A's
+z-vs-range repair are both **post-inference**, so the 23 712 persisted perturbed
+prediction files were reused and only the *analysis* re-run against
+`R2_S3_policy.json` — 4 992 inferences avoided. The two network-grid arms
+(`mapanything_n1`, `wat3r_n1`) come back numerically identical to Round 1, the
+predicted control; only `metricanything_pointmap` (0.0187 → 0.0204 local Δlog) and
+`da3mono_large` (0.0122 → 0.0128) move. The corrections are small here and were
+large in S3 because S4 compares a model to itself, so a systematic mis-sampling
+cancels on both sides.
+
+Median over six clips and twelve perturbations, local range deformation in physical
+range / wander / max |log σ|: `da3mono_large` **0.0128 / 1.044 / 0.110**;
+`mapanything_n1` 0.0200 / 1.196 / **0.348**; `metricanything_pointmap` 0.0204 /
+1.202 / 0.263; `wat3r_n1` 0.0257 / **1.061 / 0.054**.
+
+- **Every arm reads veiling as a depth cue.** `cue_conflict_inverted_veil` vs its
+  same-magnitude `veil_depth_consistent` control: 4.1× worse for `da3mono_large`,
+  2.4× MapAnything, 1.9× `wat3r_n1`, 1.3× `metricanything_pointmap`. The reference
+  builds the stimulus and never reaches the model.
+- **MapAnything's metric scale is set by appearance.** A uniform veil carrying no
+  depth information multiplies its clip range by 1.416 median, **2.465** worst clip;
+  scale swings ±40 % across the battery vs 5 % for `wat3r_n1`. Pre-C2 this does not
+  say the scale is wrong — it says appearance sets it, which is the property C2 must
+  measure and the one a reference derived from the same model cannot check.
+- **`channel_neutralize` — the project's own gray-world baseline — is MapAnything's
+  worst ordinary perturbation** (0.0619, wander 1.616). White-balancing before
+  estimating geometry moves the geometry. Carried to §22/§27 as a pipeline-ordering
+  question, not a model verdict.
+- Corrected `da3mono_large` is the most appearance-stable arm on ordinary change
+  (best on 8/12) *and* the most fooled by cue conflict (0.1205) — the same fact
+  about a strongly appearance-driven prior, coherent with its §18 lattice result.
+- S3 and S4 order the field oppositely, which is why §17 forbids a weighted score.
+
+Covers 4 arms only; `moge2_vitl` and the challengers have no perturbation set and
+are generated after the §19 reduction decides survivors (1 248 inferences per arm).
+
+## Round 2 — PXDepth (R2-4) through S2/S3/S5, and one repo defect (§10, §16, §17, §21)
+
+PXDepth completes the set of Round-2 challengers that produced primary results:
+three of six (`moge3_vitl` Step 0, `mda_mog_sky_l2`, `pxdepth`); the other three
+remain `pending_cuda` / `pending_checkpoint`, recorded not failed.
+
+**Execution.** 288 frames, CPU, 22.25–23.68 s/frame, 6 847 s total, peak RSS
+5.68 GB — the slowest arm in Round 2 by an order of magnitude. Implementation
+**category B**, and the adaptation is the largest of any arm, so it is
+enumerated: the released `scripts/infer.py` is broken as published (line 74
+imports three names from `pxdepth.inference`, a module that does not exist), so
+the *entry script* was reimplemented around the unmodified model at the repo's
+**own** documented policy — `--input-size 1022×770`, `--resize-by-area`,
+source aspect preserved. Model math, checkpoint, operators, resolution
+unchanged. **Licence UNDECLARED** → research-only; none was inferred. The
+released repo's MoGe-2-assisted metric path is inadmissible for the primary
+comparison per §10 and **was never run** — no helper model's scale enters any
+number.
+
+**S2.** Native `log1p_depth_affine_invariant`, family `affine_log1p_depth`,
+convention **`z_depth` from source code** (`scripts/infer.py:121` back-projects
+with `utils3d.pt.depth_map_to_point_map`, which multiplies unnormalised `K^-1`
+rays by the scalar). The residual test disagreed again — pooled `range` at a
+margin ratio of 1.0031, and three different answers across six clips of one
+camera. Source wins per §14; that is now the third arm where it has, and the
+residual instrument keeps failing the same way.
+
+**S3** (median over six clips): M-1 0.1589, M-2 b 0.746, M-3 rel 15.42°,
+M-4 **0.0221** — better boundary placement than corrected DA3 (0.0285) and
+MoGe-2 (0.0320), which is what a structure-preserving pixel-space method is
+supposed to buy — M-5@0.25 0.0035, M-6 1.097, coverage 0.765.
+
+**One clip carries almost all of its bad numbers, and it is a sign inversion.**
+The frozen `cenote_01` fit came out at **s = −0.2701** against +1.72…+1.93 on
+three others. Before reporting that, the raw pre-alignment order agreement was
+measured directly — per-frame Spearman between the untouched native field and
+the reference, which no monotone gauge can move: **−0.298 median on `cenote_01`,
+negative on 79 % of frames, sign flipping between −0.871 and +0.811**, against
++0.938…+0.996 on the other five through the identical code path and grid map.
+Not a harness defect. Pre-C2 the disagreement itself cannot be attributed — a
+cave interior is where a multi-view product is weakest — but the frame-to-frame
+*sign flip* is not something a multi-view product over a continuous shot can do,
+so the instability is PXDepth's. Excluding that clip, M-6 goes to **1.000** and
+M-2 to 0.781; both rows are reported and the six-clip row is the frozen result.
+`wreck_01`'s small fit (`s` = +0.274) is by contrast correct, not degraded: its
+rank agreement is the highest of the six (+0.996) and the reference's own log1p
+spread there is only 0.35.
+
+**S5.** Median over clips f2f 0.0596 / wander 3.338 / **local Δlog 0.0151** /
+local p95 **0.0308** / nf_wander **1.390** — second-best local surface and best
+near/far stability of ten arms. And `cenote_01` collapses: wander **65.9**, f2f
+**1.954** (×7 between adjacent frames), six times MDA's worst clip, the largest
+single-clip failure in the stage. Under FREEZE C7 that is the disqualifying
+frame-varying kind. Same clip, same mechanism, two stages.
+
+**Repo defect found and fixed** — `s2_freeze_policy.py` crashed with
+`KeyError: 'fg_pre_ray'` in MD generation whenever a FoundationGeo ablation arm
+was present, *after* `pol.save()` had already written the policy, so a partial
+success looked like a total failure. Added an `ev_of()` helper that lets an
+ablation arm report its primary arm's evidence. Tests 359 passed, 1 skipped.
+
+**Near-miss worth recording.** Extending the frozen policy by *rebuilding* it
+silently dropped the two Part-A/B-repaired arms (the Round-1 raw still carries
+pre-repair records) and moved two challengers; the crash above meant the
+equivalence guard never ran. Recovered from a backup. **A frozen policy is
+extended, never re-derived** — PXDepth was frozen alone through the same code
+path and *inserted*, with an assertion that every other arm stayed
+byte-identical.
+
+**Comparability defect recorded, no primary metric affected.**
+`Alignment.log_residual_mad` is measured in each family's own fitting space. For
+`scale`/`affine_depth`/`affine_disparity` that is the spread of the log range
+ratio, so the S2 column is comparable; for `affine_log1p_depth` it is the spread
+of `log(log1p(z)/fitted)` — the log *of* a log1p — systematically smaller.
+Reporting PXDepth's stored 0.0581 next to MapAnything's 0.1021 would have been a
+units error, and would have put PXDepth top of the table. Recomputed as the
+pooled log-range residual it is **0.1618**, between corrected DA3 and MoGe-3.
+The caveat is now in `alignment.py`'s docstring so it cannot recur silently.
+
+**§18 provisional entry confirmed, not assumed.** The thin-structure stage ran
+before PXDepth's S2 finished. The frozen `wreck_07` clip fit came out identical
+to the provisional one to machine precision, so no §18 number changes;
+`provisional_policy` is now `false` in the JSON.
+
+Artifacts: `R2_S2_ALIGNMENT.md`, `R2_S3_LOCAL_GEOMETRY.md`, `R2_S5_TEMPORAL.md`,
+`R2_S3_results.json`, `R2_S5_results.json`,
+`outputs/r2_s3/r2_pxdepth_rank_diagnostic.json`,
+`outputs/r2_s2/r2_pxdepth_comparable_e1.json`.
+
+## Round 2 — S4 for `dav2_small`, and the §19 decision it settles (§20, §19)
+
+`R2_S19_REDUCTION.md` withdrew `dav2_small`'s Round-1 elimination — the numbers it
+was eliminated on were the Part D grid defect, not the model — and sent it to S4,
+the one stage it had never been measured on, with the decision explicitly deferred
+to the measurement. This entry records the measurement and the decision.
+
+**Inference.** `s4_run --model dav2_small --skip-existing` in `.venv-mono`: 78
+(arm, clip) products = 13 conditions × 6 clips × 16-frame window = 1 248 inferences,
+312 s (0.250 s/frame), peak RSS 0.69 GB. The only S4 inference run in Round 2;
+every other arm in the stage is re-analysis of Round-1 predictions against the
+corrected policy.
+
+**Analysis.** `s4_analysis --models dav2_small --policy round2/R2_S3_policy.json`
+into a *separate* raw, `round2/outputs/s4/r2_s4_dav2_small.json`, then inserted into
+the frozen `R2_S4_results.json` by a guarded merge that asserts the arm is absent and
+that the perturbation battery and window match. Extend, never rebuild — the same
+discipline adopted after the `R2_S3_policy.json` near-miss. `dav2_small` appears in
+`corrected` and deliberately **not** in `old`: Round 1 never ran S4 for it, so there
+is no prior value to correct and inventing one would be a fabrication.
+
+**Result.** Median local deformation in physical range 0.0181 — 2nd of 5, between
+corrected `da3mono_large` (0.0128) and `mapanything_n1` (0.0200). Lowest p95 in the
+field (0.0597), second-lowest worst case (0.0678). `max |log σ| = 0.073` against the
+incumbent's 0.348 on identical stimuli; under `veil_uniform`, which multiplies
+MapAnything's whole clip by 1.416, its delivered range moves by 0.985. On
+`channel_neutralize` — the project's own gray-world baseline — 0.0224 deformation and
+wander 1.085, against MapAnything's 0.0619 and 1.616.
+
+Three things were written down as qualifications rather than left implicit:
+
+- **σ is not the same claim for the two arms.** MapAnything's σ is a change in its
+  own metric assertion; DA v2 asserts no metric scale, so its σ measures whether a
+  frozen affine gauge still delivers the same ranges when the water changes. Useful,
+  and not evidence that DA v2 knows the scale.
+- **Where the frozen gauge does fail is offset-dominated clips.** `cenote_01` and
+  `wreck_01` have `t/s` 4.93 and 3.50 against 1.18–1.37 elsewhere, and they are the
+  two clips with wander 2.73 and 2.39 under the veil family. Spearman over clips
+  +0.83 / +0.71. Recorded as a **hypothesis, not a finding** — n = 6 clips, and
+  `channel_neutralize` shows nothing.
+- **The boundary-jitter metric reads 0.000 for four of five arms.** That is the
+  metric saturating below one evaluation sample, not four arms with stable
+  boundaries. Only MapAnything's number (up to 3.05 px) is a result.
+
+**Decision: RETAINED, advances to S6 as the third arm.** Not on a claim of
+superiority — its S3 M-1 is 0.109 against MapAnything's 0.085, and S4 measures a
+model against itself, so an arm can be invariant about the wrong geometry. It is
+retained because the elimination was invalid, because it is now the only arm besides
+the two incumbents with a complete S2–S5 record, and because §18 shows it separating
+open space from lattice members (`gap` +0.165) where MapAnything does not (+0.006) —
+while separating far less than corrected DA3 (+0.411).
+
+Artifacts: `round2/outputs/s4/r2_s4_dav2_small.json`, `round2/R2_S4_results.json`
+(five arms), `round2/R2_S4_APPEARANCE.md` (F7–F9 added),
+`round2/R2_S19_REDUCTION.md` §6.1.
+
+## Round 2 — S6 restoration impact for the three surviving arms (§22)
+
+Ran the §22 restoration-impact stage for `mapanything_n1`, the Part-A-CORRECTED
+`da3mono_large` and `dav2_small`, entirely into Round-2 paths. Round-1's
+`results/S6_RESTORATION.md` / `S6_results.json` are untouched.
+
+**Two mechanical obstacles, both recorded because they will recur.**
+
+1. `s6_report.py` hard-coded the Round-1 output paths, so running it would have
+   silently overwritten the Round-1 report (CLAUDE.md invariant 7). Added `--out-md`
+   and `--out-json`. It also hard-coded the Round-1 *narrative* — the inspection notes
+   and the ADEQUATE/DEGRADED/UNSAFE classification are module constants written for
+   two arms under the pre-repair DA3 convention, and they would have regenerated
+   verbatim into the Round-2 file. Added `--stage-note`, `--inspection-notes` and
+   `--classification` (file paths; the constants remain the documented Round-1
+   defaults), and the arm/clip counts in the header are now computed. Round-2
+   narrative lives in `round2/narrative/s6_{inspection_notes,classification}.md`, so
+   the report is generated, never hand-edited. 359 passed, 1 skipped.
+2. `s6_temporal` cannot run from `.venv-eval`: `huggingface_hub` is absent, and after
+   installing it SEA-RAFT's `extractor.py` needs `torchvision`, which `.venv-eval`
+   deliberately does not have. Rather than keep patching the eval venv, ran it from
+   `experiments/week2a_flow/.venv-flow` — the project's own documented Phase-2A flow
+   interpreter — with `PYTHONPATH=$PWD`. Verified programmatically that the resulting
+   `backend` provenance dict is IDENTICAL to Round 1's (same repo commit
+   9137517b, same checkpoint, same config, `modifications_to_third_party_code: none`),
+   so the temporal rows are comparable across rounds.
+
+**The control worked.** `mapanything_n1`'s Round-2 raw is bit-identical to Round 1's
+on every clip and every water type — 0 differing scalars by direct comparison. Every
+DA3 movement below is the convention repair and nothing else.
+
+**Result on the criterion metric** (responsive-window median |relative radiance
+error|, against the Week-3 budget of 5 %): `mapanything_n1` **0.104**, `dav2_small`
+**0.134**, `da3mono_large` **0.162**. All three **DEGRADED**; none ADEQUATE. The
+temporal metric orders them the other way (windowed colour-pumping medians 0.906 /
+0.492 / 0.336), and pre-C2 that split is not resolvable — there is no anchor that says
+whether static agreement with a MapAnything-derived reference or temporal steadiness is
+the better evidence. One arm/clip combination meets the 5 % budget: MapAnything on
+`wreck_07` at 3.9 %.
+
+**Round 1's "DA3 approaching UNSAFE" is WITHDRAWN.** It rested entirely on `wreck_05`,
+which the repair moves from 33.3 % radiance error / windowed ΔE00 7.78 / p95 16.1 to
+15.5 % / 7.05 / 14.9. Reported straight because it cuts both ways: the repair
+*redistributed* rather than improved. OLD → CORRECTED windowed radiance error —
+wreck_07 0.134→0.168, wreck_05 0.333→0.155, cenote_01 0.064→0.072, swimthrough_02
+0.092→0.097, wreck_01 0.224→0.222, wreck_03 0.089→0.204; median 0.113→**0.162**. DA3's
+corrected median is worse than its uncorrected median while its worst case is far
+better. The corrected numbers are the valid ones — the old fit was absorbing the
+z-vs-range convention error into `s` and `t` — but "the repair helped DA3" is not what
+the data says.
+
+**Two Round-1 scene-identity charges against DA3 do not survive the mandatory visual
+inspection (invariant 5).**
+
+- **RETRACTED: the crane-lattice fill.** §18's corrected measurement gives DA3
+  `fill` **+0.056** against the reference's own +0.054 and MapAnything's +0.049; the
+  arms that actually fill are `moge2_vitl` (+0.291) and `wat3r_n1` (+0.239), neither
+  in this run. The sheet shows why the Round-1 reading went wrong: the lattice is
+  BLACK in all four range panels including the reference's — those pixels have no
+  multi-view support, sit outside the common support, and are excluded from every S6
+  number. Round 1 mistook the reference's missing data for resolved open water. S6
+  masks to the reference and therefore *cannot see* through-lattice behaviour at all;
+  §18 is the only measurement in this round that can.
+- **The `wreck_03` diver displacement is confirmed but NOT unique to DA3** —
+  `dav2_small` displaces it the same way with the same sign. With a second monocular
+  arm in the run it reads as strict-single-image geometry mishandling an
+  independently moving subject, and MapAnything's clean body is partly circular.
+
+Two further findings from the sheets. `wreck_05` is a **shared** failure: both
+monocular arms replace the reference's near-flat lateral field with a smooth
+corner-to-corner ramp and both restore it visibly cyan, while the metrics rank them
+in opposite directions (DA3 worse ΔE00 7.05 vs 4.79, dav2 worse radiance 0.213 vs
+0.155). And on `wreck_01` MapAnything's residual is a spatially uniform single-signed
+field *after* a clip-level gauge fit — so it is the frame-varying part of the scale,
+not FREEZE C7's benign constant, which Round 1 called it; its windowed colour pumping
+on that clip is 1.11 against 0.38 and 0.53.
+
+`turbid_coastal` remains unmeasurable on this footage (all channels floored on four of
+six clips under DA3, three under dav2, two under MapAnything) and its rows must not be
+used. Every arm including the reference makes the footage temporally worse than its own
+unprocessed input at lag 1 on five of six clips — the temporal rows are
+arm-vs-reference comparisons, never arm-vs-nothing.
+
+Reproduce:
+
+```
+experiments/week4_mono/.venv-eval/bin/python -m experiments.week4_mono.round1.scripts.s6_restoration \
+  --arms mapanything_n1 da3mono_large dav2_small \
+  --policy experiments/week4_mono/round2/R2_S3_policy.json --sweep-water \
+  --out-root experiments/week4_mono/round2/outputs/s6
+PYTHONPATH=$PWD experiments/week2a_flow/.venv-flow/bin/python -m experiments.week4_mono.round1.scripts.s6_temporal \
+  --arms mapanything_n1 da3mono_large dav2_small \
+  --restored-root experiments/week4_mono/round2/outputs/s6/restored \
+  --out experiments/week4_mono/round2/outputs/s6/s6_temporal.json
+experiments/week4_mono/.venv-eval/bin/python experiments/week4_mono/round1/scripts/s6_report.py \
+  --raw  experiments/week4_mono/round2/outputs/s6/s6_raw.json \
+  --temporal experiments/week4_mono/round2/outputs/s6/s6_temporal.json \
+  --inspect  experiments/week4_mono/round2/outputs/s6/inspect/manifest.json \
+  --out-md   experiments/week4_mono/round2/R2_S6_RESTORATION.md \
+  --out-json experiments/week4_mono/round2/R2_S6_results.json \
+  --stage-note "..." \
+  --inspection-notes experiments/week4_mono/round2/narrative/s6_inspection_notes.md \
+  --classification   experiments/week4_mono/round2/narrative/s6_classification.md --overwrite
+```
+
+Artifacts: `round2/outputs/s6/` (`s6_raw.json`, `restored/` 1.5 GB, `s6_temporal.json`,
+`inspect/` 18 sheets + 216 crops), `round2/R2_S6_RESTORATION.md`,
+`round2/R2_S6_results.json`, `round2/narrative/s6_*.md`.
+
+## Round 2 — late-found S3 convention defect, and its bounded repair
+
+Found while assembling the final report, not by a test. `round2/R2_S3_results.json`
+labelled its `da3mono_large` row "incumbent I2 (CORRECTED)" while printing numbers
+byte-identical to the committed Round-1 `results/S3_results.json`.
+
+Root cause: the S3 summariser sources incumbent rows from
+`experiments/week4_mono/round1/results/S3_results.json`. That file was regenerated for the
+Part D grid repair, but under the **Round-1** policy `results/S2_alignment_policy.json`,
+where `da3mono_large` and `dav2_small` still carry
+`convention: "range", convention_source: "MEASURED in S2"`. The §3/§4 convention repair
+— DA3's scalar is projective z-depth, established from `P = t + D·R·K^-1 p`, not from a
+residual — lives in `round2/R2_S3_policy.json`
+(`convention: "z_depth", convention_source: "SOURCE CODE (Round-2 Part A/B repair)"`).
+Every stage that reads the R2 policy got the repair; the S3 *summary* did not.
+
+Confirmed three ways before touching anything: the stored DA3 row equals
+`git show HEAD:experiments/week4_mono/round1/results/S3_results.json`'s DA3 row exactly; the
+two policy files differ only for those two arms and only in `('range' → 'z_depth')`;
+re-running the stage under the frozen R2 policy reproduces the
+`R2_PARTS_ABC_CORRECTNESS.md` §A3 table to four decimals.
+
+**Blast radius is S3 only.** §18 (`R2_thin_structure_results.json`, DA3 alignment
+`s=5.9868, t=5.5356`), S5 (`outputs/r2_s5/r2_s5_raw.json`), S4 and S6 all store the
+corrected parameters — verified by reading each stage's persisted alignment, not
+assumed.
+
+| | M-1 | M-2 b | M-3 rel° | M-3 abs° | M-4 | M-5@.25 | M-6 | coverage |
+|---|---|---|---|---|---|---|---|---|
+| `da3mono_large` | 0.1283 → **0.1476** | 0.846 → 0.856 | 12.77 → 13.35 | 20.58 → **19.54** | 0.0285 → **0.0223** | 0.0037 → 0.0062 | 1.014 → 1.136 | 0.808 (same) |
+| `dav2_small` | 0.1092 → 0.1094 | 0.908 → 0.994 | 12.72 → 12.65 | 20.77 → **18.64** | 0.0167 → 0.0164 | 0.0057 → 0.0052 | 0.939 → 1.013 | 0.761 (same) |
+
+DA v2 barely moves (its native disparity already inverted to something close to
+z-depth); DA3 moves materially and, as in Part A, *both ways* — worse agreement in the
+mean, better boundaries and better absolute normals.
+
+Two downstream statements changed, both re-checked rather than assumed:
+`R2_S19_REDUCTION.md`'s incumbent bar (0.1283 → 0.1476; the conclusion that no
+challenger clears both incumbents survives) and the PXDepth finding that its
+"boundary placement (M-4 0.0221) is better than corrected DA3 (0.0285)" — at the true
+0.0223 that is a **tie**, and it is now stated as one. The MoGe-3 non-domination
+argument keeps its direction with narrower margins.
+
+Applied as an extend-never-rebuild patch that asserts the other ten arms are
+byte-identical before and after; recompute persisted at
+`round2/outputs/r2_s3/r2_s3_convention_fix.json`. Round-1's `results/` artifacts are
+deliberately untouched — they are the Round-1 record under the Round-1 policy.
+
+Reproduce:
+
+```
+experiments/week4_mono/.venv-eval/bin/python -m experiments.week4_mono.round1.scripts.s3_local_geometry \
+  --arms da3mono_large dav2_small \
+  --policy experiments/week4_mono/round2/R2_S3_policy.json \
+  --out experiments/week4_mono/round2/outputs/r2_s3/r2_s3_convention_fix.json
+```
+
+## Week 4A — post-Round-2 final report (§26, §27)
+
+`experiments/week4_mono/round2/WEEK4A_POST_R2_FINAL.md`. Synthesis only — no new
+inference, no new stage. Every number in it is quoted from a persisted stage summary
+and was re-checked against that summary rather than from memory.
+
+**§26 correctness repairs.** Five asked, six answered; the sixth is the late S3
+convention defect above, recorded because §28 stop-condition 4 requires a newly found
+correctness defect to be reported even when it does not invalidate the comparison.
+The DA3 z-depth repair is written as a **redistribution** — S3 M-1 0.1283 → 0.1476
+and S6 median 0.113 → 0.162 both worse, M-4 0.0285 → 0.0223 and `wreck_05` S6
+0.333 → 0.155 both much better — not as an improvement, because that is what the data
+says. Two Round-1 verdicts are withdrawn on its strength ("DA3 fills the crane
+lattice", "DA3 approaching UNSAFE"). DA v2's elimination answer is **No**: Part B
+confirmed it and Part D then invalidated the numbers Part B confirmed it on.
+FoundationGeo's ray correction turns rays by median 0.044° and changes range by
+2.3e-07 relative — inert; its scale field is a near-uniform 0.840 that S2 refits away
+while costing 9.5 %/13.7 % on relative/absolute normals.
+
+**§26 mechanism questions.** Answered: PXDepth (partly — boundaries tie corrected
+DA3, thin structure `gap` +0.240 loses to it) and MDA (no to both halves — the
+solid-fill premise was our own artefact, and the mixture does not commit: 67–85 % of
+pixels take a pairwise midpoint, entropy-vs-M-1 Spearman −0.222 with the sign
+flipping clip to clip). Unanswerable and recorded as such: MoGe-3 Step 3
+(`pending_cuda`, Triton has no macOS distribution), HyDen and PointDiT
+(`pending_checkpoint`), SurGe (`pending_cuda`, measured at 148.5 GB peak on a 24 GB
+machine). SurGe is the one that matters most — it was the designed falsification
+target for the local-surface hypothesis, so that hypothesis stands untested.
+
+**FINAL PRE-C2 FINALISTS: 3** — `mapanything_n1`, corrected `da3mono_large`,
+`dav2_small`. Each is non-dominated on an axis where neither other is at least as
+good (native metric + best reference agreement + best S6; thin structure + local
+temporal stability + ordinary-perturbation invariance; cost + gauge steadiness +
+better S6 than DA3), and the report states for each the exact C2 measurement that
+would remove it. `moge2_vitl` is dropped — its §18 `gap` is confounded with
+far-field expansion (`r_sea` 175 m) and it never earned an S6 run.
+
+**§27 verdict: DEGRADED.** Not ADEQUATE — exactly one arm/clip pair in the study
+meets the Week-3 budget (`mapanything_n1` on `wreck_07`, 3.9 %) against medians of
+10.4 / 13.4 / 16.2 %. Not UNSAFE for the retained set — bounded, attributable,
+sign-stable — but UNSAFE behaviour exists in the class and the finalist set is what
+excludes it: PXDepth's reference-independent rank inversion with a frame-to-frame
+sign flip on `cenote_01`, and MDA's ~19 %-per-frame scale drift.
+
+Seven C2 measurements are specified, led by **absolute range under ≥3 distinct
+visibility conditions on the same scene** — required by S4 F2, where a veil carrying
+no range information multiplies MapAnything's clip scale by up to 2.465×, so a scale
+validated on one clean clip would be a scale that appearance happened to set. No
+further model search is recommended and §23's Round-2B set stays unrun; the next
+model-side effort belongs to the three challengers that were blocked, each of which
+needs exactly one thing.
+
+Baseline safety check unchanged: `uw score data/testset/murky/MURKYSHARK.MP4` runs
+clean at 292 frames with out-of-range 0.0000, the deprecated Week-1 pin still returns
+`3.244860636186786e-05` bit-for-bit, and `pytest tests/` is 359 passed, 1 skipped.
+
+**S1 gap closed after the fact.** PXDepth's determinism had been recorded as `queued`
+— it runs on CPU and its S1 was deliberately held behind its own 288-frame S3
+inference so the two runtime measurements would not corrupt each other, and the queue
+was never drained. §26 asks for determinism per challenger, so it was run: **bitwise
+reproducible**, p99 relative floor `0.0e+00`, within and across processes, identical
+valid masks on all four subset frames, median **16.45 s/frame** (min–max 15.40–17.09),
+load 3.9 s, peak RSS 5.69 GB, torch 2.11.0 on CPU. The S3 stage's 22.25–23.68 s/frame
+remains the figure to quote for S3 — it was measured under that stage's own load —
+and the difference is machine contention, not a model difference. All three runnable
+Round-2 challengers are now measured and all three are bitwise deterministic, so no
+Round-2 difference is at risk of being instrument noise. `R2_S1_DETERMINISM.md`,
+`R2_S1_results.json` (the arm moved out of `pending`) and the final report updated.

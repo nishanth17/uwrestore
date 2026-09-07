@@ -12,8 +12,8 @@ set -u
 cd "$(dirname "$0")/../../../.." || exit 1
 PY=.venv/bin/python
 P3B=experiments/week3_geometry/phase3b
-A_ROOT=experiments/week3_geometry/outputs/colmap/A
-FRAMES=experiments/week3_geometry/outputs/frames
+A_ROOT=experiments/week3_geometry/phase3a/outputs/colmap/A
+FRAMES=experiments/week3_geometry/phase3a/outputs/frames
 DB=$P3B/outputs/db
 OUT=$P3B/outputs/colmap
 METHODS=$P3B/configs/phase3b_methods.json
@@ -80,7 +80,7 @@ map "3b3_wreck_05_M_simple_radial" "$FRAMES/wreck_05" "M_simple_radial/wreck_05/
 echo "===== 3B-3 fixed intrinsics $(date +%H:%M:%S) ====="
 REF=$($PY - <<'EOF'
 import json
-r = json.load(open("experiments/week3_geometry/outputs/colmap/A/wreck_07/run0/run.json"))
+r = json.load(open("experiments/week3_geometry/phase3a/outputs/colmap/A/wreck_07/run0/run.json"))
 cam = next(iter(r["result"]["cameras"].values()))
 f, cx, cy, k = cam["params"]
 print(f"{f},{cx},{cy},{k}")
@@ -108,7 +108,7 @@ echo "===== 3B-4 frame schedules $(date +%H:%M:%S) ====="
 for clip in wreck_05 wreck_01 cenote_01; do
   for sched in S25 S13; do
     echo "--- A / ${clip}_${sched} $(date +%H:%M:%S)"
-    $PY -m experiments.week3_geometry.scripts.run_colmap \
+    $PY -m experiments.week3_geometry.phase3a.scripts.run_colmap \
         --config A --clip "${clip}_${sched}" \
         --frames-root "$P3B/outputs/frames_schedules" \
         --methods "$METHODS" --out-root "$OUT" --repeat 0 --overwrite \

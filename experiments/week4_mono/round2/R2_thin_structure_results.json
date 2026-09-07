@@ -1,0 +1,501 @@
+{
+ "_comment": "Round 2 \u00a718 \u2014 the TRIGGERED THIN-STRUCTURE TEST at the wreck_07 crane lattice.",
+ "stage": "R2-THIN",
+ "clip": "wreck_07",
+ "frames": [
+  25,
+  59,
+  92,
+  109,
+  126,
+  143
+ ],
+ "grid": "source resolution (downsample=1)",
+ "policy": "experiments/week4_mono/round2/R2_S3_policy.json",
+ "erosions_px": [
+  2,
+  5,
+  8
+ ],
+ "annotation": "experiments/week4_mono/round2/outputs/thin/annotation.json",
+ "raw": "experiments/week4_mono/round2/outputs/thin/r2_thin_raw.json",
+ "visuals": [
+  "overlay_f*.png (annotation)",
+  "ranges_f*.png (all arms)",
+  "crane_f000109.png (crane head, zoom)"
+ ],
+ "no_master_score": "Six \u00a718 aspects are reported side by side. They are not combined; an arm can preserve openings and still misplace edges.",
+ "arms": {
+  "week3_reference": {
+   "role": "the PROVISIONAL Week-3 multi-view hypothesis, scored like any other arm and authoritative over none of them",
+   "alignment": {
+    "family": "none",
+    "note": "the reference defines the gauge"
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 22,
+   "n_openings_tier_b": 162,
+   "median_gap": 0.0004537533370832617,
+   "median_fill": 0.05357120736259287,
+   "median_member": 0.06953042243742087,
+   "frac_gap_positive": 0.5,
+   "frac_gap_over_10pct": 0.045454545454545456,
+   "frac_gap_inverted_10pct": 0.0,
+   "frac_member_erased": 0.4090909090909091,
+   "frac_filled_over_half_resolved": 0.9375,
+   "n_resolved_openings": 16,
+   "tier_b_median_gap": 0.0011730389548282936,
+   "coverage_tier_a_median": 1.0,
+   "r_sea_median_m": 30.671304182880014,
+   "per_frame_median_gap": [
+    0.06089790524989305,
+    -0.0036453675594567796,
+    0.0015020666617472091,
+    -0.0014008351405266693,
+    0.019971212264534185,
+    -0.002157047734124161
+   ],
+   "median_gap_erode2": 0.0004537533370832617,
+   "median_gap_erode5": 0.004719571329908654,
+   "median_gap_erode8": 0.005716194480821096,
+   "edge_gain_5_over_2": null
+  },
+  "mapanything_n1": {
+   "role": "primary prediction",
+   "alignment": {
+    "family": "scale",
+    "params": {
+     "s": 1.0476406304235997
+    }
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 22,
+   "n_openings_tier_b": 162,
+   "median_gap": 0.0060186551986751565,
+   "median_fill": 0.04930798850582909,
+   "median_member": 0.0599723658471145,
+   "frac_gap_positive": 0.6363636363636364,
+   "frac_gap_over_10pct": 0.09090909090909091,
+   "frac_gap_inverted_10pct": 0.0,
+   "frac_member_erased": 0.45454545454545453,
+   "frac_filled_over_half_resolved": 0.9333333333333333,
+   "n_resolved_openings": 15,
+   "tier_b_median_gap": 0.001296410982409802,
+   "coverage_tier_a_median": 0.7521568322020569,
+   "r_sea_median_m": 34.34153750215607,
+   "per_frame_median_gap": [
+    0.05736888006576249,
+    -0.0021830322266178353,
+    0.00863388235349159,
+    -0.00529557601686573,
+    0.015675717737208043,
+    0.005010550620725951
+   ],
+   "median_gap_erode2": 0.0060186551986751565,
+   "median_gap_erode5": 0.011637755756982157,
+   "median_gap_erode8": 0.012023814008251732,
+   "edge_gain_5_over_2": null
+  },
+  "dav2_small": {
+   "role": "primary prediction",
+   "alignment": {
+    "family": "affine_disparity",
+    "params": {
+     "s": 0.027498603523373317,
+     "t": 0.027767587954022774
+    }
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 29,
+   "n_openings_tier_b": 183,
+   "median_gap": 0.16526983425118924,
+   "median_fill": 0.038232356060797154,
+   "median_member": 0.30907116378740285,
+   "frac_gap_positive": 0.7931034482758621,
+   "frac_gap_over_10pct": 0.5517241379310345,
+   "frac_gap_inverted_10pct": 0.0,
+   "frac_member_erased": 0.20689655172413793,
+   "frac_filled_over_half_resolved": 0.391304347826087,
+   "n_resolved_openings": 23,
+   "tier_b_median_gap": 0.0034314918702856513,
+   "coverage_tier_a_median": 0.4635258489142666,
+   "r_sea_median_m": 34.44453641756738,
+   "per_frame_median_gap": [
+    0.4556517815241021,
+    0.08433730397734336,
+    0.027363612763856175,
+    0.009760808673135628,
+    0.27083880772660573,
+    0.08596635100647293
+   ],
+   "median_gap_erode2": 0.16526983425118924,
+   "median_gap_erode5": 0.41450536095962065,
+   "median_gap_erode8": 0.41830632567175624,
+   "edge_gain_5_over_2": 2.5080521369049413
+  },
+  "moge2_vitl": {
+   "role": "primary prediction",
+   "alignment": {
+    "family": "scale",
+    "params": {
+     "s": 2.639960459387086
+    }
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 45,
+   "n_openings_tier_b": 183,
+   "median_gap": 1.6187270944587615,
+   "median_fill": 0.29084617437349763,
+   "median_member": 1.6427300459997318,
+   "frac_gap_positive": 0.8,
+   "frac_gap_over_10pct": 0.7333333333333333,
+   "frac_gap_inverted_10pct": 0.0,
+   "frac_member_erased": 0.0,
+   "frac_filled_over_half_resolved": 0.28888888888888886,
+   "n_resolved_openings": 45,
+   "tier_b_median_gap": 0.003497599418204863,
+   "coverage_tier_a_median": 1.0,
+   "r_sea_median_m": 175.33116454632898,
+   "per_frame_median_gap": [
+    2.17203343621979,
+    1.6911647754159715,
+    0.947626315665569,
+    1.6391388859121057,
+    1.6037314098769784,
+    1.243244775327664
+   ],
+   "median_gap_erode2": 1.6187270944587615,
+   "median_gap_erode5": 1.8191803020495247,
+   "median_gap_erode8": 1.7549127903126904,
+   "edge_gain_5_over_2": 1.123833849619838
+  },
+  "metricanything_pointmap": {
+   "role": "primary prediction",
+   "alignment": {
+    "family": "scale",
+    "params": {
+     "s": 2.4686129143428626
+    }
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 42,
+   "n_openings_tier_b": 183,
+   "median_gap": 1.3332519871628539,
+   "median_fill": 0.12681700803858814,
+   "median_member": 1.139893669439974,
+   "frac_gap_positive": 0.8333333333333334,
+   "frac_gap_over_10pct": 0.7142857142857143,
+   "frac_gap_inverted_10pct": 0.0,
+   "frac_member_erased": 0.0,
+   "frac_filled_over_half_resolved": 0.30952380952380953,
+   "n_resolved_openings": 42,
+   "tier_b_median_gap": 0.003338595039695603,
+   "coverage_tier_a_median": 0.9800741631484227,
+   "r_sea_median_m": 85.33089393044429,
+   "per_frame_median_gap": [
+    1.7309495960252042,
+    1.3624101981144334,
+    0.7488581371703572,
+    1.4193174499580619,
+    1.1581553592302107,
+    1.1026678304059305
+   ],
+   "median_gap_erode2": 1.3332519871628539,
+   "median_gap_erode5": 1.5375914911002284,
+   "median_gap_erode8": 1.3895226985718159,
+   "edge_gain_5_over_2": 1.1532639785313255
+  },
+  "wat3r_n1": {
+   "role": "primary prediction",
+   "alignment": {
+    "family": "scale",
+    "params": {
+     "s": 19.491903792696984
+    }
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 45,
+   "n_openings_tier_b": 183,
+   "median_gap": 0.44640164964872436,
+   "median_fill": 0.23934882300423754,
+   "median_member": 0.9284398538483457,
+   "frac_gap_positive": 0.8444444444444444,
+   "frac_gap_over_10pct": 0.6888888888888889,
+   "frac_gap_inverted_10pct": 0.0,
+   "frac_member_erased": 0.044444444444444446,
+   "frac_filled_over_half_resolved": 0.45454545454545453,
+   "n_resolved_openings": 44,
+   "tier_b_median_gap": 0.0005555017443810956,
+   "coverage_tier_a_median": 0.9907436030039972,
+   "r_sea_median_m": 44.74947167345269,
+   "per_frame_median_gap": [
+    0.6089497773879123,
+    0.40244812825424703,
+    0.5104152740825652,
+    0.16622565773447462,
+    0.7940275992984203,
+    0.3084228737053655
+   ],
+   "median_gap_erode2": 0.44640164964872436,
+   "median_gap_erode5": 0.6547674997225224,
+   "median_gap_erode8": 0.6767911290900793,
+   "edge_gain_5_over_2": 1.4667676524891027
+  },
+  "da3mono_large": {
+   "role": "primary prediction",
+   "alignment": {
+    "family": "affine_depth",
+    "params": {
+     "s": 5.9867989001699495,
+     "t": 5.535564157806796
+    }
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 45,
+   "n_openings_tier_b": 183,
+   "median_gap": 0.41144240889643807,
+   "median_fill": 0.05589397190395338,
+   "median_member": 0.5796925736368908,
+   "frac_gap_positive": 0.8444444444444444,
+   "frac_gap_over_10pct": 0.7333333333333333,
+   "frac_gap_inverted_10pct": 0.0,
+   "frac_member_erased": 0.044444444444444446,
+   "frac_filled_over_half_resolved": 0.30952380952380953,
+   "n_resolved_openings": 42,
+   "tier_b_median_gap": 0.001614797108904506,
+   "coverage_tier_a_median": 0.9952814396281247,
+   "r_sea_median_m": 33.67768409946445,
+   "per_frame_median_gap": [
+    0.664452665557416,
+    0.380341112813632,
+    0.33128843870446417,
+    0.5934164584586233,
+    0.41698835446104937,
+    0.35080337918596016
+   ],
+   "median_gap_erode2": 0.41144240889643807,
+   "median_gap_erode5": 0.6380109124229887,
+   "median_gap_erode8": 0.5525941449125806,
+   "edge_gain_5_over_2": 1.550668814462388
+  },
+  "foundationgeo_11": {
+   "role": "V4c arm D: post-ray relative geometry x scalefield \u2014 the model's primary output",
+   "alignment": {
+    "family": "scale",
+    "params": {
+     "s": 2.2526106782305373
+    }
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 43,
+   "n_openings_tier_b": 183,
+   "median_gap": 0.9830792059180958,
+   "median_fill": 0.13719525196801682,
+   "median_member": 1.0200399321884295,
+   "frac_gap_positive": 0.7906976744186046,
+   "frac_gap_over_10pct": 0.7209302325581395,
+   "frac_gap_inverted_10pct": 0.0,
+   "frac_member_erased": 0.0,
+   "frac_filled_over_half_resolved": 0.3023255813953488,
+   "n_resolved_openings": 43,
+   "tier_b_median_gap": 0.002185837398171244,
+   "coverage_tier_a_median": 0.9993546351603524,
+   "r_sea_median_m": 43.9526240331418,
+   "per_frame_median_gap": [
+    1.4065146158824549,
+    1.356377412991076,
+    0.5327534061618153,
+    1.0398542940255782,
+    0.9830792059180958,
+    0.7274527251215817
+   ],
+   "median_gap_erode2": 0.9830792059180958,
+   "median_gap_erode5": 1.2294729011988754,
+   "median_gap_erode8": 1.152167968020183,
+   "edge_gain_5_over_2": 1.2506346322834414
+  },
+  "fg_pre_ray": {
+   "role": "V4b arm A: raw geometry BEFORE the learned ray-direction delta, under the common frozen (focal, shift)",
+   "alignment": {
+    "family": "scale",
+    "params": {
+     "s": 1.7350344047444233
+    }
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 43,
+   "n_openings_tier_b": 183,
+   "median_gap": 0.970300486178931,
+   "median_fill": 0.13573968909232562,
+   "median_member": 1.0278146031428,
+   "frac_gap_positive": 0.8372093023255814,
+   "frac_gap_over_10pct": 0.7209302325581395,
+   "frac_gap_inverted_10pct": 0.0,
+   "frac_member_erased": 0.0,
+   "frac_filled_over_half_resolved": 0.3023255813953488,
+   "n_resolved_openings": 43,
+   "tier_b_median_gap": 0.002207368752073411,
+   "coverage_tier_a_median": 0.9993546351603524,
+   "r_sea_median_m": 46.73526105966694,
+   "per_frame_median_gap": [
+    1.4382828716105558,
+    1.3784611658294044,
+    0.5260562432165587,
+    1.044371803545181,
+    0.970300486178931,
+    0.7526776185085202
+   ],
+   "median_gap_erode2": 0.970300486178931,
+   "median_gap_erode5": 1.2281726220043132,
+   "median_gap_erode8": 1.151354652251022,
+   "edge_gain_5_over_2": 1.2657652340677366
+  },
+  "fg_post_ray": {
+   "role": "V4b arm B and V4c arm C: raw geometry AFTER the ray delta, same forward pass, same frozen (focal, shift)",
+   "alignment": {
+    "family": "scale",
+    "params": {
+     "s": 1.7350342882860146
+    }
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 43,
+   "n_openings_tier_b": 183,
+   "median_gap": 0.9703001007902703,
+   "median_fill": 0.1357396468083502,
+   "median_member": 1.0278144100892461,
+   "frac_gap_positive": 0.8372093023255814,
+   "frac_gap_over_10pct": 0.7209302325581395,
+   "frac_gap_inverted_10pct": 0.0,
+   "frac_member_erased": 0.0,
+   "frac_filled_over_half_resolved": 0.3023255813953488,
+   "n_resolved_openings": 43,
+   "tier_b_median_gap": 0.0022073243166413526,
+   "coverage_tier_a_median": 0.9993546351603524,
+   "r_sea_median_m": 46.735241492596614,
+   "per_frame_median_gap": [
+    1.4382850930873072,
+    1.3784611724346152,
+    0.5260563763728586,
+    1.04437184712861,
+    0.9703001007902703,
+    0.7526750851164175
+   ],
+   "median_gap_erode2": 0.9703001007902703,
+   "median_gap_erode5": 1.228172558008246,
+   "median_gap_erode8": 1.151354676986486,
+   "edge_gain_5_over_2": 1.2657656708557992
+  },
+  "moge3_vitl": {
+   "role": "primary prediction",
+   "alignment": {
+    "family": "scale",
+    "params": {
+     "s": 2.0269898160252273
+    }
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 43,
+   "n_openings_tier_b": 183,
+   "median_gap": 0.5422578658383475,
+   "median_fill": -0.10091067113857023,
+   "median_member": 0.4441666314234786,
+   "frac_gap_positive": 0.8372093023255814,
+   "frac_gap_over_10pct": 0.7209302325581395,
+   "frac_gap_inverted_10pct": 0.0,
+   "frac_member_erased": 0.09302325581395349,
+   "frac_filled_over_half_resolved": 0.23076923076923078,
+   "n_resolved_openings": 39,
+   "tier_b_median_gap": 0.0021556272484445364,
+   "coverage_tier_a_median": 0.947103652366575,
+   "r_sea_median_m": 36.081545980538834,
+   "per_frame_median_gap": [
+    1.342696576145158,
+    0.719989215090836,
+    0.2983236276849806,
+    0.42763726608246,
+    0.47133186514315306,
+    0.579817911383508
+   ],
+   "median_gap_erode2": 0.5422578658383475,
+   "median_gap_erode5": 0.7175257708079616,
+   "median_gap_erode8": 0.6775678066530689,
+   "edge_gain_5_over_2": 1.3232187415089767
+  },
+  "mda_mog_sky_l2": {
+   "role": "primary prediction",
+   "alignment": {
+    "family": "affine_depth",
+    "params": {
+     "s": 15.61882698957137,
+     "t": 2.1857244394318496
+    }
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 45,
+   "n_openings_tier_b": 183,
+   "median_gap": 0.22553564576115626,
+   "median_fill": -0.0035341982817435817,
+   "median_member": 0.2520459870954056,
+   "frac_gap_positive": 0.8444444444444444,
+   "frac_gap_over_10pct": 0.6888888888888889,
+   "frac_gap_inverted_10pct": 0.044444444444444446,
+   "frac_member_erased": 0.28888888888888886,
+   "frac_filled_over_half_resolved": 0.25,
+   "n_resolved_openings": 36,
+   "tier_b_median_gap": 0.003614796075825754,
+   "coverage_tier_a_median": 0.9947421655268986,
+   "r_sea_median_m": 33.47478833350923,
+   "per_frame_median_gap": [
+    0.33666731788549703,
+    0.1292953834446624,
+    0.19901281706069207,
+    0.10292302235251513,
+    0.34172153677407374,
+    0.39281740163953227
+   ],
+   "median_gap_erode2": 0.22553564576115626,
+   "median_gap_erode5": 0.2929972112254038,
+   "median_gap_erode8": 0.3024258910491909,
+   "edge_gain_5_over_2": 1.2991170873968623
+  },
+  "pxdepth": {
+   "role": "primary prediction",
+   "alignment": {
+    "family": "affine_log1p_depth",
+    "params": {
+     "s": 1.7267100387401935,
+     "t": 1.879891790727995
+    }
+   },
+   "provisional_policy": false,
+   "n_openings_tier_a": 44,
+   "n_openings_tier_b": 183,
+   "median_gap": 0.24042930898729156,
+   "median_fill": 0.022376623419164562,
+   "median_member": 0.2615746095982069,
+   "frac_gap_positive": 0.8636363636363636,
+   "frac_gap_over_10pct": 0.6363636363636364,
+   "frac_gap_inverted_10pct": 0.0,
+   "frac_member_erased": 0.18181818181818182,
+   "frac_filled_over_half_resolved": 0.28125,
+   "n_resolved_openings": 32,
+   "tier_b_median_gap": 0.0012330627167765527,
+   "coverage_tier_a_median": 0.9075646313052157,
+   "r_sea_median_m": 31.57766726942855,
+   "per_frame_median_gap": [
+    0.601393701499845,
+    0.10137439879167524,
+    0.11768612187563544,
+    0.06368522604723678,
+    0.38300454843033666,
+    0.6745066604191567
+   ],
+   "median_gap_erode2": 0.24042930898729156,
+   "median_gap_erode5": 0.2975625911446127,
+   "median_gap_erode8": 0.3105154715886576,
+   "edge_gain_5_over_2": 1.2376302722740888,
+   "policy_status": "CONFIRMED against the frozen S2 policy. This stage ran before `pxdepth`'s S2 finished, under a provisional entry (family `affine_log1p_depth`, convention `z_depth` from source code). The frozen clip fit for wreck_07 in R2_S3_policy.json came out identical to the provisional one to machine precision (s=1.7267100387401935, t=1.879891790727995), so no number in this row changes and no recomputation was needed. Verified, not assumed."
+  }
+ }
+}

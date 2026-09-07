@@ -1,0 +1,3695 @@
+{
+  "_comment": "S0 \u2014 semantics, preprocessing and runtime gate. Wrapper validation on a four-image sanity set, NOT a benchmark. Nothing here ranks a model.",
+  "stage": "S0",
+  "frozen_set_check": {
+    "extraction": {
+      "n_frames": 48,
+      "long_side": 1280,
+      "resample": "cv2.INTER_AREA in LINEAR light (uw.colorspace.srgb_to_linear -> resize -> linear_to_srgb), then written as 8-bit sRGB PNG",
+      "format": "png",
+      "why_srgb_png": "COLMAP and every third-party geometry model expect ordinary display-referred images. The linear-light invariant governs the resample itself (area-averaging radiance), not the interchange encoding. No restoration measurement is made from these files.",
+      "sampling": "np.linspace(start, end, n_frames) rounded to unique integer source frame indices; the source index is preserved in the filename so nothing is silently renumbered."
+    },
+    "clips": {
+      "wreck_07": {
+        "n_frames_expected": 48,
+        "n_frames_present": 48,
+        "source_frame_indices_match": true,
+        "extracted_shape_hw": [
+          720,
+          1280
+        ],
+        "orientation": "landscape",
+        "reference_product_present": true,
+        "reference_n_frames": 48,
+        "ok": true,
+        "frame_set_sha256": "c161ef1efdf5c4d40a43695242382f00b0c0f16c4fad13197586b1639131b0a4",
+        "frame_set_sha256_expected": "c161ef1efdf5c4d40a43695242382f00b0c0f16c4fad13197586b1639131b0a4",
+        "frame_set_sha256_match": true
+      },
+      "wreck_05": {
+        "n_frames_expected": 48,
+        "n_frames_present": 48,
+        "source_frame_indices_match": true,
+        "extracted_shape_hw": [
+          720,
+          1280
+        ],
+        "orientation": "landscape",
+        "reference_product_present": true,
+        "reference_n_frames": 48,
+        "ok": true,
+        "frame_set_sha256": "45376c391871435e07f9baca9406958756da42ca6330fe10c62e8ac9ef4de2af",
+        "frame_set_sha256_expected": "45376c391871435e07f9baca9406958756da42ca6330fe10c62e8ac9ef4de2af",
+        "frame_set_sha256_match": true
+      },
+      "cenote_01": {
+        "n_frames_expected": 48,
+        "n_frames_present": 48,
+        "source_frame_indices_match": true,
+        "extracted_shape_hw": [
+          720,
+          1280
+        ],
+        "orientation": "landscape",
+        "reference_product_present": true,
+        "reference_n_frames": 48,
+        "ok": true,
+        "frame_set_sha256": "28d3a95f97edbba32b90e186254b476e0bb9ab3afc6e17a27eed94c11a572d3c",
+        "frame_set_sha256_expected": "28d3a95f97edbba32b90e186254b476e0bb9ab3afc6e17a27eed94c11a572d3c",
+        "frame_set_sha256_match": true
+      },
+      "swimthrough_02": {
+        "n_frames_expected": 48,
+        "n_frames_present": 48,
+        "source_frame_indices_match": true,
+        "extracted_shape_hw": [
+          720,
+          1280
+        ],
+        "orientation": "landscape",
+        "reference_product_present": true,
+        "reference_n_frames": 48,
+        "ok": true,
+        "frame_set_sha256": "ab339ba58a9537f0bb81b9a90b288739db7bb5cb2fb7f0e956ab29f23ec32e59",
+        "frame_set_sha256_expected": "ab339ba58a9537f0bb81b9a90b288739db7bb5cb2fb7f0e956ab29f23ec32e59",
+        "frame_set_sha256_match": true
+      },
+      "wreck_01": {
+        "n_frames_expected": 48,
+        "n_frames_present": 48,
+        "source_frame_indices_match": true,
+        "extracted_shape_hw": [
+          1280,
+          720
+        ],
+        "orientation": "portrait",
+        "reference_product_present": true,
+        "reference_n_frames": 48,
+        "ok": true,
+        "frame_set_sha256": "b3e6555e13a8f0be6c36de6401d53b86618d8d7f0aabd10da62ece073d9d27f5",
+        "frame_set_sha256_expected": "b3e6555e13a8f0be6c36de6401d53b86618d8d7f0aabd10da62ece073d9d27f5",
+        "frame_set_sha256_match": true
+      },
+      "wreck_03": {
+        "n_frames_expected": 48,
+        "n_frames_present": 48,
+        "source_frame_indices_match": true,
+        "extracted_shape_hw": [
+          720,
+          1280
+        ],
+        "orientation": "landscape",
+        "reference_product_present": true,
+        "reference_n_frames": 48,
+        "ok": true,
+        "frame_set_sha256": "bf14cd3e3c25aad0dbd52ff1f1c5c9d4fa33bd177a64225e42097db1fd5d0436",
+        "frame_set_sha256_expected": "bf14cd3e3c25aad0dbd52ff1f1c5c9d4fa33bd177a64225e42097db1fd5d0436",
+        "frame_set_sha256_match": true
+      }
+    },
+    "ok": true,
+    "reference_config": "D_mapanything",
+    "reference_status": "PROVISIONAL MULTI-VIEW HYPOTHESIS, not ground truth. Agreement with it means consistency with the current Week-3 hypothesis, never objective correctness (MONO_DEPTH_FREEZE.md 7).",
+    "total_frames": 288,
+    "expected_total_frames": 288
+  },
+  "models": {
+    "da3mono_large": {
+      "model": "da3mono_large",
+      "checkpoint": "depth-anything/DA3MONO-LARGE",
+      "declared_native_representation": "depth_relative",
+      "env": {
+        "python": "3.13.5",
+        "executable": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/.venv-mono/bin/python",
+        "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+        "machine": "arm64",
+        "torch": "2.13.0",
+        "mps_available": true,
+        "mps_built": true,
+        "cuda_available": false,
+        "numpy": "1.26.4"
+      },
+      "seed": 0,
+      "sanity_set": [
+        {
+          "key": "ordinary_project",
+          "clip": "wreck_07",
+          "frame": 109,
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png"
+        },
+        {
+          "key": "difficult_project",
+          "clip": "wreck_05",
+          "frame": 113,
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png"
+        },
+        {
+          "key": "portrait_project",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png"
+        },
+        {
+          "key": "public_reference",
+          "clip": null,
+          "frame": null,
+          "why": "public/reference image with independently documented semantics",
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg"
+        }
+      ],
+      "load_seconds": 2.5,
+      "native_kind": "depth_relative",
+      "range_rule": "unresolved",
+      "semantics": {
+        "native_field": "prediction.depth (N,H,W), N=1",
+        "native_meaning": "relative depth, larger is farther. The MAIN DA3 series pairs this field with predicted rays and its own `unproject_depth` treats it as PLANAR z-depth. This monocular checkpoint emits no rays and no camera, so that code path is never reached and the convention is NOT established by the wrapper. S2 settles it by measurement.",
+        "canonical_range": "NONE HERE. The head is output_dim=1 with no camera branch, so there is no intrinsics to convert with. Supplying an invented focal would manufacture a radial error.",
+        "emits": "depth and sky only; intrinsics, extrinsics and conf are all None",
+        "ray_word_warning": "DA3's 'ray' is UNNORMALISED and pairs with z-depth. FoundationGeo's 'ray' is UNIT and pairs with range. The two are not interchangeable.",
+        "documented_ambiguity": "affine in depth / Class 3: the DA3 teacher outputs scale-shift-invariant DEPTH and the mono student is trained from those targets",
+        "e1_family": "d' = s*d + t (S2 also tests the s-only subgroup empirically)",
+        "camera_frame": "OpenCV: +x right, +y down, +z forward",
+        "confidence": "prediction.conf where the checkpoint emits one",
+        "claimed_scale": "relative; is_metric is recorded per frame",
+        "view_count": "strictly 1 \u2014 a one-element image list, count asserted"
+      },
+      "preprocessing_declared": {
+        "loader": "depth_anything_3.utils.io.input_processor.InputProcessor",
+        "process_res": 504,
+        "process_res_method": "upper_bound_resize",
+        "resize_rule": "upper_bound_resize toward process_res with patch-size rounding; outputs stay on the PROCESSED grid, not the source grid, so a source->grid map is required to evaluate",
+        "fov_loss_expected": "measured in S0, not assumed"
+      },
+      "provenance": {
+        "method": "Depth Anything 3 \u2014 monocular series, Large",
+        "role": "modern direct-depth relative model",
+        "repo": "https://github.com/ByteDance-Seed/Depth-Anything-3",
+        "repo_commit": "3d835ec1a5802d64a8b8b15f817a1ab54809bfe4",
+        "code_license": "Apache-2.0",
+        "checkpoint": "depth-anything/DA3MONO-LARGE",
+        "checkpoint_license": "Apache-2.0",
+        "model_name": "da3mono-large",
+        "torch": "2.13.0",
+        "device": "mps",
+        "dtype": "float32",
+        "reference_impl_modifications": "two, both packaging-only and neither touching the model: (1) pyproject requires-python widened from '<=3.13' to '<3.14' so it installs on CPython 3.13.5; (2) the pycolmap-backed COLMAP EXPORT import in utils/export/__init__.py made optional, because importing pycolmap alongside torch aborts on macOS with a duplicate libomp. The export path is never used here. Patch: patches/da3_no_pycolmap_and_python313.patch"
+      },
+      "image_probes": [
+        {
+          "key": "ordinary_project",
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "clip": "wreck_07",
+          "frame": 109,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png",
+          "native_shape": [
+            280,
+            504
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            280,
+            504
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": false,
+          "emits_K": false,
+          "emits_conf": false,
+          "aux": [
+            "sky"
+          ],
+          "extra": {
+            "output_hw": [
+              280,
+              504
+            ],
+            "is_metric": false,
+            "scale_factor": null,
+            "aux_keys": [],
+            "emits_intrinsics": false,
+            "emits_extrinsics": false,
+            "emits_conf": false,
+            "emits_sky": true,
+            "process_res": 504,
+            "process_res_method": "upper_bound_resize",
+            "depth_min": 0.16625946760177612,
+            "depth_max": 6.478483200073242,
+            "sky_fraction_gt_half": 0.003550170068027211,
+            "processed_image_hw": [
+              280,
+              504
+            ],
+            "infer_seconds": 0.4088167499867268
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": false,
+          "native_p05": 0.21081365197896956,
+          "native_median": 0.7434676885604858,
+          "native_p95": 5.8964361906051606
+        },
+        {
+          "key": "difficult_project",
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "clip": "wreck_05",
+          "frame": 113,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png",
+          "native_shape": [
+            280,
+            504
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            280,
+            504
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": false,
+          "emits_K": false,
+          "emits_conf": false,
+          "aux": [
+            "sky"
+          ],
+          "extra": {
+            "output_hw": [
+              280,
+              504
+            ],
+            "is_metric": false,
+            "scale_factor": null,
+            "aux_keys": [],
+            "emits_intrinsics": false,
+            "emits_extrinsics": false,
+            "emits_conf": false,
+            "emits_sky": true,
+            "process_res": 504,
+            "process_res_method": "upper_bound_resize",
+            "depth_min": 0.2045988291501999,
+            "depth_max": 6.570355415344238,
+            "sky_fraction_gt_half": 0.037705498866213154,
+            "processed_image_hw": [
+              280,
+              504
+            ],
+            "infer_seconds": 0.29120512498775497
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": false,
+          "native_p05": 0.26565636694431305,
+          "native_median": 0.49347516894340515,
+          "native_p95": 6.186464786529541
+        },
+        {
+          "key": "portrait_project",
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png",
+          "native_shape": [
+            504,
+            280
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            504,
+            280
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": false,
+          "emits_K": false,
+          "emits_conf": false,
+          "aux": [
+            "sky"
+          ],
+          "extra": {
+            "output_hw": [
+              504,
+              280
+            ],
+            "is_metric": false,
+            "scale_factor": null,
+            "aux_keys": [],
+            "emits_intrinsics": false,
+            "emits_extrinsics": false,
+            "emits_conf": false,
+            "emits_sky": true,
+            "process_res": 504,
+            "process_res_method": "upper_bound_resize",
+            "depth_min": 0.36029893159866333,
+            "depth_max": 1.66167414188385,
+            "sky_fraction_gt_half": 0.0,
+            "processed_image_hw": [
+              504,
+              280
+            ],
+            "infer_seconds": 0.361005374987144
+          },
+          "source_hw": [
+            1280,
+            720
+          ],
+          "output_equals_source_grid": false,
+          "native_p05": 0.41533392369747163,
+          "native_median": 0.6889899373054504,
+          "native_p95": 1.3291854441165922
+        },
+        {
+          "key": "public_reference",
+          "why": "public/reference image with independently documented semantics",
+          "clip": null,
+          "frame": null,
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg",
+          "native_shape": [
+            280,
+            504
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            280,
+            504
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": false,
+          "emits_K": false,
+          "emits_conf": false,
+          "aux": [
+            "sky"
+          ],
+          "extra": {
+            "output_hw": [
+              280,
+              504
+            ],
+            "is_metric": false,
+            "scale_factor": null,
+            "aux_keys": [],
+            "emits_intrinsics": false,
+            "emits_extrinsics": false,
+            "emits_conf": false,
+            "emits_sky": true,
+            "process_res": 504,
+            "process_res_method": "upper_bound_resize",
+            "depth_min": 0.5107425451278687,
+            "depth_max": 1.9669184684753418,
+            "sky_fraction_gt_half": 0.0,
+            "processed_image_hw": [
+              280,
+              504
+            ],
+            "infer_seconds": 0.2865531670395285
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": false,
+          "native_p05": 0.6516486316919327,
+          "native_median": 1.2009332180023193,
+          "native_p95": 1.8016405344009399
+        }
+      ],
+      "image_failures": [],
+      "fov_audit": {
+        "720x1280": {
+          "measured": true,
+          "source_hw": [
+            720,
+            1280
+          ],
+          "model_grid_hw": [
+            280,
+            504
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.39368719525305085,
+          "u_offset": -0.3023300838512969,
+          "u_max_abs_residual_px": 0.1574748781012545,
+          "v_scale": 0.38885351963433246,
+          "v_offset": -0.33141397598958416,
+          "v_max_abs_residual_px": 0.3198620337056539,
+          "fov_retained_u": 0.9989555200538593,
+          "fov_retained_v": 0.9979051837855489,
+          "fov_retained_area": 0.9968628918329351
+        },
+        "1280x720": {
+          "measured": true,
+          "source_hw": [
+            1280,
+            720
+          ],
+          "model_grid_hw": [
+            504,
+            280
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.38885351963433246,
+          "u_offset": -0.33141397598958466,
+          "u_max_abs_residual_px": 0.3198620337056539,
+          "v_scale": 0.39368719525305085,
+          "v_offset": -0.3023300838512887,
+          "v_max_abs_residual_px": 0.1574748781012545,
+          "fov_retained_u": 0.9979051837855489,
+          "fov_retained_v": 0.9989555200538593,
+          "fov_retained_area": 0.9968628918329351
+        }
+      },
+      "device_matrix": [
+        {
+          "device": "mps",
+          "works": true,
+          "note": "the run above"
+        },
+        {
+          "device": "cpu",
+          "load_seconds": 1.07,
+          "infer_seconds": 5.908,
+          "works": true,
+          "peak_rss_gb": 3.15
+        }
+      ],
+      "cuda_available_here": false,
+      "strict_n1_verified": true,
+      "status": "PASS"
+    },
+    "dav2_small": {
+      "model": "dav2_small",
+      "checkpoint": "depth-anything/Depth-Anything-V2-Small",
+      "declared_native_representation": "disparity_relative",
+      "env": {
+        "python": "3.13.5",
+        "executable": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/.venv-mono/bin/python",
+        "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+        "machine": "arm64",
+        "torch": "2.13.0",
+        "mps_available": true,
+        "mps_built": true,
+        "cuda_available": false,
+        "numpy": "1.26.4"
+      },
+      "seed": 0,
+      "sanity_set": [
+        {
+          "key": "ordinary_project",
+          "clip": "wreck_07",
+          "frame": 109,
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png"
+        },
+        {
+          "key": "difficult_project",
+          "clip": "wreck_05",
+          "frame": 113,
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png"
+        },
+        {
+          "key": "portrait_project",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png"
+        },
+        {
+          "key": "public_reference",
+          "clip": null,
+          "frame": null,
+          "why": "public/reference image with independently documented semantics",
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg"
+        }
+      ],
+      "load_seconds": 0.86,
+      "native_kind": "disparity_relative",
+      "range_rule": "unresolved",
+      "semantics": {
+        "native_field": "relative inverse depth (disparity), (H,W) float32",
+        "native_meaning": "Larger is NEARER. Scale AND offset are free; the documented ambiguity is affine in disparity.",
+        "legal_alignment": "q' = a*q + b fitted in DISPARITY space, then inverted",
+        "illegal_alignment": "a*d + b fitted in physical depth. Doing that would be a different transform group, not a stricter one.",
+        "range_conversion": "NONE HERE. No canonical range is written, because there is no honest range before the S2 policy fixes (a,b).",
+        "camera": "no intrinsics, no FOV, no point map, no confidence",
+        "output_grid": "SOURCE resolution \u2014 the model interpolates back up",
+        "claimed_scale": "relative only; never metric"
+      },
+      "preprocessing_declared": {
+        "loader": "depth_anything_v2.dpt.DepthAnythingV2.image2tensor",
+        "input_size": 518,
+        "resize_rule": "Resize longest/both sides toward input_size with ensure_multiple_of=14, keep_aspect_ratio=True, then normalise. NO crop: the aspect ratio is preserved and the output is interpolated back to the source (H,W).",
+        "fov_loss_expected": "none \u2014 full frame retained, verified in S0"
+      },
+      "provenance": {
+        "method": "Depth Anything V2 Small (ViT-S)",
+        "role": "inverse-depth/disparity control",
+        "repo": "https://github.com/DepthAnything/Depth-Anything-V2",
+        "repo_commit": "a561b849ebae10a6f5ef49e26c83cbbcd36c71bf",
+        "code_license": "Apache-2.0",
+        "checkpoint": "depth-anything/Depth-Anything-V2-Small",
+        "checkpoint_file": "depth_anything_v2_vits.pth",
+        "checkpoint_license": "Apache-2.0",
+        "model_config": {
+          "encoder": "vits",
+          "features": 64,
+          "out_channels": [
+            48,
+            96,
+            192,
+            384
+          ]
+        },
+        "torch": "2.13.0",
+        "device": "mps",
+        "dtype": "float32",
+        "reference_impl_modifications": "none"
+      },
+      "image_probes": [
+        {
+          "key": "ordinary_project",
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "clip": "wreck_07",
+          "frame": 109,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png",
+          "native_shape": [
+            720,
+            1280
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            720,
+            1280
+          ],
+          "valid_fraction": 0.847490234375,
+          "emits_range": false,
+          "emits_K": false,
+          "emits_conf": false,
+          "aux": [],
+          "extra": {
+            "source_hw": [
+              720,
+              1280
+            ],
+            "output_hw": [
+              720,
+              1280
+            ],
+            "disparity_min": 0.0,
+            "disparity_max": 7.14763879776001,
+            "nonpositive_fraction": 0.152509765625,
+            "infer_seconds": 0.28273470903513953
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": true,
+          "native_p05": 0.08049520403146745,
+          "native_median": 3.6800763607025146,
+          "native_p95": 6.172483873367308
+        },
+        {
+          "key": "difficult_project",
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "clip": "wreck_05",
+          "frame": 113,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png",
+          "native_shape": [
+            720,
+            1280
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            720,
+            1280
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": false,
+          "emits_K": false,
+          "emits_conf": false,
+          "aux": [],
+          "extra": {
+            "source_hw": [
+              720,
+              1280
+            ],
+            "output_hw": [
+              720,
+              1280
+            ],
+            "disparity_min": 0.045060183852910995,
+            "disparity_max": 8.230854034423828,
+            "nonpositive_fraction": 0.0,
+            "infer_seconds": 0.21986962499795482
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": true,
+          "native_p05": 0.08513392247259617,
+          "native_median": 4.599576950073242,
+          "native_p95": 7.213117003440856
+        },
+        {
+          "key": "portrait_project",
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png",
+          "native_shape": [
+            1280,
+            720
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            1280,
+            720
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": false,
+          "emits_K": false,
+          "emits_conf": false,
+          "aux": [],
+          "extra": {
+            "source_hw": [
+              1280,
+              720
+            ],
+            "output_hw": [
+              1280,
+              720
+            ],
+            "disparity_min": 0.57097989320755,
+            "disparity_max": 5.545715808868408,
+            "nonpositive_fraction": 0.0,
+            "infer_seconds": 0.21532583300722763
+          },
+          "source_hw": [
+            1280,
+            720
+          ],
+          "output_equals_source_grid": true,
+          "native_p05": 1.285591232776642,
+          "native_median": 3.191481113433838,
+          "native_p95": 5.0180337667465205
+        },
+        {
+          "key": "public_reference",
+          "why": "public/reference image with independently documented semantics",
+          "clip": null,
+          "frame": null,
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg",
+          "native_shape": [
+            720,
+            1280
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            720,
+            1280
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": false,
+          "emits_K": false,
+          "emits_conf": false,
+          "aux": [],
+          "extra": {
+            "source_hw": [
+              720,
+              1280
+            ],
+            "output_hw": [
+              720,
+              1280
+            ],
+            "disparity_min": 0.41293519735336304,
+            "disparity_max": 6.667364597320557,
+            "nonpositive_fraction": 0.0,
+            "infer_seconds": 0.19424774998333305
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": true,
+          "native_p05": 0.6646544754505157,
+          "native_median": 2.048521041870117,
+          "native_p95": 5.638791847229004
+        }
+      ],
+      "image_failures": [],
+      "fov_audit": {
+        "720x1280": {
+          "measured": true,
+          "source_hw": [
+            720,
+            1280
+          ],
+          "model_grid_hw": [
+            518,
+            924
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.7217498496771777,
+          "u_offset": -0.03679440690113009,
+          "u_max_abs_residual_px": 0.10432841687429573,
+          "v_scale": 0.7192183648239956,
+          "v_offset": -0.04385676804183382,
+          "v_max_abs_residual_px": 0.23665825568775745,
+          "fov_retained_u": 0.9998721098172431,
+          "fov_retained_v": 0.9997718039065172,
+          "fov_retained_area": 0.9996439429078003
+        },
+        "1280x720": {
+          "measured": true,
+          "source_hw": [
+            1280,
+            720
+          ],
+          "model_grid_hw": [
+            924,
+            518
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.7192183648239956,
+          "u_offset": -0.04385676804183351,
+          "u_max_abs_residual_px": 0.23665825568775745,
+          "v_scale": 0.7217498496771777,
+          "v_offset": -0.0367944069011042,
+          "v_max_abs_residual_px": 0.10432841687435257,
+          "fov_retained_u": 0.9997718039065172,
+          "fov_retained_v": 0.9998721098172431,
+          "fov_retained_area": 0.9996439429078003
+        }
+      },
+      "device_matrix": [
+        {
+          "device": "mps",
+          "works": true,
+          "note": "the run above"
+        },
+        {
+          "device": "cpu",
+          "load_seconds": 0.57,
+          "works": false,
+          "error": "RuntimeError: Input type (MPSFloatType) and weight type (torch.FloatTensor) should be the same"
+        }
+      ],
+      "cuda_available_here": false,
+      "strict_n1_verified": true,
+      "status": "PASS"
+    },
+    "foundationgeo_11": {
+      "model": "foundationgeo_11",
+      "checkpoint": "mxliu-hku/FoundationGeo-1.1",
+      "declared_native_representation": "pointmap_metric",
+      "env": {
+        "python": "3.13.5",
+        "executable": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/.venv-mono/bin/python",
+        "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+        "machine": "arm64",
+        "torch": "2.13.0",
+        "mps_available": true,
+        "mps_built": true,
+        "cuda_available": false,
+        "numpy": "1.26.4"
+      },
+      "seed": 0,
+      "sanity_set": [
+        {
+          "key": "ordinary_project",
+          "clip": "wreck_07",
+          "frame": 109,
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png"
+        },
+        {
+          "key": "difficult_project",
+          "clip": "wreck_05",
+          "frame": 113,
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png"
+        },
+        {
+          "key": "portrait_project",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png"
+        },
+        {
+          "key": "public_reference",
+          "clip": null,
+          "frame": null,
+          "why": "public/reference image with independently documented semantics",
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg"
+        }
+      ],
+      "load_seconds": 4.9,
+      "native_kind": "pointmap_metric",
+      "range_rule": "norm_pointmap",
+      "semantics": {
+        "native_field": "points_metric = points_rel * scalefield, (H,W,3)",
+        "canonical_range": "||points_metric||",
+        "z_trap": "`depth_metric` in the release is points_metric[..., 2], i.e. Z-DEPTH. It is stored here only as `depth_z_metric` and is never used as a range.",
+        "naming_trap": "`points_pre_field` in the release is the geometry before the learned RAY correction, not merely before the scale field, and it has been through its OWN focal/shift recovery.",
+        "ray_word_warning": "FoundationGeo's ray is a UNIT ray paired with RANGE (d = ||p||). DA3's ray is unnormalised and pairs with z-depth. Opposite conventions, same word.",
+        "v4b_ray_correction": "raw pre-delta vs raw post-delta geometry from ONE forward pass, both put through the SAME frozen (focal, shift) recovered from the post-delta arm",
+        "v4c_scale_field": "points_post_ray_common vs points_post_ray_common * scalefield \u2014 a same-tensor intervention",
+        "ray_correction_cap": "the applied angular perturbation is delta_max_rad * tanh(delta_raw), capped at ~3 degrees. The `delta` tensor itself is RAW and unbounded; `delta_raw` stores it, and `ray_turn_deg_*` reports the angle the rays actually turned.",
+        "camera_frame": "OpenCV: +x right, +y down, +z forward",
+        "confidence": "none emitted",
+        "claimed_scale": "metric; PROVISIONAL pre-C2 on this camera",
+        "fov": "the model CONSUMES intrinsics optionally; with fov_x=None it recovers focal and shift from the point map itself",
+        "view_count": "strictly 1 \u2014 a single (1,3,H,W) tensor"
+      },
+      "preprocessing_declared": {
+        "loader": "cv2.imread -> RGB -> /255 -> (1,3,H,W); the model resizes internally",
+        "resize_rule": "bicubic resize to a num_tokens-derived resolution, rounded to a multiple of 16 for DINOv3, then outputs interpolated back to the SOURCE (H,W)",
+        "resolution_level": 9,
+        "fov_loss_expected": "none \u2014 aspect ratio preserved, no crop; verified in S0",
+        "use_fp16": "False (the reference default is True; overridden for reproducibility)"
+      },
+      "provenance": {
+        "method": "FoundationGeo-1.1 (Stage-II)",
+        "role": "point-map candidate + V4b/V4c same-checkpoint internal ablations",
+        "repo": "https://github.com/mx-liu6/FoundationGeo",
+        "repo_commit": "759f8463caf414c8ea34d66219250f9c2be7e971",
+        "code_license": "MIT. The LICENSE file is byte-identical to MoGe's template and reads 'Copyright (c) Microsoft Corporation' despite HKU authorship; the MIT grant itself is unambiguous.",
+        "checkpoint": "mxliu-hku/FoundationGeo-1.1",
+        "checkpoint_file": "FoundationGeo.pt",
+        "checkpoint_license": "MIT",
+        "model_config": {
+          "encoder": "dinov3_vitl16",
+          "dinov3_ckpt": "/nfs/dataset-ofs-voyager-research/mxliu/pretrain/dinov3_vitl16_pretrain_lvd1689m-8aa4cbdd.pth",
+          "remap_output": "exp",
+          "intermediate_layers": [
+            4,
+            11,
+            17,
+            23
+          ],
+          "dim_upsample": [
+            256,
+            128,
+            64
+          ],
+          "dim_times_res_block_hidden": 2,
+          "num_res_blocks": 2,
+          "num_tokens_range": [
+            1200,
+            2500
+          ],
+          "last_conv_channels": 32,
+          "last_conv_size": 1,
+          "freeze_encoder": false,
+          "freeze_relative": false
+        },
+        "torch": "2.13.0",
+        "device": "mps",
+        "dtype": "float32 (fp16 autocast disabled)",
+        "reference_impl_modifications": "none to the vendored code. `infer()` is NOT called: this backend calls `model.forward()` and reimplements the postprocessing tail so that both ray-correction arms share one frozen (focal, shift) solution. Calling `infer()` would have produced two independently postprocessed arms, which FREEZE C3 explicitly forbids treating as a ray-correction ablation."
+      },
+      "image_probes": [
+        {
+          "key": "ordinary_project",
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "clip": "wreck_07",
+          "frame": 109,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png",
+          "native_shape": [
+            720,
+            1280,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            720,
+            1280
+          ],
+          "valid_fraction": 0.9886957465277778,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": false,
+          "aux": [
+            "delta_raw",
+            "depth_z_metric",
+            "depth_z_post_ray",
+            "points_metric",
+            "points_post_ray_common",
+            "points_pre_ray_common",
+            "points_pre_ray_own_postproc",
+            "scalefield"
+          ],
+          "extra": {
+            "output_hw": [
+              720,
+              1280
+            ],
+            "num_tokens": 2500,
+            "resolution_level": 9,
+            "force_projection": false,
+            "delta_max_rad": 0.0523598,
+            "focal_common": 1.055107831954956,
+            "shift_common": -0.0017688573570922017,
+            "focal_pre_own": 1.0544570684432983,
+            "shift_pre_own": -0.005895240232348442,
+            "scalefield_median": 0.7494805455207825,
+            "scalefield_p05": 0.7331058025360108,
+            "scalefield_p95": 0.7596307963132858,
+            "delta_raw_abs_median": 0.005235999822616577,
+            "delta_raw_abs_max": 0.17833258211612701,
+            "ray_turn_deg_median": 0.02797645330429077,
+            "ray_turn_deg_p95": 0.09065408259630203,
+            "ray_turn_deg_max": 0.6766640543937683,
+            "applied_delta_rad_abs_max": 0.009239716824820637,
+            "median_ratio_range_over_zdepth_metric": 1.1168285608291626,
+            "max_ratio_range_over_zdepth_metric": 1.3891690969467163,
+            "pre_delta_own_vs_common_postproc_median_dist": 0.004126310348510742,
+            "infer_seconds": 1.7084445420186967
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": true,
+          "range_p05": 2.5186675071716307,
+          "range_median": 4.395688056945801,
+          "range_p95": 32.51010665893554,
+          "native_p05": -1.8531695008277893,
+          "native_median": 1.7401701211929321,
+          "native_p95": 17.710951805114746
+        },
+        {
+          "key": "difficult_project",
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "clip": "wreck_05",
+          "frame": 113,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png",
+          "native_shape": [
+            720,
+            1280,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            720,
+            1280
+          ],
+          "valid_fraction": 0.8997265625,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": false,
+          "aux": [
+            "delta_raw",
+            "depth_z_metric",
+            "depth_z_post_ray",
+            "points_metric",
+            "points_post_ray_common",
+            "points_pre_ray_common",
+            "points_pre_ray_own_postproc",
+            "scalefield"
+          ],
+          "extra": {
+            "output_hw": [
+              720,
+              1280
+            ],
+            "num_tokens": 2500,
+            "resolution_level": 9,
+            "force_projection": false,
+            "delta_max_rad": 0.0523598,
+            "focal_common": 0.9354406595230103,
+            "shift_common": -0.12381815910339355,
+            "focal_pre_own": 0.9361333250999451,
+            "shift_pre_own": -0.1246885284781456,
+            "scalefield_median": 0.8050715923309326,
+            "scalefield_p05": 0.7953109353780746,
+            "scalefield_p95": 0.8165338218212128,
+            "delta_raw_abs_median": 0.005614679306745529,
+            "delta_raw_abs_max": 0.09937113523483276,
+            "ray_turn_deg_median": 0.02797645330429077,
+            "ray_turn_deg_p95": 0.09691328555345535,
+            "ray_turn_deg_max": 0.3494263291358948,
+            "applied_delta_rad_abs_max": 0.005185993996798992,
+            "median_ratio_range_over_zdepth_metric": 1.1484756469726562,
+            "max_ratio_range_over_zdepth_metric": 1.477623701095581,
+            "pre_delta_own_vs_common_postproc_median_dist": 0.0008702278137207031,
+            "infer_seconds": 1.5942139999824576
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": true,
+          "range_p05": 3.501365602016449,
+          "range_median": 4.5898847579956055,
+          "range_p95": 52.669736862182575,
+          "native_p05": -15.56751208305359,
+          "native_median": 1.340684413909912,
+          "native_p95": 31.027830696105994
+        },
+        {
+          "key": "portrait_project",
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png",
+          "native_shape": [
+            1280,
+            720,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            1280,
+            720
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": false,
+          "aux": [
+            "delta_raw",
+            "depth_z_metric",
+            "depth_z_post_ray",
+            "points_metric",
+            "points_post_ray_common",
+            "points_pre_ray_common",
+            "points_pre_ray_own_postproc",
+            "scalefield"
+          ],
+          "extra": {
+            "output_hw": [
+              1280,
+              720
+            ],
+            "num_tokens": 2500,
+            "resolution_level": 9,
+            "force_projection": false,
+            "delta_max_rad": 0.0523598,
+            "focal_common": 1.0366082191467285,
+            "shift_common": -0.01740063540637493,
+            "focal_pre_own": 1.0316550731658936,
+            "shift_pre_own": -0.026583822444081306,
+            "scalefield_median": 0.5572056770324707,
+            "scalefield_p05": 0.5517235994338989,
+            "scalefield_p95": 0.5608472228050232,
+            "delta_raw_abs_median": 0.011163633316755295,
+            "delta_raw_abs_max": 0.03050127811729908,
+            "ray_turn_deg_median": 0.048456642776727676,
+            "ray_turn_deg_p95": 0.07132624834775925,
+            "ray_turn_deg_max": 0.09487278014421463,
+            "applied_delta_rad_abs_max": 0.001596545771221444,
+            "median_ratio_range_over_zdepth_metric": 1.1212952136993408,
+            "max_ratio_range_over_zdepth_metric": 1.4041649103164673,
+            "pre_delta_own_vs_common_postproc_median_dist": 0.009183168411254883,
+            "infer_seconds": 1.455551541002933
+          },
+          "source_hw": [
+            1280,
+            720
+          ],
+          "output_equals_source_grid": true,
+          "range_p05": 1.0906190872192383,
+          "range_median": 1.273549199104309,
+          "range_p95": 2.339789867401123,
+          "native_p05": -0.5874756783246994,
+          "native_median": 0.3966062068939209,
+          "native_p95": 1.648090136051178
+        },
+        {
+          "key": "public_reference",
+          "why": "public/reference image with independently documented semantics",
+          "clip": null,
+          "frame": null,
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg",
+          "native_shape": [
+            720,
+            1280,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            720,
+            1280
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": false,
+          "aux": [
+            "delta_raw",
+            "depth_z_metric",
+            "depth_z_post_ray",
+            "points_metric",
+            "points_post_ray_common",
+            "points_pre_ray_common",
+            "points_pre_ray_own_postproc",
+            "scalefield"
+          ],
+          "extra": {
+            "output_hw": [
+              720,
+              1280
+            ],
+            "num_tokens": 2500,
+            "resolution_level": 9,
+            "force_projection": false,
+            "delta_max_rad": 0.0523598,
+            "focal_common": 1.3730721473693848,
+            "shift_common": -0.016404902562499046,
+            "focal_pre_own": 1.3734134435653687,
+            "shift_pre_own": -0.016429360955953598,
+            "scalefield_median": 0.6622328758239746,
+            "scalefield_p05": 0.6577321261167526,
+            "scalefield_p95": 0.6673764586448669,
+            "delta_raw_abs_median": 0.0038727791979908943,
+            "delta_raw_abs_max": 0.06349439918994904,
+            "ray_turn_deg_median": 0.01978234015405178,
+            "ray_turn_deg_p95": 0.04423465579748154,
+            "ray_turn_deg_max": 0.19382664561271667,
+            "applied_delta_rad_abs_max": 0.003320093514561653,
+            "median_ratio_range_over_zdepth_metric": 1.0713436603546143,
+            "max_ratio_range_over_zdepth_metric": 1.2386281490325928,
+            "pre_delta_own_vs_common_postproc_median_dist": 2.4318695068359375e-05,
+            "infer_seconds": 1.461592334031593
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": true,
+          "range_p05": 3.3382711172103883,
+          "range_median": 5.578743934631348,
+          "range_p95": 7.161266016960144,
+          "native_p05": -2.1845295786857606,
+          "native_median": 1.0011696815490723,
+          "native_p95": 6.433790612220763
+        }
+      ],
+      "image_failures": [],
+      "fov_audit": {
+        "720x1280": {
+          "measured": true,
+          "source_hw": [
+            720,
+            1280
+          ],
+          "model_grid_hw": [
+            592,
+            1056
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.8250089534617795,
+          "u_offset": -0.0766265636184971,
+          "u_max_abs_residual_px": 0.2915531326840437,
+          "v_scale": 0.8223719025386977,
+          "v_offset": -0.12615828902604634,
+          "v_max_abs_residual_px": 0.06620333943573087,
+          "fov_retained_u": 0.999823299970015,
+          "fov_retained_v": 0.9995173262753908,
+          "fov_retained_area": 0.9993407115338674
+        },
+        "1280x720": {
+          "measured": true,
+          "source_hw": [
+            1280,
+            720
+          ],
+          "model_grid_hw": [
+            1056,
+            592
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.8223719025812468,
+          "u_offset": -0.1261583003245242,
+          "u_max_abs_residual_px": 0.06620335279961864,
+          "v_scale": 0.8250089534277314,
+          "v_offset": -0.07662653237283129,
+          "v_max_abs_residual_px": 0.2915531419330364,
+          "fov_retained_u": 0.9995173262236763,
+          "fov_retained_v": 0.9998233000112776,
+          "fov_retained_area": 0.9993407115234048
+        }
+      },
+      "device_matrix": [
+        {
+          "device": "mps",
+          "works": true,
+          "note": "the run above"
+        },
+        {
+          "device": "cpu",
+          "load_seconds": 4.15,
+          "infer_seconds": 3.627,
+          "works": true,
+          "peak_rss_gb": 4.58
+        }
+      ],
+      "cuda_available_here": false,
+      "strict_n1_verified": true,
+      "status": "PASS"
+    },
+    "mapanything_n1": {
+      "model": "mapanything_n1",
+      "checkpoint": "facebook/map-anything-apache",
+      "declared_native_representation": "depth_along_ray_metric",
+      "env": {
+        "python": "3.13.5",
+        "executable": "/Users/nishanthmohan/code/uwrestore/experiments/week3_geometry/.venv-mapanything/bin/python",
+        "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+        "machine": "arm64",
+        "torch": "2.13.0",
+        "mps_available": true,
+        "mps_built": true,
+        "cuda_available": false,
+        "numpy": "2.5.2"
+      },
+      "seed": 0,
+      "sanity_set": [
+        {
+          "key": "ordinary_project",
+          "clip": "wreck_07",
+          "frame": 109,
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png"
+        },
+        {
+          "key": "difficult_project",
+          "clip": "wreck_05",
+          "frame": 113,
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png"
+        },
+        {
+          "key": "portrait_project",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png"
+        },
+        {
+          "key": "public_reference",
+          "clip": null,
+          "frame": null,
+          "why": "public/reference image with independently documented semantics",
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg"
+        }
+      ],
+      "load_seconds": 15.52,
+      "native_kind": "depth_along_ray_metric",
+      "range_rule": "identity_depth_along_ray",
+      "semantics": {
+        "native_field": "depth_along_ray (B,H,W,1)",
+        "native_meaning": "Euclidean camera-centre-to-point distance. Verified per frame against ||pts3d_cam||; see max_abs_range_minus_norm_pts3d_cam.",
+        "z_field": "depth_z (B,H,W,1) is the PLANAR z component, not range",
+        "camera_frame": "OpenCV: +x right, +y down, +z forward",
+        "range_conversion": "identity \u2014 the native field already IS the range",
+        "mask": "pred['mask'] with apply_mask=True, mask_edges=True",
+        "confidence": "pred['conf'], learned per-pixel, NOT calibrated underwater",
+        "claimed_scale": "metric; at N=1 the absolute scale is PROVISIONAL pre-C2",
+        "view_count": "strictly 1 \u2014 asserted on both the loader and the model output"
+      },
+      "preprocessing_declared": {
+        "loader": "mapanything.utils.image.load_images (default fixed_mapping mode)",
+        "resolution_set": 518,
+        "note": "Lanczos rescale to an aspect-ratio-mapped resolution, then centre crop. Every dense number is produced on that grid, NOT at the 1280-long-side extraction resolution."
+      },
+      "provenance": {
+        "method": "MapAnything (N=1)",
+        "role": "V1 view-count control against the Week-3 N=48 reference product",
+        "repo": "https://github.com/facebookresearch/map-anything",
+        "repo_commit": "3d10cf7a3016fc0f9bb13a071ee66c47b10be0d9",
+        "package_version": "1.1.4",
+        "code_license": "Apache-2.0",
+        "checkpoint": "facebook/map-anything-apache",
+        "checkpoint_license": "Apache-2.0 (default facebook/map-anything is CC-BY-NC-4.0)",
+        "torch": "2.13.0",
+        "device": "mps",
+        "dtype": "float32 (use_amp=False; MPS has no bf16 autocast path)",
+        "reference_impl_modifications": "none"
+      },
+      "image_probes": [
+        {
+          "key": "ordinary_project",
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "clip": "wreck_07",
+          "frame": 109,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png",
+          "native_shape": [
+            294,
+            518
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            294,
+            518
+          ],
+          "valid_fraction": 0.8292490741470333,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": true,
+          "aux": [
+            "depth_z",
+            "pts3d_cam"
+          ],
+          "extra": {
+            "max_abs_range_minus_norm_pts3d_cam": 1.1444091796875e-05,
+            "max_abs_depth_z_minus_pts3d_cam_z": 0.0,
+            "median_ratio_range_over_z": 1.1175732612609863,
+            "max_ratio_range_over_z": 1.3722007274627686,
+            "non_ambiguous_fraction": 0.9508181651038794,
+            "metric_scaling_factor": 6.846336841583252,
+            "n_views_seen_by_model": 1,
+            "infer_seconds": 1.326700083038304
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": false,
+          "range_p05": 5.175226211547852,
+          "range_median": 7.010000228881836,
+          "range_p95": 47.61341857910156,
+          "native_p05": 5.175226211547852,
+          "native_median": 7.010000228881836,
+          "native_p95": 47.61341857910156
+        },
+        {
+          "key": "difficult_project",
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "clip": "wreck_05",
+          "frame": 113,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png",
+          "native_shape": [
+            294,
+            518
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            294,
+            518
+          ],
+          "valid_fraction": 0.7352914138628425,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": true,
+          "aux": [
+            "depth_z",
+            "pts3d_cam"
+          ],
+          "extra": {
+            "max_abs_range_minus_norm_pts3d_cam": 1.52587890625e-05,
+            "max_abs_depth_z_minus_pts3d_cam_z": 0.0,
+            "median_ratio_range_over_z": 1.0900983810424805,
+            "max_ratio_range_over_z": 1.3117448091506958,
+            "non_ambiguous_fraction": 0.7708218422504137,
+            "metric_scaling_factor": 7.026167869567871,
+            "n_views_seen_by_model": 1,
+            "infer_seconds": 1.0534750000224449
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": false,
+          "range_p05": 9.440564155578613,
+          "range_median": 12.031082153320312,
+          "range_p95": 24.616792678833008,
+          "native_p05": 9.440564155578613,
+          "native_median": 12.031082153320312,
+          "native_p95": 24.616792678833008
+        },
+        {
+          "key": "portrait_project",
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png",
+          "native_shape": [
+            518,
+            294
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            518,
+            294
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": true,
+          "aux": [
+            "depth_z",
+            "pts3d_cam"
+          ],
+          "extra": {
+            "max_abs_range_minus_norm_pts3d_cam": 1.430511474609375e-06,
+            "max_abs_depth_z_minus_pts3d_cam_z": 0.0,
+            "median_ratio_range_over_z": 1.1087404489517212,
+            "max_ratio_range_over_z": 1.3527143001556396,
+            "non_ambiguous_fraction": 1.0,
+            "metric_scaling_factor": 2.411033868789673,
+            "n_views_seen_by_model": 1,
+            "infer_seconds": 1.0564298749668524
+          },
+          "source_hw": [
+            1280,
+            720
+          ],
+          "output_equals_source_grid": false,
+          "range_p05": 3.1868398189544678,
+          "range_median": 3.540552854537964,
+          "range_p95": 5.761980056762695,
+          "native_p05": 3.1868398189544678,
+          "native_median": 3.540552854537964,
+          "native_p95": 5.761980056762695
+        },
+        {
+          "key": "public_reference",
+          "why": "public/reference image with independently documented semantics",
+          "clip": null,
+          "frame": null,
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg",
+          "native_shape": [
+            294,
+            518
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            294,
+            518
+          ],
+          "valid_fraction": 0.948106269534841,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": true,
+          "aux": [
+            "depth_z",
+            "pts3d_cam"
+          ],
+          "extra": {
+            "max_abs_range_minus_norm_pts3d_cam": 1.430511474609375e-06,
+            "max_abs_depth_z_minus_pts3d_cam_z": 0.0,
+            "median_ratio_range_over_z": 1.1731184720993042,
+            "max_ratio_range_over_z": 1.5309711694717407,
+            "non_ambiguous_fraction": 1.0,
+            "metric_scaling_factor": 2.0772206783294678,
+            "n_views_seen_by_model": 1,
+            "infer_seconds": 1.0527669580187649
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": false,
+          "range_p05": 2.406249761581421,
+          "range_median": 4.469046592712402,
+          "range_p95": 5.441348552703857,
+          "native_p05": 2.406249761581421,
+          "native_median": 4.469046592712402,
+          "native_p95": 5.441348552703857
+        }
+      ],
+      "image_failures": [],
+      "fov_audit": {
+        "720x1280": {
+          "measured": true,
+          "source_hw": [
+            720,
+            1280
+          ],
+          "model_grid_hw": [
+            294,
+            518
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.40766245693637565,
+          "u_offset": -2.240907456505813,
+          "u_max_abs_residual_px": 0.19852399293759504,
+          "v_scale": 0.40922053800860425,
+          "v_offset": -0.6553461037404478,
+          "v_max_abs_residual_px": 0.21548294618095554,
+          "fov_retained_u": 0.9915606443456696,
+          "fov_retained_v": 0.995821062983434,
+          "fov_retained_area": 0.9874169748648435
+        },
+        "1280x720": {
+          "measured": true,
+          "source_hw": [
+            1280,
+            720
+          ],
+          "model_grid_hw": [
+            518,
+            294
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.4082998842732288,
+          "u_offset": -0.324638384653107,
+          "u_max_abs_residual_px": 0.18210296890964628,
+          "v_scale": 0.4076703074102068,
+          "v_offset": -2.245372150826463,
+          "v_max_abs_residual_px": 0.1999741053070352,
+          "fov_retained_u": 0.9980664870374556,
+          "fov_retained_v": 0.9915415499432837,
+          "fov_retained_area": 0.989624391503567
+        }
+      },
+      "device_matrix": [
+        {
+          "device": "mps",
+          "works": true,
+          "note": "the run above"
+        },
+        {
+          "device": "cpu",
+          "load_seconds": 17.42,
+          "infer_seconds": 2.336,
+          "works": true,
+          "peak_rss_gb": 9.58,
+          "note": "probed in a separate process (--skip-cpu in the main run)"
+        }
+      ],
+      "cuda_available_here": false,
+      "strict_n1_verified": true,
+      "status": "PASS"
+    },
+    "metricanything_pointmap": {
+      "model": "metricanything_pointmap",
+      "checkpoint": "yjh001/metricanything_student_pointmap",
+      "declared_native_representation": "pointmap_metric",
+      "env": {
+        "python": "3.13.5",
+        "executable": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/.venv-moge/bin/python",
+        "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+        "machine": "arm64",
+        "torch": "2.13.0",
+        "mps_available": true,
+        "mps_built": true,
+        "cuda_available": false,
+        "numpy": "2.5.3"
+      },
+      "seed": 0,
+      "sanity_set": [
+        {
+          "key": "ordinary_project",
+          "clip": "wreck_07",
+          "frame": 109,
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png"
+        },
+        {
+          "key": "difficult_project",
+          "clip": "wreck_05",
+          "frame": 113,
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png"
+        },
+        {
+          "key": "portrait_project",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png"
+        },
+        {
+          "key": "public_reference",
+          "clip": null,
+          "frame": null,
+          "why": "public/reference image with independently documented semantics",
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg"
+        }
+      ],
+      "load_seconds": 4.91,
+      "native_kind": "pointmap_metric",
+      "range_rule": "norm_pointmap",
+      "semantics": {
+        "native_field": "points (H,W,3) camera-frame point map",
+        "native_meaning": "metric-claimed 3D point per pixel in the camera frame",
+        "canonical_range": "||points|| \u2014 NOT points[..., 2], which is z-depth",
+        "z_field": "out['depth'] is planar z-depth; verified equal to points[...,2]",
+        "camera_frame": "OpenCV: +x right, +y down, +z forward",
+        "mask": "out['mask'], the model's own validity",
+        "confidence": "none emitted",
+        "intrinsics": "out['intrinsics'] is NORMALISED (0..1); scaled to pixels by the output (H,W) here",
+        "claimed_scale": "metric; PROVISIONAL pre-C2 on this camera",
+        "fov_postprocessing": "fov_x=None means the model's own focal/shift recovery. Supplying fov_x replaces that recovery's focal \u2014 it is POSTPROCESSING/CALIBRATION, the network is NOT conditioned on it (V9).",
+        "view_count": "strictly 1 by construction \u2014 infer() takes a single (3,H,W) tensor"
+      },
+      "preprocessing_declared": {
+        "loader": "cv2.imread -> RGB -> /255 -> (3,H,W) float32; MoGe resizes internally",
+        "resize_rule": "MoGeModel.infer resizes to a token-budget-derived resolution and interpolates the outputs back to the SOURCE (H,W).",
+        "resolution_level": 9,
+        "force_projection": true,
+        "force_projection_note": "the reference default. With it on, `points` is recomputed from (depth, K), so the point map is projection-consistent by construction.",
+        "use_fp16": "False (reference default is True; overridden for reproducibility)",
+        "fov_loss_expected": "none \u2014 aspect ratio preserved, no crop; verified in S0",
+        "code_copy": "metricanything",
+        "code_copy_path": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/vendor/metric-anything/models/student_pointmap"
+      },
+      "provenance": {
+        "method": "MoGe-2 architecture (metricanything_pointmap)",
+        "role": "V5 treatment arm: heterogeneous metric fine-tuning of MoGe-2 ViT-L",
+        "repo": "https://github.com/metric-anything/metric-anything",
+        "repo_commit": "616a5e6762f5fc40d1a4ef990fee04c800532f59",
+        "code_license": "Apache-2.0",
+        "code_copy": "metricanything",
+        "code_copy_path": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/vendor/metric-anything/models/student_pointmap",
+        "code_copy_resolved_module": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/vendor/metric-anything/models/student_pointmap/moge/__init__.py",
+        "checkpoint": "yjh001/metricanything_student_pointmap",
+        "checkpoint_file": "student_pointmap.pt",
+        "checkpoint_license": "Apache-2.0",
+        "model_config": {
+          "encoder": {
+            "backbone": "dinov2_vitl14",
+            "intermediate_layers": [
+              5,
+              11,
+              17,
+              23
+            ],
+            "dim_out": 1024
+          },
+          "neck": {
+            "dim_in": [
+              1026,
+              2,
+              2,
+              2,
+              2
+            ],
+            "dim_out": null,
+            "dim_res_blocks": [
+              1024,
+              256,
+              128,
+              64,
+              32
+            ],
+            "num_res_blocks": [
+              0,
+              2,
+              2,
+              2,
+              0
+            ],
+            "res_block_in_norm": "none",
+            "res_block_hidden_norm": "none",
+            "resamplers": [
+              "conv_transpose",
+              "conv_transpose",
+              "conv_transpose",
+              "bilinear"
+            ]
+          },
+          "points_head": {
+            "dim_in": [
+              1024,
+              256,
+              128,
+              64,
+              32
+            ],
+            "dim_out": [
+              null,
+              null,
+              null,
+              null,
+              3
+            ],
+            "dim_res_blocks": [
+              1024,
+              256,
+              128,
+              64,
+              32
+            ],
+            "num_res_blocks": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "res_block_in_norm": "none",
+            "res_block_hidden_norm": "none",
+            "resamplers": [
+              "conv_transpose",
+              "conv_transpose",
+              "conv_transpose",
+              "bilinear"
+            ]
+          },
+          "mask_head": {
+            "dim_in": [
+              1024,
+              256,
+              128,
+              64,
+              32
+            ],
+            "dim_out": [
+              null,
+              null,
+              null,
+              null,
+              1
+            ],
+            "dim_res_blocks": [
+              1024,
+              256,
+              128,
+              64,
+              32
+            ],
+            "num_res_blocks": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "res_block_in_norm": "none",
+            "res_block_hidden_norm": "none",
+            "resamplers": [
+              "conv_transpose",
+              "conv_transpose",
+              "conv_transpose",
+              "bilinear"
+            ]
+          },
+          "scale_head": {
+            "dims": [
+              1024,
+              1024,
+              1024,
+              1
+            ]
+          },
+          "remap_output": "exp",
+          "num_tokens_range": [
+            1200,
+            3600
+          ]
+        },
+        "load_state_dict_missing_keys": [],
+        "load_state_dict_unexpected_keys": [],
+        "torch": "2.13.0",
+        "device": "mps",
+        "dtype": "float32",
+        "fov_x_supplied": null,
+        "reference_impl_modifications": "none to the model code. `moge` is put on sys.path explicitly instead of pip-installed so that the code copy is chosen rather than inherited."
+      },
+      "image_probes": [
+        {
+          "key": "ordinary_project",
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "clip": "wreck_07",
+          "frame": 109,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png",
+          "native_shape": [
+            720,
+            1280,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            720,
+            1280
+          ],
+          "valid_fraction": 0.9044965277777778,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": false,
+          "aux": [
+            "depth_z",
+            "points"
+          ],
+          "extra": {
+            "output_hw": [
+              720,
+              1280
+            ],
+            "fov_x_supplied": null,
+            "intrinsics_normalised": [
+              [
+                0.5820956230163574,
+                0.0,
+                0.5
+              ],
+              [
+                0.0,
+                1.0348366498947144,
+                0.5
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "use_fp16": false,
+            "resolution_level": 9,
+            "force_projection": true,
+            "max_abs_depth_minus_points_z": 0.0,
+            "median_ratio_range_over_z": 1.1137170791625977,
+            "max_ratio_range_over_z": 1.4033790826797485,
+            "infer_seconds": 2.1256384160369635
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": true,
+          "range_p05": 2.15706729888916,
+          "range_median": 3.3472886085510254,
+          "range_p95": 41.19084548950195,
+          "native_p05": -1.4199544191360474,
+          "native_median": 1.7620536088943481,
+          "native_p95": 21.82240104675293
+        },
+        {
+          "key": "difficult_project",
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "clip": "wreck_05",
+          "frame": 113,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png",
+          "native_shape": [
+            720,
+            1280,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            720,
+            1280
+          ],
+          "valid_fraction": 0.8556586371527778,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": false,
+          "aux": [
+            "depth_z",
+            "points"
+          ],
+          "extra": {
+            "output_hw": [
+              720,
+              1280
+            ],
+            "fov_x_supplied": null,
+            "intrinsics_normalised": [
+              [
+                0.5798591375350952,
+                0.0,
+                0.5
+              ],
+              [
+                0.0,
+                1.0308606624603271,
+                0.5
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "use_fp16": false,
+            "resolution_level": 9,
+            "force_projection": true,
+            "max_abs_depth_minus_points_z": 0.0,
+            "median_ratio_range_over_z": 1.1148227453231812,
+            "max_ratio_range_over_z": 1.4060461521148682,
+            "infer_seconds": 2.0211451670038514
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": true,
+          "range_p05": 2.222940683364868,
+          "range_median": 2.7751786708831787,
+          "range_p95": 58.24338912963867,
+          "native_p05": -9.386298179626465,
+          "native_median": 0.881466805934906,
+          "native_p95": 16.68899917602539
+        },
+        {
+          "key": "portrait_project",
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png",
+          "native_shape": [
+            1280,
+            720,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            1280,
+            720
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": false,
+          "aux": [
+            "depth_z",
+            "points"
+          ],
+          "extra": {
+            "output_hw": [
+              1280,
+              720
+            ],
+            "fov_x_supplied": null,
+            "intrinsics_normalised": [
+              [
+                1.1491879224777222,
+                0.0,
+                0.5
+              ],
+              [
+                0.0,
+                0.6464182138442993,
+                0.5
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "use_fp16": false,
+            "resolution_level": 9,
+            "force_projection": true,
+            "max_abs_depth_minus_points_z": 0.0,
+            "median_ratio_range_over_z": 1.104140043258667,
+            "max_ratio_range_over_z": 1.3364635705947876,
+            "infer_seconds": 2.039969207951799
+          },
+          "source_hw": [
+            1280,
+            720
+          ],
+          "output_equals_source_grid": true,
+          "range_p05": 0.9312162399291992,
+          "range_median": 1.0211772918701172,
+          "range_p95": 1.5369633436203003,
+          "native_p05": -0.4558340907096863,
+          "native_median": 0.283844530582428,
+          "native_p95": 1.1730871200561523
+        },
+        {
+          "key": "public_reference",
+          "why": "public/reference image with independently documented semantics",
+          "clip": null,
+          "frame": null,
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg",
+          "native_shape": [
+            720,
+            1280,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            720,
+            1280
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": false,
+          "aux": [
+            "depth_z",
+            "points"
+          ],
+          "extra": {
+            "output_hw": [
+              720,
+              1280
+            ],
+            "fov_x_supplied": null,
+            "intrinsics_normalised": [
+              [
+                0.7102421522140503,
+                0.0,
+                0.5
+              ],
+              [
+                0.0,
+                1.2626527547836304,
+                0.5
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "use_fp16": false,
+            "resolution_level": 9,
+            "force_projection": true,
+            "max_abs_depth_minus_points_z": 0.0,
+            "median_ratio_range_over_z": 1.086974024772644,
+            "max_ratio_range_over_z": 1.284988522529602,
+            "infer_seconds": 2.0288644999964163
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": true,
+          "range_p05": 2.925452947616577,
+          "range_median": 5.056534767150879,
+          "range_p95": 6.500540733337402,
+          "native_p05": -2.15126633644104,
+          "native_median": 0.9611687064170837,
+          "native_p95": 5.790388107299805
+        }
+      ],
+      "image_failures": [],
+      "fov_audit": {
+        "720x1280": {
+          "measured": true,
+          "source_hw": [
+            720,
+            1280
+          ],
+          "model_grid_hw": [
+            630,
+            1120
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.8746450720097779,
+          "u_offset": 0.17701192766887044,
+          "u_max_abs_residual_px": 0.05014196223135059,
+          "v_scale": 0.8754436833531787,
+          "v_offset": -0.2095485585987184,
+          "v_max_abs_residual_px": 0.1386241680501712,
+          "fov_retained_u": 1.0,
+          "fov_retained_v": 0.9992946023394315,
+          "fov_retained_area": 0.9992946023394315
+        },
+        "1280x720": {
+          "measured": true,
+          "source_hw": [
+            1280,
+            720
+          ],
+          "model_grid_hw": [
+            1120,
+            630
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.8754436833443912,
+          "u_offset": -0.20954855543868073,
+          "u_max_abs_residual_px": 0.13862416679006628,
+          "v_scale": 0.8746450720016935,
+          "v_offset": 0.17701193207680221,
+          "v_max_abs_residual_px": 0.050141962997599876,
+          "fov_retained_u": 0.9992946023494622,
+          "fov_retained_v": 1.0,
+          "fov_retained_area": 0.9992946023494622
+        }
+      },
+      "device_matrix": [
+        {
+          "device": "mps",
+          "works": true,
+          "note": "the run above"
+        },
+        {
+          "device": "cpu",
+          "load_seconds": 3.49,
+          "infer_seconds": 4.822,
+          "works": true,
+          "peak_rss_gb": 6.14
+        }
+      ],
+      "cuda_available_here": false,
+      "strict_n1_verified": true,
+      "status": "PASS"
+    },
+    "moge2_vitl": {
+      "model": "moge2_vitl",
+      "checkpoint": "Ruicheng/moge-2-vitl",
+      "declared_native_representation": "pointmap_metric",
+      "env": {
+        "python": "3.13.5",
+        "executable": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/.venv-moge/bin/python",
+        "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+        "machine": "arm64",
+        "torch": "2.13.0",
+        "mps_available": true,
+        "mps_built": true,
+        "cuda_available": false,
+        "numpy": "2.5.3"
+      },
+      "seed": 0,
+      "sanity_set": [
+        {
+          "key": "ordinary_project",
+          "clip": "wreck_07",
+          "frame": 109,
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png"
+        },
+        {
+          "key": "difficult_project",
+          "clip": "wreck_05",
+          "frame": 113,
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png"
+        },
+        {
+          "key": "portrait_project",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png"
+        },
+        {
+          "key": "public_reference",
+          "clip": null,
+          "frame": null,
+          "why": "public/reference image with independently documented semantics",
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg"
+        }
+      ],
+      "load_seconds": 4.6,
+      "native_kind": "pointmap_metric",
+      "range_rule": "norm_pointmap",
+      "semantics": {
+        "native_field": "points (H,W,3) camera-frame point map",
+        "native_meaning": "metric-claimed 3D point per pixel in the camera frame",
+        "canonical_range": "||points|| \u2014 NOT points[..., 2], which is z-depth",
+        "z_field": "out['depth'] is planar z-depth; verified equal to points[...,2]",
+        "camera_frame": "OpenCV: +x right, +y down, +z forward",
+        "mask": "out['mask'], the model's own validity",
+        "confidence": "none emitted",
+        "intrinsics": "out['intrinsics'] is NORMALISED (0..1); scaled to pixels by the output (H,W) here",
+        "claimed_scale": "metric; PROVISIONAL pre-C2 on this camera",
+        "fov_postprocessing": "fov_x=None means the model's own focal/shift recovery. Supplying fov_x replaces that recovery's focal \u2014 it is POSTPROCESSING/CALIBRATION, the network is NOT conditioned on it (V9).",
+        "view_count": "strictly 1 by construction \u2014 infer() takes a single (3,H,W) tensor"
+      },
+      "preprocessing_declared": {
+        "loader": "cv2.imread -> RGB -> /255 -> (3,H,W) float32; MoGe resizes internally",
+        "resize_rule": "MoGeModel.infer resizes to a token-budget-derived resolution and interpolates the outputs back to the SOURCE (H,W).",
+        "resolution_level": 9,
+        "force_projection": true,
+        "force_projection_note": "the reference default. With it on, `points` is recomputed from (depth, K), so the point map is projection-consistent by construction.",
+        "use_fp16": "False (reference default is True; overridden for reproducibility)",
+        "fov_loss_expected": "none \u2014 aspect ratio preserved, no crop; verified in S0",
+        "code_copy": "metricanything",
+        "code_copy_path": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/vendor/metric-anything/models/student_pointmap"
+      },
+      "provenance": {
+        "method": "MoGe-2 architecture (moge2_vitl)",
+        "role": "strong monocular metric point-map baseline; V5 control arm",
+        "repo": "https://github.com/microsoft/MoGe",
+        "repo_commit": "74fbce054ebed49800de42d0ad0e83495065719a",
+        "code_license": "MIT",
+        "code_copy": "metricanything",
+        "code_copy_path": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/vendor/metric-anything/models/student_pointmap",
+        "code_copy_resolved_module": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/vendor/metric-anything/models/student_pointmap/moge/__init__.py",
+        "checkpoint": "Ruicheng/moge-2-vitl",
+        "checkpoint_file": "model.pt",
+        "checkpoint_license": "MIT",
+        "model_config": {
+          "encoder": {
+            "backbone": "dinov2_vitl14",
+            "intermediate_layers": [
+              5,
+              11,
+              17,
+              23
+            ],
+            "dim_out": 1024
+          },
+          "neck": {
+            "dim_in": [
+              1026,
+              2,
+              2,
+              2,
+              2
+            ],
+            "dim_out": null,
+            "dim_res_blocks": [
+              1024,
+              256,
+              128,
+              64,
+              32
+            ],
+            "num_res_blocks": [
+              0,
+              2,
+              2,
+              2,
+              0
+            ],
+            "res_block_in_norm": "none",
+            "res_block_hidden_norm": "none",
+            "resamplers": [
+              "conv_transpose",
+              "conv_transpose",
+              "conv_transpose",
+              "bilinear"
+            ]
+          },
+          "points_head": {
+            "dim_in": [
+              1024,
+              256,
+              128,
+              64,
+              32
+            ],
+            "dim_out": [
+              null,
+              null,
+              null,
+              null,
+              3
+            ],
+            "dim_res_blocks": [
+              1024,
+              256,
+              128,
+              64,
+              32
+            ],
+            "num_res_blocks": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "res_block_in_norm": "none",
+            "res_block_hidden_norm": "none",
+            "resamplers": [
+              "conv_transpose",
+              "conv_transpose",
+              "conv_transpose",
+              "bilinear"
+            ]
+          },
+          "mask_head": {
+            "dim_in": [
+              1024,
+              256,
+              128,
+              64,
+              32
+            ],
+            "dim_out": [
+              null,
+              null,
+              null,
+              null,
+              1
+            ],
+            "dim_res_blocks": [
+              1024,
+              256,
+              128,
+              64,
+              32
+            ],
+            "num_res_blocks": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "res_block_in_norm": "none",
+            "res_block_hidden_norm": "none",
+            "resamplers": [
+              "conv_transpose",
+              "conv_transpose",
+              "conv_transpose",
+              "bilinear"
+            ]
+          },
+          "scale_head": {
+            "dims": [
+              1024,
+              1024,
+              1024,
+              1
+            ]
+          },
+          "remap_output": "exp",
+          "num_tokens_range": [
+            1200,
+            3600
+          ]
+        },
+        "load_state_dict_missing_keys": [],
+        "load_state_dict_unexpected_keys": [],
+        "torch": "2.13.0",
+        "device": "mps",
+        "dtype": "float32",
+        "fov_x_supplied": null,
+        "reference_impl_modifications": "none to the model code. `moge` is put on sys.path explicitly instead of pip-installed so that the code copy is chosen rather than inherited."
+      },
+      "image_probes": [
+        {
+          "key": "ordinary_project",
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "clip": "wreck_07",
+          "frame": 109,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png",
+          "native_shape": [
+            720,
+            1280,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            720,
+            1280
+          ],
+          "valid_fraction": 0.9871755642361111,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": false,
+          "aux": [
+            "depth_z",
+            "points"
+          ],
+          "extra": {
+            "output_hw": [
+              720,
+              1280
+            ],
+            "fov_x_supplied": null,
+            "intrinsics_normalised": [
+              [
+                0.4597340226173401,
+                0.0,
+                0.5
+              ],
+              [
+                0.0,
+                0.8173049092292786,
+                0.5
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "use_fp16": false,
+            "resolution_level": 9,
+            "force_projection": true,
+            "max_abs_depth_minus_points_z": 0.0,
+            "median_ratio_range_over_z": 1.194187879562378,
+            "max_ratio_range_over_z": 1.5981910228729248,
+            "infer_seconds": 2.3214412499801256
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": true,
+          "range_p05": 1.9061294794082642,
+          "range_median": 4.2275567054748535,
+          "range_p95": 134.06402587890625,
+          "native_p05": -1.6519742012023926,
+          "native_median": 1.5686759948730469,
+          "native_p95": 64.54220581054688
+        },
+        {
+          "key": "difficult_project",
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "clip": "wreck_05",
+          "frame": 113,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png",
+          "native_shape": [
+            720,
+            1280,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            720,
+            1280
+          ],
+          "valid_fraction": 0.7939832899305556,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": false,
+          "aux": [
+            "depth_z",
+            "points"
+          ],
+          "extra": {
+            "output_hw": [
+              720,
+              1280
+            ],
+            "fov_x_supplied": null,
+            "intrinsics_normalised": [
+              [
+                0.4625273644924164,
+                0.0,
+                0.5
+              ],
+              [
+                0.0,
+                0.8222708702087402,
+                0.5
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "use_fp16": false,
+            "resolution_level": 9,
+            "force_projection": true,
+            "max_abs_depth_minus_points_z": 0.0,
+            "median_ratio_range_over_z": 1.1847994327545166,
+            "max_ratio_range_over_z": 1.5923248529434204,
+            "infer_seconds": 2.0077515830053017
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": true,
+          "range_p05": 2.2626495361328125,
+          "range_median": 2.8243331909179688,
+          "range_p95": 53.21794891357422,
+          "native_p05": -4.498473167419434,
+          "native_median": 1.1007754802703857,
+          "native_p95": 6.856365203857422
+        },
+        {
+          "key": "portrait_project",
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png",
+          "native_shape": [
+            1280,
+            720,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            1280,
+            720
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": false,
+          "aux": [
+            "depth_z",
+            "points"
+          ],
+          "extra": {
+            "output_hw": [
+              1280,
+              720
+            ],
+            "fov_x_supplied": null,
+            "intrinsics_normalised": [
+              [
+                0.9021308422088623,
+                0.0,
+                0.5
+              ],
+              [
+                0.0,
+                0.5074486136436462,
+                0.5
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "use_fp16": false,
+            "resolution_level": 9,
+            "force_projection": true,
+            "max_abs_depth_minus_points_z": 0.0,
+            "median_ratio_range_over_z": 1.1642930507659912,
+            "max_ratio_range_over_z": 1.5085340738296509,
+            "infer_seconds": 2.035903625015635
+          },
+          "source_hw": [
+            1280,
+            720
+          ],
+          "output_equals_source_grid": true,
+          "range_p05": 0.9693120718002319,
+          "range_median": 1.0878804922103882,
+          "range_p95": 1.666930913925171,
+          "native_p05": -0.5881249308586121,
+          "native_median": 0.36027276515960693,
+          "native_p95": 1.166240930557251
+        },
+        {
+          "key": "public_reference",
+          "why": "public/reference image with independently documented semantics",
+          "clip": null,
+          "frame": null,
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg",
+          "native_shape": [
+            720,
+            1280,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            720,
+            1280
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": false,
+          "aux": [
+            "depth_z",
+            "points"
+          ],
+          "extra": {
+            "output_hw": [
+              720,
+              1280
+            ],
+            "fov_x_supplied": null,
+            "intrinsics_normalised": [
+              [
+                0.7189419865608215,
+                0.0,
+                0.5
+              ],
+              [
+                0.0,
+                1.2781190872192383,
+                0.5
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "use_fp16": false,
+            "resolution_level": 9,
+            "force_projection": true,
+            "max_abs_depth_minus_points_z": 0.0,
+            "median_ratio_range_over_z": 1.0849636793136597,
+            "max_ratio_range_over_z": 1.2788786888122559,
+            "infer_seconds": 2.0176692500244826
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": true,
+          "range_p05": 3.0405523777008057,
+          "range_median": 5.157625198364258,
+          "range_p95": 6.624432563781738,
+          "native_p05": -2.1634597778320312,
+          "native_median": 0.9864661693572998,
+          "native_p95": 5.9056196212768555
+        }
+      ],
+      "image_failures": [],
+      "fov_audit": {
+        "720x1280": {
+          "measured": true,
+          "source_hw": [
+            720,
+            1280
+          ],
+          "model_grid_hw": [
+            630,
+            1120
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.8746450720097779,
+          "u_offset": 0.17701192766887044,
+          "u_max_abs_residual_px": 0.05014196223135059,
+          "v_scale": 0.8754436833531787,
+          "v_offset": -0.2095485585987184,
+          "v_max_abs_residual_px": 0.1386241680501712,
+          "fov_retained_u": 1.0,
+          "fov_retained_v": 0.9992946023394315,
+          "fov_retained_area": 0.9992946023394315
+        },
+        "1280x720": {
+          "measured": true,
+          "source_hw": [
+            1280,
+            720
+          ],
+          "model_grid_hw": [
+            1120,
+            630
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.8754436833443912,
+          "u_offset": -0.20954855543868073,
+          "u_max_abs_residual_px": 0.13862416679006628,
+          "v_scale": 0.8746450720016935,
+          "v_offset": 0.17701193207680221,
+          "v_max_abs_residual_px": 0.050141962997599876,
+          "fov_retained_u": 0.9992946023494622,
+          "fov_retained_v": 1.0,
+          "fov_retained_area": 0.9992946023494622
+        }
+      },
+      "device_matrix": [
+        {
+          "device": "mps",
+          "works": true,
+          "note": "the run above"
+        },
+        {
+          "device": "cpu",
+          "load_seconds": 4.39,
+          "infer_seconds": 5.296,
+          "works": true,
+          "peak_rss_gb": 5.81
+        }
+      ],
+      "cuda_available_here": false,
+      "strict_n1_verified": true,
+      "status": "PASS"
+    },
+    "wat3r_n1": {
+      "model": "wat3r_n1",
+      "checkpoint": "lsxi77777/Wat3R",
+      "declared_native_representation": "pointmap",
+      "env": {
+        "python": "3.13.5",
+        "executable": "/Users/nishanthmohan/code/uwrestore/experiments/week3_geometry/.venv-vggt/bin/python",
+        "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+        "machine": "arm64",
+        "torch": "2.13.0",
+        "mps_available": true,
+        "mps_built": true,
+        "cuda_available": false,
+        "numpy": "2.5.2"
+      },
+      "seed": 0,
+      "sanity_set": [
+        {
+          "key": "ordinary_project",
+          "clip": "wreck_07",
+          "frame": 109,
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png"
+        },
+        {
+          "key": "difficult_project",
+          "clip": "wreck_05",
+          "frame": 113,
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png"
+        },
+        {
+          "key": "portrait_project",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png"
+        },
+        {
+          "key": "public_reference",
+          "clip": null,
+          "frame": null,
+          "why": "public/reference image with independently documented semantics",
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg"
+        }
+      ],
+      "load_seconds": 9.02,
+      "native_kind": "pointmap",
+      "range_rule": "zdepth_to_range_with_K",
+      "semantics": {
+        "native_field": "point map built as K^-1[u,v,1] * depth, from the model's own PLANAR z-depth head and its decoded pixel intrinsics",
+        "native_meaning": "camera-frame 3D point per pixel",
+        "z_field": "preds['depth'] is PLANAR z-depth, not range",
+        "canonical_range": "z * ||K^-1 [u,v,1]|| \u2014 the secant conversion",
+        "camera_frame": "OpenCV: +x right, +y down, +z forward",
+        "pose": "pose_encoding_to_extri_intri returns world2cam extrinsics",
+        "confidence": "preds['depth_conf'], learned; NOT calibrated for this domain",
+        "claimed_scale": "NOT established here. The model was trained multi-view and the released evaluation aligns before scoring; native ambiguity is an S2 measurement, not an inheritance.",
+        "training_caveat": "not trained with single-image supervision; FLSea is in its training pool though its evaluation scenes are held out",
+        "view_count": "strictly 1 \u2014 asserted on the preprocessed tensor"
+      },
+      "preprocessing_declared": {
+        "loader": "wat3r.utils.load_fn.load_and_preprocess_images",
+        "mode": "crop",
+        "mode_rationale": "Wat3R's README uses mode='max'; Week 3 uses 'crop' because that branch is identical to VGGT's, which keeps the family comparison on identical pixels. Kept for Week 4 so this arm differs from the Week-3 product ONLY in view count.",
+        "resize_rule": "resize so the SHORT side reaches 518 rounded to a multiple of 14, then centre-crop the long side to 518",
+        "fov_loss_expected": "substantial on PORTRAIT sources \u2014 Week 3 lost 10/25 FOV markers at 1280x720. Measured in S0, not assumed."
+      },
+      "provenance": {
+        "method": "Wat3R-Ren (N=1)",
+        "role": "sole underwater-specialisation control",
+        "repo": "https://github.com/LSXI7/Wat3R",
+        "repo_commit": "93147df00e15605afa93f586923fec000b18cefc",
+        "code_license": "Apache-2.0",
+        "checkpoint": "lsxi77777/Wat3R",
+        "checkpoint_license": "Apache-2.0",
+        "torch": "2.13.0",
+        "device": "mps",
+        "dtype": "float32 (no autocast)",
+        "reference_impl_modifications": "none",
+        "naming_note": "Ren et al. ECCV 2026. A second unrelated 2026 method is also called WAT3R (Xu et al.); Week 3 records this one as wat3r_ren."
+      },
+      "image_probes": [
+        {
+          "key": "ordinary_project",
+          "why": "ordinary project underwater frame, high texture, landscape",
+          "clip": "wreck_07",
+          "frame": 109,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_07/f000109.png",
+          "native_shape": [
+            294,
+            518,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            294,
+            518
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": true,
+          "aux": [
+            "T_cw",
+            "depth_z"
+          ],
+          "extra": {
+            "output_hw": [
+              294,
+              518
+            ],
+            "n_views_seen_by_model": 1,
+            "pred_keys": [
+              "depth",
+              "depth_conf",
+              "images",
+              "pose_enc",
+              "pose_enc_list",
+              "world_points",
+              "world_points_conf"
+            ],
+            "max_abs_range_minus_norm_points": 0.0,
+            "emits_world_points": true,
+            "emits_world_points_conf": true,
+            "infer_seconds": 1.3654027500306256
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": false,
+          "range_p05": 0.3224915862083435,
+          "range_median": 0.6126768589019775,
+          "range_p95": 3.704874277114868,
+          "native_p05": -0.2269977331161499,
+          "native_median": 0.2327304482460022,
+          "native_p95": 2.0340676307678223
+        },
+        {
+          "key": "difficult_project",
+          "why": "difficult project underwater frame, low texture / hazy, landscape",
+          "clip": "wreck_05",
+          "frame": 113,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_05/f000113.png",
+          "native_shape": [
+            294,
+            518,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            294,
+            518
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": true,
+          "aux": [
+            "T_cw",
+            "depth_z"
+          ],
+          "extra": {
+            "output_hw": [
+              294,
+              518
+            ],
+            "n_views_seen_by_model": 1,
+            "pred_keys": [
+              "depth",
+              "depth_conf",
+              "images",
+              "pose_enc",
+              "pose_enc_list",
+              "world_points",
+              "world_points_conf"
+            ],
+            "max_abs_range_minus_norm_points": 0.0,
+            "emits_world_points": true,
+            "emits_world_points_conf": true,
+            "infer_seconds": 1.1246723750373349
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": false,
+          "range_p05": 0.399800568819046,
+          "range_median": 0.492698609828949,
+          "range_p95": 4.415058135986328,
+          "native_p05": -1.3015263080596924,
+          "native_median": 0.1088404655456543,
+          "native_p95": 3.764173984527588
+        },
+        {
+          "key": "portrait_project",
+          "why": "PORTRAIT/orientation-sensitive frame; Week 3 lost 10/25 FOV markers here in the VGGT family, so this is the preprocessing trap case",
+          "clip": "wreck_01",
+          "frame": 1855,
+          "path": "experiments/week3_geometry/outputs/frames/wreck_01/f001855.png",
+          "native_shape": [
+            518,
+            518,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            518,
+            518
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": true,
+          "aux": [
+            "T_cw",
+            "depth_z"
+          ],
+          "extra": {
+            "output_hw": [
+              518,
+              518
+            ],
+            "n_views_seen_by_model": 1,
+            "pred_keys": [
+              "depth",
+              "depth_conf",
+              "images",
+              "pose_enc",
+              "pose_enc_list",
+              "world_points",
+              "world_points_conf"
+            ],
+            "max_abs_range_minus_norm_points": 0.0,
+            "emits_world_points": true,
+            "emits_world_points_conf": true,
+            "infer_seconds": 1.9211695419508033
+          },
+          "source_hw": [
+            1280,
+            720
+          ],
+          "output_equals_source_grid": false,
+          "range_p05": 0.7930159568786621,
+          "range_median": 0.9284631013870239,
+          "range_p95": 1.2753143310546875,
+          "native_p05": -0.2788201570510864,
+          "native_median": 0.2001788318157196,
+          "native_p95": 1.0934888124465942
+        },
+        {
+          "key": "public_reference",
+          "why": "public/reference image with independently documented semantics",
+          "clip": null,
+          "frame": null,
+          "path": "experiments/week4_mono/vendor/FoundationGeo/demo/indoor.jpg",
+          "native_shape": [
+            294,
+            518,
+            3
+          ],
+          "native_dtype": "float32",
+          "valid_shape": [
+            294,
+            518
+          ],
+          "valid_fraction": 1.0,
+          "emits_range": true,
+          "emits_K": true,
+          "emits_conf": true,
+          "aux": [
+            "T_cw",
+            "depth_z"
+          ],
+          "extra": {
+            "output_hw": [
+              294,
+              518
+            ],
+            "n_views_seen_by_model": 1,
+            "pred_keys": [
+              "depth",
+              "depth_conf",
+              "images",
+              "pose_enc",
+              "pose_enc_list",
+              "world_points",
+              "world_points_conf"
+            ],
+            "max_abs_range_minus_norm_points": 0.0,
+            "emits_world_points": true,
+            "emits_world_points_conf": true,
+            "infer_seconds": 1.085876583994832
+          },
+          "source_hw": [
+            720,
+            1280
+          ],
+          "output_equals_source_grid": false,
+          "range_p05": 0.4346156120300293,
+          "range_median": 0.7273500561714172,
+          "range_p95": 3.4341652393341064,
+          "native_p05": -0.43124181032180786,
+          "native_median": 0.12228620797395706,
+          "native_p95": 0.9723355770111084
+        }
+      ],
+      "image_failures": [],
+      "fov_audit": {
+        "720x1280": {
+          "measured": true,
+          "source_hw": [
+            720,
+            1280
+          ],
+          "model_grid_hw": [
+            294,
+            518
+          ],
+          "n_markers_used": 25,
+          "n_markers_lost_to_crop": 0,
+          "markers_lost_source_uv": [],
+          "u_scale": 0.4048903008842466,
+          "u_offset": -0.4678364455641478,
+          "u_max_abs_residual_px": 0.16195612035363638,
+          "v_scale": 0.40921507152136977,
+          "v_offset": -0.6534867324528644,
+          "v_max_abs_residual_px": 0.217512083375496,
+          "fov_retained_u": 0.998349547007138,
+          "fov_retained_v": 0.9958343656291759,
+          "fov_retained_area": 0.9941907878200283
+        },
+        "1280x720": {
+          "measured": true,
+          "source_hw": [
+            1280,
+            720
+          ],
+          "model_grid_hw": [
+            518,
+            518
+          ],
+          "n_markers_used": 15,
+          "n_markers_lost_to_crop": 10,
+          "markers_lost_source_uv": [
+            [
+              86.0,
+              153.0
+            ],
+            [
+              216.0,
+              153.0
+            ],
+            [
+              360.0,
+              153.0
+            ],
+            [
+              503.0,
+              153.0
+            ],
+            [
+              633.0,
+              153.0
+            ],
+            [
+              86.0,
+              1126.0
+            ],
+            [
+              216.0,
+              1126.0
+            ],
+            [
+              360.0,
+              1126.0
+            ],
+            [
+              503.0,
+              1126.0
+            ],
+            [
+              633.0,
+              1126.0
+            ]
+          ],
+          "u_scale": 0.7192961829136163,
+          "u_offset": -0.06883599197168716,
+          "u_max_abs_residual_px": 0.14067905055333085,
+          "v_scale": 0.721821663201903,
+          "v_offset": -203.09125827250242,
+          "v_max_abs_residual_px": 0.07604360429326107,
+          "fov_retained_u": 0.9996636421594026,
+          "fov_retained_v": 0.5600026558946668,
+          "fov_retained_area": 0.5598142946106013
+        }
+      },
+      "device_matrix": [
+        {
+          "device": "mps",
+          "works": true,
+          "note": "the run above"
+        },
+        {
+          "device": "cpu",
+          "load_seconds": 8.63,
+          "infer_seconds": 2.119,
+          "works": true,
+          "peak_rss_gb": 9.17,
+          "note": "probed in a separate process (--skip-cpu in the main run)"
+        }
+      ],
+      "cuda_available_here": false,
+      "strict_n1_verified": true,
+      "status": "PASS"
+    }
+  },
+  "checkpoint_integrity": {
+    "_comment": "Tensor-level comparison of the MetricAnything Student-PointMap checkpoint against stock MoGe-2 ViT-L. Mandated by MONO_DEPTH_FREEZE.md C5 because Week 4A's V5 comparison assumes the two share an architecture and a representation.",
+    "base": {
+      "repo": "Ruicheng/moge-2-vitl",
+      "file": "model.pt",
+      "bytes": 1305030700,
+      "sha256": "3eefd4abb2102f38f12b2d1992e5ff15e4923e5431c67dd494afe157e0111cd5"
+    },
+    "fine": {
+      "repo": "yjh001/metricanything_student_pointmap",
+      "file": "student_pointmap.pt",
+      "bytes": 1304997680,
+      "sha256": "f3b49bf78bc2699e79a7c8a53498d4520b30d2c1620c5c4f6f02cc7e94229d58"
+    },
+    "files_identical": false,
+    "model_config_base": {
+      "encoder": {
+        "backbone": "dinov2_vitl14",
+        "intermediate_layers": [
+          5,
+          11,
+          17,
+          23
+        ],
+        "dim_out": 1024
+      },
+      "neck": {
+        "dim_in": [
+          1026,
+          2,
+          2,
+          2,
+          2
+        ],
+        "dim_out": null,
+        "dim_res_blocks": [
+          1024,
+          256,
+          128,
+          64,
+          32
+        ],
+        "num_res_blocks": [
+          0,
+          2,
+          2,
+          2,
+          0
+        ],
+        "res_block_in_norm": "none",
+        "res_block_hidden_norm": "none",
+        "resamplers": [
+          "conv_transpose",
+          "conv_transpose",
+          "conv_transpose",
+          "bilinear"
+        ]
+      },
+      "points_head": {
+        "dim_in": [
+          1024,
+          256,
+          128,
+          64,
+          32
+        ],
+        "dim_out": [
+          null,
+          null,
+          null,
+          null,
+          3
+        ],
+        "dim_res_blocks": [
+          1024,
+          256,
+          128,
+          64,
+          32
+        ],
+        "num_res_blocks": [
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        "res_block_in_norm": "none",
+        "res_block_hidden_norm": "none",
+        "resamplers": [
+          "conv_transpose",
+          "conv_transpose",
+          "conv_transpose",
+          "bilinear"
+        ]
+      },
+      "mask_head": {
+        "dim_in": [
+          1024,
+          256,
+          128,
+          64,
+          32
+        ],
+        "dim_out": [
+          null,
+          null,
+          null,
+          null,
+          1
+        ],
+        "dim_res_blocks": [
+          1024,
+          256,
+          128,
+          64,
+          32
+        ],
+        "num_res_blocks": [
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        "res_block_in_norm": "none",
+        "res_block_hidden_norm": "none",
+        "resamplers": [
+          "conv_transpose",
+          "conv_transpose",
+          "conv_transpose",
+          "bilinear"
+        ]
+      },
+      "scale_head": {
+        "dims": [
+          1024,
+          1024,
+          1024,
+          1
+        ]
+      },
+      "remap_output": "exp",
+      "num_tokens_range": [
+        1200,
+        3600
+      ]
+    },
+    "model_config_fine": {
+      "encoder": {
+        "backbone": "dinov2_vitl14",
+        "intermediate_layers": [
+          5,
+          11,
+          17,
+          23
+        ],
+        "dim_out": 1024
+      },
+      "neck": {
+        "dim_in": [
+          1026,
+          2,
+          2,
+          2,
+          2
+        ],
+        "dim_out": null,
+        "dim_res_blocks": [
+          1024,
+          256,
+          128,
+          64,
+          32
+        ],
+        "num_res_blocks": [
+          0,
+          2,
+          2,
+          2,
+          0
+        ],
+        "res_block_in_norm": "none",
+        "res_block_hidden_norm": "none",
+        "resamplers": [
+          "conv_transpose",
+          "conv_transpose",
+          "conv_transpose",
+          "bilinear"
+        ]
+      },
+      "points_head": {
+        "dim_in": [
+          1024,
+          256,
+          128,
+          64,
+          32
+        ],
+        "dim_out": [
+          null,
+          null,
+          null,
+          null,
+          3
+        ],
+        "dim_res_blocks": [
+          1024,
+          256,
+          128,
+          64,
+          32
+        ],
+        "num_res_blocks": [
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        "res_block_in_norm": "none",
+        "res_block_hidden_norm": "none",
+        "resamplers": [
+          "conv_transpose",
+          "conv_transpose",
+          "conv_transpose",
+          "bilinear"
+        ]
+      },
+      "mask_head": {
+        "dim_in": [
+          1024,
+          256,
+          128,
+          64,
+          32
+        ],
+        "dim_out": [
+          null,
+          null,
+          null,
+          null,
+          1
+        ],
+        "dim_res_blocks": [
+          1024,
+          256,
+          128,
+          64,
+          32
+        ],
+        "num_res_blocks": [
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        "res_block_in_norm": "none",
+        "res_block_hidden_norm": "none",
+        "resamplers": [
+          "conv_transpose",
+          "conv_transpose",
+          "conv_transpose",
+          "bilinear"
+        ]
+      },
+      "scale_head": {
+        "dims": [
+          1024,
+          1024,
+          1024,
+          1
+        ]
+      },
+      "remap_output": "exp",
+      "num_tokens_range": [
+        1200,
+        3600
+      ]
+    },
+    "model_config_identical": true,
+    "n_params_base": 483,
+    "n_params_fine": 483,
+    "keys_only_in_base": [],
+    "keys_only_in_fine": [],
+    "key_sets_identical": true,
+    "shape_mismatches": [],
+    "n_tensors_compared": 483,
+    "n_tensors_bitwise_identical": 3,
+    "fraction_bitwise_identical": 0.006211180124223602,
+    "global_rel_l2": 0.009567106361224497,
+    "most_changed_tensors": [
+      {
+        "key": "scale_head.4.weight",
+        "numel": 1024,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.01930082216858864,
+        "rel_l2": 0.15085303768947997
+      },
+      {
+        "key": "neck.resamplers.0.1.weight",
+        "numel": 589824,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.015266929753124714,
+        "rel_l2": 0.13894331160628282
+      },
+      {
+        "key": "neck.resamplers.0.0.weight",
+        "numel": 1048576,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.013747170567512512,
+        "rel_l2": 0.11890108477679477
+      },
+      {
+        "key": "encoder.output_projections.2.weight",
+        "numel": 1048576,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.015498602762818336,
+        "rel_l2": 0.11173586853866072
+      },
+      {
+        "key": "neck.res_blocks.1.1.layers.2.weight",
+        "numel": 589824,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.02608640491962433,
+        "rel_l2": 0.1111518398546619
+      },
+      {
+        "key": "neck.res_blocks.1.0.layers.5.weight",
+        "numel": 589824,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.018767349421977997,
+        "rel_l2": 0.10976921527260709
+      },
+      {
+        "key": "points_head.resamplers.0.1.weight",
+        "numel": 589824,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.01052868366241455,
+        "rel_l2": 0.10908758066945064
+      },
+      {
+        "key": "neck.res_blocks.1.0.layers.2.weight",
+        "numel": 589824,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.019312459975481033,
+        "rel_l2": 0.10825808707322201
+      },
+      {
+        "key": "encoder.output_projections.1.weight",
+        "numel": 1048576,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.01487824972718954,
+        "rel_l2": 0.1047991760516777
+      },
+      {
+        "key": "neck.res_blocks.1.1.layers.5.weight",
+        "numel": 589824,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.01604561135172844,
+        "rel_l2": 0.10147721965542744
+      },
+      {
+        "key": "neck.res_blocks.2.0.layers.5.weight",
+        "numel": 147456,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.017789572477340698,
+        "rel_l2": 0.10002522062655801
+      },
+      {
+        "key": "points_head.res_blocks.1.0.layers.2.weight",
+        "numel": 589824,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.019800961017608643,
+        "rel_l2": 0.1000152890590898
+      },
+      {
+        "key": "neck.res_blocks.2.0.layers.2.weight",
+        "numel": 147456,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.021774012595415115,
+        "rel_l2": 0.09872636707519974
+      },
+      {
+        "key": "neck.res_blocks.2.1.layers.2.weight",
+        "numel": 147456,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.018383482471108437,
+        "rel_l2": 0.09772890463618628
+      },
+      {
+        "key": "encoder.output_projections.3.weight",
+        "numel": 1048576,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.016765188425779343,
+        "rel_l2": 0.09436123826230734
+      }
+    ],
+    "least_changed_tensors": [
+      {
+        "key": "encoder.backbone.mask_token",
+        "numel": 1024,
+        "bitwise_identical": true,
+        "max_abs_diff": 0.0,
+        "rel_l2": NaN
+      },
+      {
+        "key": "encoder.image_std",
+        "numel": 3,
+        "bitwise_identical": true,
+        "max_abs_diff": 0.0,
+        "rel_l2": 0.0
+      },
+      {
+        "key": "encoder.image_mean",
+        "numel": 3,
+        "bitwise_identical": true,
+        "max_abs_diff": 0.0,
+        "rel_l2": 0.0
+      },
+      {
+        "key": "encoder.backbone.blocks.23.ls2.gamma",
+        "numel": 1024,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.0001964569091796875,
+        "rel_l2": 1.0576328622613059e-06
+      },
+      {
+        "key": "encoder.backbone.blocks.23.ls1.gamma",
+        "numel": 1024,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.00014495849609375,
+        "rel_l2": 1.1774180338184266e-06
+      },
+      {
+        "key": "encoder.backbone.blocks.22.ls2.gamma",
+        "numel": 1024,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.00017547607421875,
+        "rel_l2": 1.1792215186122204e-06
+      },
+      {
+        "key": "encoder.backbone.blocks.21.ls2.gamma",
+        "numel": 1024,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.0002455711364746094,
+        "rel_l2": 2.2228743705895247e-06
+      },
+      {
+        "key": "encoder.backbone.blocks.22.ls1.gamma",
+        "numel": 1024,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.00022983551025390625,
+        "rel_l2": 4.254310416647476e-06
+      },
+      {
+        "key": "encoder.backbone.blocks.20.ls2.gamma",
+        "numel": 1024,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.00020503997802734375,
+        "rel_l2": 5.826934939396017e-06
+      },
+      {
+        "key": "encoder.backbone.norm.bias",
+        "numel": 1024,
+        "bitwise_identical": false,
+        "max_abs_diff": 1.6450881958007812e-05,
+        "rel_l2": 8.565131875453263e-06
+      },
+      {
+        "key": "encoder.backbone.norm.weight",
+        "numel": 1024,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.00013017654418945312,
+        "rel_l2": 9.280426870524703e-06
+      },
+      {
+        "key": "encoder.backbone.blocks.7.norm2.weight",
+        "numel": 1024,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.00015878677368164062,
+        "rel_l2": 1.289494124534645e-05
+      },
+      {
+        "key": "encoder.backbone.blocks.5.norm2.weight",
+        "numel": 1024,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.0001366138458251953,
+        "rel_l2": 1.3536826609955911e-05
+      },
+      {
+        "key": "encoder.backbone.blocks.1.mlp.fc1.bias",
+        "numel": 4096,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.00018212199211120605,
+        "rel_l2": 1.3825824631476018e-05
+      },
+      {
+        "key": "encoder.backbone.blocks.3.norm2.weight",
+        "numel": 1024,
+        "bitwise_identical": false,
+        "max_abs_diff": 0.0001513957977294922,
+        "rel_l2": 1.403029712438659e-05
+      }
+    ],
+    "rel_l2_by_module": {
+      "encoder": {
+        "n": 352,
+        "median": 0.00017474748288621455,
+        "min": 0.0,
+        "max": 0.11173586853866072
+      },
+      "mask_head": {
+        "n": 38,
+        "median": 0.019373721358472037,
+        "min": 4.7969850512863114e-05,
+        "max": 0.08484555487975386
+      },
+      "neck": {
+        "n": 48,
+        "median": 0.03261913650745846,
+        "min": 0.0005130211541237302,
+        "max": 0.13894331160628282
+      },
+      "points_head": {
+        "n": 38,
+        "median": 0.026932421085251363,
+        "min": 0.0003946705650375258,
+        "max": 0.10908758066945064
+      },
+      "scale_head": {
+        "n": 6,
+        "median": 0.04364120354954466,
+        "min": 0.009202896837808222,
+        "max": 0.15085303768947997
+      }
+    },
+    "verdict": "LINEAGE_CONSISTENT",
+    "verdict_meaning": "LINEAGE_CONSISTENT: identical model_config, identical parameter key set, no shape mismatches, and the files are not the same file \u2014 everything V5 needs in order to be a controlled architecture/representation comparison. It does NOT establish which component of the fine-tuning treatment caused any downstream difference; FREEZE C5 keeps data, objectives, supervision and camera diversity confounded."
+  },
+  "survivors": [
+    "da3mono_large",
+    "dav2_small",
+    "foundationgeo_11",
+    "mapanything_n1",
+    "metricanything_pointmap",
+    "moge2_vitl",
+    "wat3r_n1"
+  ],
+  "failed": []
+}

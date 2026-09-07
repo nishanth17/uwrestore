@@ -10,7 +10,7 @@ belongs.
 import numpy as np
 import pytest
 
-from experiments.week3_geometry.geometry import (
+from experiments.week3_geometry.phase3a.geometry import (
     PATH_SOURCES,
     ScaleFit,
     binned_profile,
@@ -392,7 +392,7 @@ def test_path_source_labels_are_distinct():
 
 def test_range_writer_demotes_bad_values_into_the_mask(tmp_path):
     """A non-finite or non-positive range must never survive as a number."""
-    from experiments.week3_geometry.rangeio import RangeReader, RangeWriter
+    from experiments.week3_geometry.phase3a.rangeio import RangeReader, RangeWriter
 
     w = RangeWriter(str(tmp_path), "TEST", "clip")
     rng = np.array([[1.0, np.nan], [-2.0, 4.0]], dtype=np.float32)
@@ -408,7 +408,7 @@ def test_range_writer_demotes_bad_values_into_the_mask(tmp_path):
 
 
 def test_range_writer_round_trips_conventions_and_refuses_silent_overwrite(tmp_path):
-    from experiments.week3_geometry.rangeio import RangeReader, RangeWriter
+    from experiments.week3_geometry.phase3a.rangeio import RangeReader, RangeWriter
 
     w = RangeWriter(str(tmp_path), "TEST", "clip")
     T = np.eye(4)
@@ -436,7 +436,7 @@ def test_range_writer_round_trips_conventions_and_refuses_silent_overwrite(tmp_p
 # ----------------------------------------- flat-port water-path bounding ----
 
 def test_flatport_exit_point_bound_is_the_slab_crossing_length():
-    from experiments.week3_geometry.geometry import flatport_exit_point_distance_bound
+    from experiments.week3_geometry.phase3a.geometry import flatport_exit_point_distance_bound
 
     # Straight down the optical axis the bound is just the two slab thicknesses.
     assert flatport_exit_point_distance_bound(0.002, 0.001, 0.0) == pytest.approx(0.003)
@@ -447,7 +447,7 @@ def test_flatport_exit_point_bound_is_the_slab_crossing_length():
 
 def test_flatport_bound_is_negligible_against_metre_scale_scenes():
     """The quantitative claim Phase 3A actually relies on."""
-    from experiments.week3_geometry.geometry import flatport_exit_point_distance_bound
+    from experiments.week3_geometry.phase3a.geometry import flatport_exit_point_distance_bound
 
     bound = flatport_exit_point_distance_bound(0.002, 0.001, np.deg2rad(55.0))
     assert bound < 0.006                      # under 6 mm
@@ -456,7 +456,7 @@ def test_flatport_bound_is_negligible_against_metre_scale_scenes():
 
 
 def test_flatport_bound_rejects_impossible_inputs():
-    from experiments.week3_geometry.geometry import flatport_exit_point_distance_bound
+    from experiments.week3_geometry.phase3a.geometry import flatport_exit_point_distance_bound
 
     with pytest.raises(ValueError):
         flatport_exit_point_distance_bound(-1.0, 0.001, 0.0)
@@ -465,7 +465,7 @@ def test_flatport_bound_rejects_impossible_inputs():
 
 
 def test_max_half_angle_from_K_matches_the_corner_ray():
-    from experiments.week3_geometry.geometry import max_half_angle_from_K
+    from experiments.week3_geometry.phase3a.geometry import max_half_angle_from_K
 
     h, w = 294, 518
     K = np.array([[260.0, 0.0, (w - 1) / 2], [0.0, 260.0, (h - 1) / 2], [0, 0, 1]])

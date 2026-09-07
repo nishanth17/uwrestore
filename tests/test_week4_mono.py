@@ -16,9 +16,9 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from experiments.week3_geometry import geometry as g3
-from experiments.week4_mono import alignment, common, evalgrid, metrics_geom as M, monoio
-from experiments.week4_mono.backends import base as bb
+from experiments.week3_geometry.phase3a import geometry as g3
+from experiments.week4_mono.round1 import alignment, common, evalgrid, metrics_geom as M, monoio
+from experiments.week4_mono.round1.backends import base as bb
 
 
 # ---------------------------------------------------------------------------
@@ -148,6 +148,32 @@ def test_affine_disparity_is_fitted_in_disparity_then_inverted():
     wrong = alignment.fit_affine(q_pred, depth, "affine_depth")
     wrong_back = alignment.to_range(alignment.apply(wrong, q_pred), "affine_depth")
     assert np.nanmedian(np.abs(wrong_back - depth) / depth) > 0.1
+
+
+def test_affine_log1p_depth_recovers_pxdepths_native_gauge():
+    """PXDepth emits normalised log1p-depth. Its documented ambiguity is affine
+    in THAT space (inference.py:174/189/195), so the reference must be converted
+    with to_log1p and the result inverted with expm1 -- not squeezed through the
+    depth or disparity family, which would charge the model for the wrong gauge."""
+    rng = np.random.default_rng(11)
+    depth = rng.uniform(0.4, 30.0, 8000)
+    native = (np.log1p(depth) - 0.35) / 1.9        # a=1.9, b=0.35 exactly
+    fit = alignment.fit_affine(native, alignment.to_log1p(depth), "affine_log1p_depth")
+    assert fit.params["s"] == pytest.approx(1.9, rel=1e-6)
+    assert fit.params["t"] == pytest.approx(0.35, abs=1e-5)
+    back = alignment.to_range(alignment.apply(fit, native), "affine_log1p_depth")
+    assert np.nanmedian(np.abs(back - depth) / depth) < 1e-9
+    # the same prediction fitted in plain depth space does not recover it
+    wrong = alignment.fit_affine(native, depth, "affine_depth")
+    wrong_back = alignment.to_range(alignment.apply(wrong, native), "affine_depth")
+    assert np.nanmedian(np.abs(wrong_back - depth) / depth) > 0.1
+
+
+def test_to_range_declines_nonpositive_log1p_depth():
+    """A negative aligned log1p is an absent prediction, not a near point."""
+    out = alignment.to_range(np.array([np.log1p(3.0), 0.0, -0.5]), "affine_log1p_depth")
+    assert out[0] == pytest.approx(3.0)
+    assert np.isnan(out[1]) and np.isnan(out[2])
 
 
 def test_to_range_declines_nonpositive_disparity():
@@ -325,7 +351,7 @@ def test_monoio_round_trips_native_and_aux(tmp_path):
 # ---------------------------------------------------------------------------
 
 def test_every_perturbation_preserves_shape_and_dtype():
-    from experiments.week4_mono import perturb
+    from experiments.week4_mono.round1 import perturb
     rng = np.random.default_rng(10)
     img = rng.integers(0, 256, (24, 32, 3), dtype=np.uint8)
     ref = rng.uniform(1.0, 9.0, (24, 32))
@@ -337,7 +363,7 @@ def test_every_perturbation_preserves_shape_and_dtype():
 
 def test_a_unit_channel_gain_is_a_no_op_through_the_linear_round_trip():
     """If this drifts, every S4 response carries an unmeasured baseline offset."""
-    from experiments.week4_mono import perturb
+    from experiments.week4_mono.round1 import perturb
     rng = np.random.default_rng(11)
     img = rng.integers(0, 256, (16, 20, 3), dtype=np.uint8)
     out = perturb.apply_perturbation(img, "channel_gain", {"gain": [1.0, 1.0, 1.0]})
@@ -354,7 +380,7 @@ def test_no_two_perturbation_arms_are_the_same_stimulus():
     the control a second time and reported it as the cue conflict. The bug is
     invisible per-arm and obvious pairwise, so test it pairwise.
     """
-    from experiments.week4_mono import perturb
+    from experiments.week4_mono.round1 import perturb
     rng = np.random.default_rng(12)
     img = rng.integers(0, 256, (24, 32, 3), dtype=np.uint8)
     # a reference range with real near/far structure, so depth-shaped arms
@@ -374,7 +400,7 @@ def test_the_depth_veils_run_in_opposite_directions():
     This is the claim S4's cue-conflict arm actually rests on, so it is asserted
     on the stimulus rather than inferred from the parameter names.
     """
-    from experiments.week4_mono import perturb
+    from experiments.week4_mono.round1 import perturb
     img = np.full((24, 32, 3), 200, dtype=np.uint8)
     ref = np.linspace(1.0, 9.0, 24)[:, None] * np.ones((1, 32))  # row 0 near, row -1 far
     spec = {name: params for name, kind, params, _ in perturb.SPEC if kind == "veil_depth"}
@@ -397,7 +423,7 @@ def test_compare_restorations_always_reports_the_same_keys():
     restoration with no usable denominator -- the aggregator raised KeyError
     on the third water regime of the first clip.
     """
-    from experiments.week4_mono import restoration
+    from experiments.week4_mono.round1 import restoration
 
     rng = np.random.default_rng(3)
     h, w = 16, 16
@@ -430,7 +456,7 @@ def test_the_veiling_light_must_be_one_the_image_can_actually_carry():
     Binf_B = 1.0 and the inversion subtracts more blue than the mid-field
     contains. The admissible bound is what stops that.
     """
-    from experiments.week4_mono import restoration
+    from experiments.week4_mono.round1 import restoration
 
     h, w = 64, 64
     d = np.full((h, w), 6.0)
@@ -457,7 +483,7 @@ def test_the_veiling_light_must_be_one_the_image_can_actually_carry():
 
 
 def test_the_transmission_floor_caps_the_inversion_gain():
-    from experiments.week4_mono import restoration
+    from experiments.week4_mono.round1 import restoration
 
     d = np.full((16, 16), 40.0)        # far past where red is recoverable
     I = np.full((16, 16, 3), 0.05)

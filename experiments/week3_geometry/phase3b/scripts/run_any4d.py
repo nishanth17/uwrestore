@@ -72,12 +72,13 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", 
 if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
 
-from experiments.week3_geometry.rangeio import RangeWriter  # noqa: E402
+from experiments.week3_geometry.phase3a.rangeio import RangeWriter  # noqa: E402
 
 W3 = os.path.join(REPO_ROOT, "experiments", "week3_geometry")
-ANY4D_REPO = os.path.join(W3, "vendor", "any4d")
+W3_PHASE3A = os.path.join(W3, "phase3a")
+ANY4D_REPO = os.path.join(W3_PHASE3A, "vendor", "any4d")
 CONFIG = "Y_any4d"
-CHECKPOINT = os.path.join(W3, "checkpoints", "any4d_4v_combined.pth")
+CHECKPOINT = os.path.join(W3_PHASE3A, "checkpoints", "any4d_4v_combined.pth")
 RESOLUTION = (518, 336)          # the released demo's resolution, unchanged
 
 
@@ -183,7 +184,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--clip", required=True)
-    ap.add_argument("--frames-root", default=os.path.join(W3, "outputs", "frames"))
+    ap.add_argument("--frames-root", default=os.path.join(W3_PHASE3A, "outputs", "frames"))
     ap.add_argument("--out-root", default=os.path.join(W3, "phase3b", "outputs", "range"))
     ap.add_argument("--checkpoint", default=CHECKPOINT)
     ap.add_argument("--max-views", type=int, default=None,

@@ -33,9 +33,10 @@ import sys
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".."))
 W3 = os.path.join(REPO_ROOT, "experiments", "week3_geometry")
+W3_PHASE3A = os.path.join(W3, "phase3a")
 P3B = os.path.join(W3, "phase3b")
 
-SRC = os.path.join(W3, "configs", "phase3a_methods.json")
+SRC = os.path.join(W3_PHASE3A, "configs", "phase3a_methods.json")
 DST = os.path.join(P3B, "configs", "phase3b_methods.json")
 
 NEW_CONFIGS = {

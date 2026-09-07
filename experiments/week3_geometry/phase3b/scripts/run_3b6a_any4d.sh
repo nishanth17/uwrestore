@@ -14,7 +14,7 @@ set -u
 cd "$(dirname "$0")/../../../.." || exit 1
 W3=experiments/week3_geometry
 PY=$W3/.venv-any4d/bin/python
-CKPT=$W3/checkpoints/any4d_4v_combined.pth
+CKPT=$W3/phase3a/checkpoints/any4d_4v_combined.pth
 
 echo "===== 3B-6A Any4D $(date +%H:%M:%S) ====="
 if [ ! -f "$CKPT" ]; then echo "no checkpoint at $CKPT"; exit 1; fi
@@ -24,7 +24,7 @@ if [ ! -f "$CKPT" ]; then echo "no checkpoint at $CKPT"; exit 1; fi
 mkdir -p "$W3/phase3b/outputs/preflight"
 $PY - <<'PYEOF'
 import hashlib, json, os
-p = "experiments/week3_geometry/checkpoints/any4d_4v_combined.pth"
+p = "experiments/week3_geometry/phase3a/checkpoints/any4d_4v_combined.pth"
 h = hashlib.sha256()
 with open(p, "rb") as fh:
     for chunk in iter(lambda: fh.read(1 << 22), b""):

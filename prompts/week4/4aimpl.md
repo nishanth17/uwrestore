@@ -671,7 +671,7 @@ No objective final winner before C2.
 Persist:
 
 ```text
-experiments/week4_mono/results/
+experiments/week4_mono/round1/results/
     S0_SEMANTICS_RUNTIME.md
     S0_results.json
 

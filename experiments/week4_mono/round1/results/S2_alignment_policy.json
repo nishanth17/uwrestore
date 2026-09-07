@@ -1,0 +1,685 @@
+{
+  "_comment": "FROZEN Week-4A alignment policy. One policy, not one transform: the legal E1 family depends on the native representation, and fitting a single universal transform across representations is the standard way to make a monocular comparison meaningless.",
+  "stage": "S2",
+  "scope": "clip-level for every arm; per-frame fits are DIAGNOSTICS ONLY",
+  "scope_rationale": "Week 3 established that renormalising each frame erases temporal scale drift, and FREEZE C7 makes that drift a first-class failure mode: a CONSTANT global scale bias is a benign gauge because the physical coefficients can be refit once (beta' = beta/s), whereas FRAME-VARYING drift would demand beta'_t = beta/s_t, i.e. water properties that change with the estimator.",
+  "reference": "D_mapanything",
+  "reference_status": "PROVISIONAL MULTI-VIEW HYPOTHESIS, not ground truth. Every residual here is disagreement with the current Week-3 hypothesis, never objective monocular error.",
+  "e1_meaning": "If the model's documented legal ambiguity were known, how good is the remaining shape? The nuisance parameters consumed are reported alongside, never hidden (FREEZE C9).",
+  "evidence": {
+    "mapanything_n1": {
+      "convention": {},
+      "scale_trajectory_by_clip": {
+        "wreck_07": {
+          "median": 1.0544908735964507,
+          "log_std": 0.09561775159713533,
+          "wander_ratio": 1.5447436573772635,
+          "frame_to_frame_log_mad": 0.025461645382939484
+        },
+        "wreck_05": {
+          "median": 1.0056296418087176,
+          "log_std": 0.08515105590081022,
+          "wander_ratio": 1.5211738418299667,
+          "frame_to_frame_log_mad": 0.05235751821332385
+        },
+        "cenote_01": {
+          "median": 1.1110365867501286,
+          "log_std": 0.28337571409256634,
+          "wander_ratio": 5.5907822007588805,
+          "frame_to_frame_log_mad": 0.06741680866007363
+        },
+        "swimthrough_02": {
+          "median": 0.9971161231493563,
+          "log_std": 0.12348425481768793,
+          "wander_ratio": 1.6300949482596796,
+          "frame_to_frame_log_mad": 0.03608038298846851
+        },
+        "wreck_01": {
+          "median": 0.9296422929599903,
+          "log_std": 0.27060477936905264,
+          "wander_ratio": 2.4691562581928994,
+          "frame_to_frame_log_mad": 0.11252669451987074
+        },
+        "wreck_03": {
+          "median": 1.1156769205859451,
+          "log_std": 0.1743893191050125,
+          "wander_ratio": 2.052799320912158,
+          "frame_to_frame_log_mad": 0.04739857475126866
+        }
+      },
+      "clip_to_clip_scale_spread": 1.2001142041780595,
+      "raw_median_abs_rel_by_clip": {
+        "wreck_07": 0.08465950930734405,
+        "wreck_05": 0.06168510582591227,
+        "cenote_01": 0.14867994387560934,
+        "swimthrough_02": 0.08748433249425822,
+        "wreck_01": 0.22137761481862597,
+        "wreck_03": 0.1442114231264468
+      },
+      "aligned_median_abs_rel_by_clip": {
+        "wreck_07": 0.07331395779608424,
+        "wreck_05": 0.061776962613924624,
+        "cenote_01": 0.1162229801352044,
+        "swimthrough_02": 0.08764856004829738,
+        "wreck_01": 0.17050756534026262,
+        "wreck_03": 0.12893421312797218
+      },
+      "coverage_by_clip": {
+        "wreck_07": 0.7814011863425926,
+        "wreck_05": 0.7201309317129629,
+        "cenote_01": 0.9323799189814815,
+        "swimthrough_02": 0.6902430555555555,
+        "wreck_01": 0.9845044849537037,
+        "wreck_03": 0.7359790943287038
+      }
+    },
+    "dav2_small": {
+      "convention": {
+        "verdict": "range",
+        "why": "the two hypotheses are indistinguishable at the 3 % margin; defaulted to the project's canonical range, and the tie is recorded",
+        "pooled_z_depth_abs_rel": 0.11334357636355472,
+        "pooled_range_abs_rel": 0.1165368353733892,
+        "margin_ratio": 1.02817326850171,
+        "per_clip": {
+          "wreck_07": {
+            "z_depth_abs_rel": 0.1106172343389047,
+            "range_abs_rel": 0.11528731850894239,
+            "verdict": "z_depth",
+            "margin_ratio": 1.0422184137756478
+          },
+          "wreck_05": {
+            "z_depth_abs_rel": 0.11243296062184782,
+            "range_abs_rel": 0.12017207091517475,
+            "verdict": "z_depth",
+            "margin_ratio": 1.0688331095305434
+          },
+          "cenote_01": {
+            "z_depth_abs_rel": 0.11425419210526161,
+            "range_abs_rel": 0.11178901160415575,
+            "verdict": "INDISTINGUISHABLE",
+            "margin_ratio": 1.0220520824518518
+          },
+          "swimthrough_02": {
+            "z_depth_abs_rel": 0.11192596481341709,
+            "range_abs_rel": 0.11778635223783601,
+            "verdict": "z_depth",
+            "margin_ratio": 1.0523594988364702
+          },
+          "wreck_01": {
+            "z_depth_abs_rel": 0.21988560280767683,
+            "range_abs_rel": 0.21222632814487125,
+            "verdict": "range",
+            "margin_ratio": 1.0360901247727246
+          },
+          "wreck_03": {
+            "z_depth_abs_rel": 0.12640659742098145,
+            "range_abs_rel": 0.10641926610989352,
+            "verdict": "range",
+            "margin_ratio": 1.1878168497276431
+          }
+        },
+        "n_clips_agreeing": 2
+      },
+      "scale_trajectory_by_clip": {
+        "wreck_07": {
+          "median": 0.026570559156672533,
+          "log_std": 0.2758479017406228,
+          "wander_ratio": 2.578865670007064,
+          "frame_to_frame_log_mad": 0.03102804512201285
+        },
+        "wreck_05": {
+          "median": 0.012550509395037967,
+          "log_std": 0.19865962576213253,
+          "wander_ratio": 2.061068419325382,
+          "frame_to_frame_log_mad": 0.036770828213135154
+        },
+        "cenote_01": {
+          "median": 0.020379673318333777,
+          "log_std": 0.2374730493894708,
+          "wander_ratio": 2.446522397957003,
+          "frame_to_frame_log_mad": 0.08414486792025455
+        },
+        "swimthrough_02": {
+          "median": 0.02239421927021954,
+          "log_std": 0.14491899796703261,
+          "wander_ratio": 1.5975104080508844,
+          "frame_to_frame_log_mad": 0.024699424734722086
+        },
+        "wreck_01": {
+          "median": 0.025836264079346468,
+          "log_std": 0.24600884456423164,
+          "wander_ratio": 3.47121779844825,
+          "frame_to_frame_log_mad": 0.07966611698349402
+        },
+        "wreck_03": {
+          "median": 0.009883143016723285,
+          "log_std": 0.3891318232835843,
+          "wander_ratio": 5.2481757297468885,
+          "frame_to_frame_log_mad": 0.07853060032087011
+        }
+      },
+      "clip_to_clip_scale_spread": 2.688472595379065,
+      "raw_median_abs_rel_by_clip": {},
+      "aligned_median_abs_rel_by_clip": {
+        "wreck_07": 0.1106172343389047,
+        "wreck_05": 0.11243296062184782,
+        "cenote_01": 0.11178901160415575,
+        "swimthrough_02": 0.11192596481341709,
+        "wreck_01": 0.21222632814487125,
+        "wreck_03": 0.10641926610989352
+      },
+      "coverage_by_clip": {
+        "wreck_07": 0.7146473524305555,
+        "wreck_05": 0.6861798321759259,
+        "cenote_01": 0.9445952690972222,
+        "swimthrough_02": 0.7099280237268518,
+        "wreck_01": 0.9851291232638889,
+        "wreck_03": 0.7457432725694444
+      }
+    },
+    "moge2_vitl": {
+      "convention": {},
+      "scale_trajectory_by_clip": {
+        "wreck_07": {
+          "median": 2.6193738787263365,
+          "log_std": 0.15591892422748457,
+          "wander_ratio": 2.155872131355847,
+          "frame_to_frame_log_mad": 0.05201288605700283
+        },
+        "wreck_05": {
+          "median": 3.2613759121410033,
+          "log_std": 0.10422693684652967,
+          "wander_ratio": 1.5283849558770124,
+          "frame_to_frame_log_mad": 0.04460534549054285
+        },
+        "cenote_01": {
+          "median": 1.8592210614091285,
+          "log_std": 0.2915997419167725,
+          "wander_ratio": 3.087670783235722,
+          "frame_to_frame_log_mad": 0.1892387566654885
+        },
+        "swimthrough_02": {
+          "median": 2.6420658153935714,
+          "log_std": 0.06722585025724252,
+          "wander_ratio": 1.305172291360892,
+          "frame_to_frame_log_mad": 0.02312096766467142
+        },
+        "wreck_01": {
+          "median": 2.5494161847739756,
+          "log_std": 0.4641438647000679,
+          "wander_ratio": 7.596193036033178,
+          "frame_to_frame_log_mad": 0.14316712428189307
+        },
+        "wreck_03": {
+          "median": 2.869076780901488,
+          "log_std": 0.26920452195307937,
+          "wander_ratio": 2.668029424896885,
+          "frame_to_frame_log_mad": 0.08241593929559721
+        }
+      },
+      "clip_to_clip_scale_spread": 1.754162525283122,
+      "raw_median_abs_rel_by_clip": {
+        "wreck_07": 0.6524098899732048,
+        "wreck_05": 0.715152263628557,
+        "cenote_01": 0.4513758333321348,
+        "swimthrough_02": 0.6140932890551198,
+        "wreck_01": 0.6078171710823479,
+        "wreck_03": 0.6568896741065704
+      },
+      "aligned_median_abs_rel_by_clip": {
+        "wreck_07": 0.19041926534178813,
+        "wreck_05": 0.15075438592675505,
+        "cenote_01": 0.22329856494644823,
+        "swimthrough_02": 0.08068329076240616,
+        "wreck_01": 0.3163656638728296,
+        "wreck_03": 0.26406937808954956
+      },
+      "coverage_by_clip": {
+        "wreck_07": 0.7981430844907408,
+        "wreck_05": 0.7162923177083332,
+        "cenote_01": 0.9445952690972222,
+        "swimthrough_02": 0.7104716435185185,
+        "wreck_01": 0.9849392361111112,
+        "wreck_03": 0.7562651909722223
+      }
+    },
+    "metricanything_pointmap": {
+      "convention": {},
+      "scale_trajectory_by_clip": {
+        "wreck_07": {
+          "median": 2.4065914292548123,
+          "log_std": 0.15090358603066656,
+          "wander_ratio": 1.9396375731810647,
+          "frame_to_frame_log_mad": 0.03806562314065853
+        },
+        "wreck_05": {
+          "median": 3.092689709484021,
+          "log_std": 0.1049089831535779,
+          "wander_ratio": 1.4499988431980209,
+          "frame_to_frame_log_mad": 0.027476108432694657
+        },
+        "cenote_01": {
+          "median": 1.6270079395961083,
+          "log_std": 0.24727562316012777,
+          "wander_ratio": 2.6281738763414264,
+          "frame_to_frame_log_mad": 0.11990024715379144
+        },
+        "swimthrough_02": {
+          "median": 2.4814100471084384,
+          "log_std": 0.052559062568481384,
+          "wander_ratio": 1.2366163778050727,
+          "frame_to_frame_log_mad": 0.023411643957265915
+        },
+        "wreck_01": {
+          "median": 2.673525707795222,
+          "log_std": 0.5167496506059708,
+          "wander_ratio": 7.520647097587696,
+          "frame_to_frame_log_mad": 0.10578031417460196
+        },
+        "wreck_03": {
+          "median": 2.644975056457653,
+          "log_std": 0.2397006722268701,
+          "wander_ratio": 2.8655607173099975,
+          "frame_to_frame_log_mad": 0.07627812185314853
+        }
+      },
+      "clip_to_clip_scale_spread": 1.9008448786376275,
+      "raw_median_abs_rel_by_clip": {
+        "wreck_07": 0.60296704391241,
+        "wreck_05": 0.6875466867050244,
+        "cenote_01": 0.38619995263974627,
+        "swimthrough_02": 0.5974463923247295,
+        "wreck_01": 0.6242845654901557,
+        "wreck_03": 0.6195804279128749
+      },
+      "aligned_median_abs_rel_by_clip": {
+        "wreck_07": 0.1669342701449224,
+        "wreck_05": 0.11511220644250636,
+        "cenote_01": 0.20770305956612617,
+        "swimthrough_02": 0.06780269597846043,
+        "wreck_01": 0.36207015313226165,
+        "wreck_03": 0.21182929097513506
+      },
+      "coverage_by_clip": {
+        "wreck_07": 0.7404166666666668,
+        "wreck_05": 0.6783174189814813,
+        "cenote_01": 0.9445952690972222,
+        "swimthrough_02": 0.7104065393518519,
+        "wreck_01": 0.9851291232638889,
+        "wreck_03": 0.7490610532407409
+      }
+    },
+    "wat3r_n1": {
+      "convention": {},
+      "subgroup_gain": {
+        "per_clip_relative_gain_from_shift": [
+          0.14351634328523874,
+          0.07878437634618053,
+          0.3050703601058914,
+          -0.10265590936377553,
+          0.07386085172645265,
+          0.28068344317949645
+        ],
+        "median_relative_gain_from_shift": 0.11115035981570964
+      },
+      "scale_trajectory_by_clip": {
+        "wreck_07": {
+          "median": 20.760916196543498,
+          "log_std": 0.16495223201220036,
+          "wander_ratio": 1.9959257202526623,
+          "frame_to_frame_log_mad": 0.0494626782630041
+        },
+        "wreck_05": {
+          "median": 28.200155594802023,
+          "log_std": 0.2398733645847832,
+          "wander_ratio": 2.2029508519498564,
+          "frame_to_frame_log_mad": 0.04118605203988768
+        },
+        "cenote_01": {
+          "median": 7.012604160675289,
+          "log_std": 0.0743205075543739,
+          "wander_ratio": 1.3446957100851347,
+          "frame_to_frame_log_mad": 0.014291651747121437
+        },
+        "swimthrough_02": {
+          "median": 12.384105778764898,
+          "log_std": 0.2762141608447951,
+          "wander_ratio": 2.391358887496438,
+          "frame_to_frame_log_mad": 0.020717710638571862
+        },
+        "wreck_01": {
+          "median": 5.210669188762787,
+          "log_std": 0.2849365681980329,
+          "wander_ratio": 2.8559273843211037,
+          "frame_to_frame_log_mad": 0.03651279794516227
+        },
+        "wreck_03": {
+          "median": 21.066803842408508,
+          "log_std": 0.32097494396111975,
+          "wander_ratio": 3.3606702618416113,
+          "frame_to_frame_log_mad": 0.06221505937046068
+        }
+      },
+      "clip_to_clip_scale_spread": 5.412002676281551,
+      "raw_median_abs_rel_by_clip": {
+        "wreck_07": 0.9486966477459791,
+        "wreck_05": 0.960283259521323,
+        "cenote_01": 0.8549717598703555,
+        "swimthrough_02": 0.9220488102020936,
+        "wreck_01": 0.8053147146140415,
+        "wreck_03": 0.9535828853683193
+      },
+      "aligned_median_abs_rel_by_clip": {
+        "wreck_07": 0.1820743589507406,
+        "wreck_05": 0.22212596980323518,
+        "cenote_01": 0.12887132721485722,
+        "swimthrough_02": 0.14852829936584108,
+        "wreck_01": 0.25114437304398335,
+        "wreck_03": 0.22971402365223945
+      },
+      "coverage_by_clip": {
+        "wreck_07": 0.803287398726852,
+        "wreck_05": 0.7437637442129631,
+        "cenote_01": 0.9445952690972222,
+        "swimthrough_02": 0.7104716435185185,
+        "wreck_01": 0.5622341579861111,
+        "wreck_03": 0.7653182870370371
+      }
+    },
+    "da3mono_large": {
+      "convention": {
+        "verdict": "range",
+        "why": "the range hypothesis leaves the smaller residual",
+        "pooled_z_depth_abs_rel": 0.15087662967035725,
+        "pooled_range_abs_rel": 0.13580942930347795,
+        "margin_ratio": 1.1109436984173635,
+        "per_clip": {
+          "wreck_07": {
+            "z_depth_abs_rel": 0.17155034343866915,
+            "range_abs_rel": 0.15076949685756186,
+            "verdict": "range",
+            "margin_ratio": 1.1378319024354098
+          },
+          "wreck_05": {
+            "z_depth_abs_rel": 0.21536508202134874,
+            "range_abs_rel": 0.21036469598362512,
+            "verdict": "INDISTINGUISHABLE",
+            "margin_ratio": 1.0237700818302367
+          },
+          "cenote_01": {
+            "z_depth_abs_rel": 0.08592494426519592,
+            "range_abs_rel": 0.09160406125893678,
+            "verdict": "z_depth",
+            "margin_ratio": 1.0660939269999758
+          },
+          "swimthrough_02": {
+            "z_depth_abs_rel": 0.11551913563530135,
+            "range_abs_rel": 0.12084936174939405,
+            "verdict": "z_depth",
+            "margin_ratio": 1.0461414992830318
+          },
+          "wreck_01": {
+            "z_depth_abs_rel": 0.2300996953766905,
+            "range_abs_rel": 0.21159438681613724,
+            "verdict": "range",
+            "margin_ratio": 1.0874565192347625
+          },
+          "wreck_03": {
+            "z_depth_abs_rel": 0.13020291590204536,
+            "range_abs_rel": 0.10542636679027347,
+            "verdict": "range",
+            "margin_ratio": 1.2350128328054815
+          }
+        },
+        "n_clips_agreeing": 3
+      },
+      "subgroup_gain": {
+        "per_clip_relative_gain_from_shift": [
+          0.4983227080410527,
+          0.07531291909605553,
+          0.5234494991836596,
+          0.2676858521381008,
+          0.08582516799870685,
+          0.5564892089081372
+        ],
+        "median_relative_gain_from_shift": 0.38300428008957677
+      },
+      "scale_trajectory_by_clip": {
+        "wreck_07": {
+          "median": 6.846113803828845,
+          "log_std": 0.09323801570832879,
+          "wander_ratio": 1.4567025610996787,
+          "frame_to_frame_log_mad": 0.03344033305032634
+        },
+        "wreck_05": {
+          "median": 7.649724156127315,
+          "log_std": 0.2672363011325577,
+          "wander_ratio": 2.464815556397485,
+          "frame_to_frame_log_mad": 0.04280395020341299
+        },
+        "cenote_01": {
+          "median": 2.760196154783574,
+          "log_std": 0.1380646222895739,
+          "wander_ratio": 1.8364474064640939,
+          "frame_to_frame_log_mad": 0.05481786627459173
+        },
+        "swimthrough_02": {
+          "median": 8.99437925762116,
+          "log_std": 0.11822556293397513,
+          "wander_ratio": 1.5502479991648042,
+          "frame_to_frame_log_mad": 0.03088035507146225
+        },
+        "wreck_01": {
+          "median": 3.6055086146660287,
+          "log_std": 0.29978884880331275,
+          "wander_ratio": 4.20343005902585,
+          "frame_to_frame_log_mad": 0.07786698988710472
+        },
+        "wreck_03": {
+          "median": 7.013970360173536,
+          "log_std": 0.3095368894659841,
+          "wander_ratio": 4.4046288913026554,
+          "frame_to_frame_log_mad": 0.08907174913859839
+        }
+      },
+      "clip_to_clip_scale_spread": 3.2586014736791076,
+      "raw_median_abs_rel_by_clip": {},
+      "aligned_median_abs_rel_by_clip": {
+        "wreck_07": 0.15076949685756186,
+        "wreck_05": 0.21036469598362512,
+        "cenote_01": 0.08592494426519592,
+        "swimthrough_02": 0.11551913563530135,
+        "wreck_01": 0.21159438681613724,
+        "wreck_03": 0.10542636679027347
+      },
+      "coverage_by_clip": {
+        "wreck_07": 0.803287398726852,
+        "wreck_05": 0.7437637442129631,
+        "cenote_01": 0.9445952690972222,
+        "swimthrough_02": 0.7104716435185185,
+        "wreck_01": 0.9851291232638889,
+        "wreck_03": 0.7653182870370371
+      }
+    },
+    "foundationgeo_11": {
+      "convention": {},
+      "scale_trajectory_by_clip": {
+        "wreck_07": {
+          "median": 2.224176487208558,
+          "log_std": 0.12909906153102507,
+          "wander_ratio": 1.78218465826903,
+          "frame_to_frame_log_mad": 0.0421587460762598
+        },
+        "wreck_05": {
+          "median": 2.82695191937127,
+          "log_std": 0.125579997207595,
+          "wander_ratio": 1.7343795578506616,
+          "frame_to_frame_log_mad": 0.032138297721412634
+        },
+        "cenote_01": {
+          "median": 0.47391521927112445,
+          "log_std": 0.22248832178007885,
+          "wander_ratio": 2.3606045880895317,
+          "frame_to_frame_log_mad": 0.07061226154584199
+        },
+        "swimthrough_02": {
+          "median": 1.8659186737397404,
+          "log_std": 0.10882154741744028,
+          "wander_ratio": 1.4446571474957148,
+          "frame_to_frame_log_mad": 0.02177799774340905
+        },
+        "wreck_01": {
+          "median": 2.0335237443542504,
+          "log_std": 0.3714044466692593,
+          "wander_ratio": 6.346934476602555,
+          "frame_to_frame_log_mad": 0.14618557071430782
+        },
+        "wreck_03": {
+          "median": 2.1469455494789353,
+          "log_std": 0.12088424919643703,
+          "wander_ratio": 2.035022771926072,
+          "frame_to_frame_log_mad": 0.0580754715112497
+        }
+      },
+      "clip_to_clip_scale_spread": 5.965100516752946,
+      "raw_median_abs_rel_by_clip": {
+        "wreck_07": 0.556138928578123,
+        "wreck_05": 0.6420350883295982,
+        "cenote_01": 0.9726732266706652,
+        "swimthrough_02": 0.46448606935773895,
+        "wreck_01": 0.5111243916402639,
+        "wreck_03": 0.5409198192150735
+      },
+      "aligned_median_abs_rel_by_clip": {
+        "wreck_07": 0.12399869900372273,
+        "wreck_05": 0.12346085190803721,
+        "cenote_01": 0.19016785524718358,
+        "swimthrough_02": 0.0980473897178849,
+        "wreck_01": 0.2496844865472668,
+        "wreck_03": 0.11694229024375968
+      },
+      "coverage_by_clip": {
+        "wreck_07": 0.8024699797453705,
+        "wreck_05": 0.6791413483796296,
+        "cenote_01": 0.9445952690972222,
+        "swimthrough_02": 0.7102213541666668,
+        "wreck_01": 0.9851291232638889,
+        "wreck_03": 0.764125072337963
+      }
+    }
+  },
+  "arms": {
+    "mapanything_n1": {
+      "native_kind": "depth_along_ray_metric",
+      "family": "scale",
+      "family_rationale": "The arm emits a point map or a camera-centre range and claims metric scale. The oracle scale is a DIAGNOSTIC granting the one gauge a shared clip-level physical model can absorb (FREEZE C7), not a deployment entitlement; the raw metric output is retained separately and judged post-C2.",
+      "convention": "range",
+      "convention_source": "the model's own verified semantics (S0)",
+      "scope": "clip",
+      "legal_families_considered": [
+        "none",
+        "scale"
+      ]
+    },
+    "dav2_small": {
+      "native_kind": "disparity_relative",
+      "family": "affine_disparity",
+      "family_rationale": "The ambiguity lives in DISPARITY, so the transform is fitted there and inverted afterwards. Fitting a*d+b in physical depth would be a DIFFERENT transform group, not a stricter one.",
+      "convention": "range",
+      "convention_source": "MEASURED in S2",
+      "scope": "clip",
+      "legal_families_considered": [
+        "affine_disparity"
+      ]
+    },
+    "moge2_vitl": {
+      "native_kind": "pointmap_metric",
+      "family": "scale",
+      "family_rationale": "The arm emits a point map or a camera-centre range and claims metric scale. The oracle scale is a DIAGNOSTIC granting the one gauge a shared clip-level physical model can absorb (FREEZE C7), not a deployment entitlement; the raw metric output is retained separately and judged post-C2.",
+      "convention": "range",
+      "convention_source": "the model's own verified semantics (S0)",
+      "scope": "clip",
+      "legal_families_considered": [
+        "none",
+        "scale"
+      ]
+    },
+    "metricanything_pointmap": {
+      "native_kind": "pointmap_metric",
+      "family": "scale",
+      "family_rationale": "The arm emits a point map or a camera-centre range and claims metric scale. The oracle scale is a DIAGNOSTIC granting the one gauge a shared clip-level physical model can absorb (FREEZE C7), not a deployment entitlement; the raw metric output is retained separately and judged post-C2.",
+      "convention": "range",
+      "convention_source": "the model's own verified semantics (S0)",
+      "scope": "clip",
+      "legal_families_considered": [
+        "none",
+        "scale"
+      ]
+    },
+    "wat3r_n1": {
+      "native_kind": "pointmap",
+      "family": "scale",
+      "family_rationale": "The arm emits a point map or a camera-centre range and claims metric scale. The oracle scale is a DIAGNOSTIC granting the one gauge a shared clip-level physical model can absorb (FREEZE C7), not a deployment entitlement; the raw metric output is retained separately and judged post-C2.",
+      "convention": "range",
+      "convention_source": "the model's own verified semantics (S0)",
+      "scope": "clip",
+      "legal_families_considered": [
+        "none",
+        "scale",
+        "affine_depth"
+      ]
+    },
+    "da3mono_large": {
+      "native_kind": "depth_relative",
+      "family": "affine_depth",
+      "family_rationale": "Affine-in-depth / Class 3 from the primary source: the DA3 teacher outputs scale-shift-invariant DEPTH and the monocular student is trained from those targets (FREEZE C1). The scale-only subgroup is tested empirically; only measured evidence may earn an 'approximately scale-only' description.",
+      "convention": "range",
+      "convention_source": "MEASURED in S2",
+      "scope": "clip",
+      "legal_families_considered": [
+        "affine_depth",
+        "scale"
+      ]
+    },
+    "foundationgeo_11": {
+      "native_kind": "pointmap_metric",
+      "family": "scale",
+      "family_rationale": "The arm emits a point map or a camera-centre range and claims metric scale. The oracle scale is a DIAGNOSTIC granting the one gauge a shared clip-level physical model can absorb (FREEZE C7), not a deployment entitlement; the raw metric output is retained separately and judged post-C2.",
+      "convention": "range",
+      "convention_source": "the model's own verified semantics (S0)",
+      "scope": "clip",
+      "legal_families_considered": [
+        "none",
+        "scale"
+      ]
+    },
+    "fg_pre_ray": {
+      "native_kind": "pointmap_metric",
+      "family": "scale",
+      "family_rationale": "The arm emits a point map or a camera-centre range and claims metric scale. The oracle scale is a DIAGNOSTIC granting the one gauge a shared clip-level physical model can absorb (FREEZE C7), not a deployment entitlement; the raw metric output is retained separately and judged post-C2. This ablation arm inherits the primary arm's policy unchanged: it is the same representation from the same checkpoint, and aligning it differently would confound the intervention with the alignment.",
+      "convention": "range",
+      "convention_source": "the model's own verified semantics (S0)",
+      "scope": "clip",
+      "legal_families_considered": [
+        "none",
+        "scale"
+      ],
+      "inherits_from": "foundationgeo_11",
+      "role": "V4b arm A: raw geometry BEFORE the learned ray-direction delta, under the common frozen (focal, shift)"
+    },
+    "fg_post_ray": {
+      "native_kind": "pointmap_metric",
+      "family": "scale",
+      "family_rationale": "The arm emits a point map or a camera-centre range and claims metric scale. The oracle scale is a DIAGNOSTIC granting the one gauge a shared clip-level physical model can absorb (FREEZE C7), not a deployment entitlement; the raw metric output is retained separately and judged post-C2. This ablation arm inherits the primary arm's policy unchanged: it is the same representation from the same checkpoint, and aligning it differently would confound the intervention with the alignment.",
+      "convention": "range",
+      "convention_source": "the model's own verified semantics (S0)",
+      "scope": "clip",
+      "legal_families_considered": [
+        "none",
+        "scale"
+      ],
+      "inherits_from": "foundationgeo_11",
+      "role": "V4b arm B and V4c arm C: raw geometry AFTER the ray delta, same forward pass, same frozen (focal, shift)"
+    }
+  }
+}

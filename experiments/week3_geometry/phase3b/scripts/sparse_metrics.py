@@ -44,19 +44,19 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", 
 if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
 
-from experiments.week3_geometry.geometry import (  # noqa: E402
+from experiments.week3_geometry.phase3a.geometry import (  # noqa: E402
     binned_profile,
     fit_global_scale,
     image_radius,
     relative_errors,
     robust_stats,
 )
-from experiments.week3_geometry.scripts.compare import (  # noqa: E402
+from experiments.week3_geometry.phase3a.scripts.compare import (  # noqa: E402
     _T_cw,
     classical_observations,
     radius_profiles_by_range_bin,
 )
-from experiments.week3_geometry.scripts.run_colmap import (  # noqa: E402
+from experiments.week3_geometry.phase3a.scripts.run_colmap import (  # noqa: E402
     parse_cameras_txt,
     parse_images_txt,
     parse_points3d_txt,
@@ -254,7 +254,7 @@ def sparse_structure_metrics(model: dict, n_offered: int | None = None) -> dict:
     # the clip median. That corrupts every shape statistic downstream while
     # leaving the MEDIAN residual looking healthy, so it has to be measured
     # rather than noticed by accident.
-    from experiments.week3_geometry.scripts.compare import classical_observations as _obs
+    from experiments.week3_geometry.phase3a.scripts.compare import classical_observations as _obs
     o = _obs(model)
     if o:
         allr = np.concatenate([v["range"] for v in o.values()])

@@ -1,0 +1,320 @@
+{
+ "stage": "R2-S1 determinism, runtime, memory (FREEZE S1 / week4a-r2 \u00a715)",
+ "_epistemic": "PRE-C2.  S1 measures reproducibility of a model against ITSELF on identical input.  It says nothing about whether the prediction is correct, and a bitwise-deterministic model can be bitwise-deterministically wrong.",
+ "subset": {
+  "frames": [
+   "wreck_07/f000105",
+   "wreck_05/f000109",
+   "cenote_01/f000193",
+   "wreck_01/f001845"
+  ],
+  "roles": {
+   "wreck_07/f000105": "high-texture arc / favourable geometry support",
+   "wreck_05/f000109": "lower-texture lateral glide / weak geometry support",
+   "cenote_01/f000193": "widest near/far range variation",
+   "wreck_01/f001845": "low-texture near-planar PORTRAIT orientation (FOV/orientation trap)"
+  },
+  "rationale": "A representative subset, not the 288-frame benchmark. Determinism and runtime do not need the full set, and FREEZE S1 explicitly does not ask for it."
+ },
+ "arms": {
+  "moge3_vitl": {
+   "status": "measured",
+   "checkpoint": "Ruicheng/moge-3-vitl",
+   "device": "mps",
+   "precision": "float32 (no autocast; MPS supports only bf16/fp16 autocast)",
+   "seed": 0,
+   "repeats": 3,
+   "compared_field": "canonical_range where the model emits one, otherwise the NATIVE field \u2014 so the floor is in the units the S2 alignment policy will actually work in",
+   "bitwise_reproducible": true,
+   "stochasticity_source": "none observed \u2014 bitwise reproducible on this device and precision",
+   "noise_floor": {
+    "within_process_p99_rel": 0.0,
+    "across_process_p99_rel": 0.0,
+    "floor_p99_rel": 0.0,
+    "meaning": "Worst 99th-percentile RELATIVE difference between repeated runs on identical input. No downstream relative delta below this may be read as signal for this model."
+   },
+   "runtime_seconds": {
+    "n": 12,
+    "median": 4.1011185414972715,
+    "min": 4.049027625005692,
+    "max": 4.861670499958564
+   },
+   "load_seconds": 9.08,
+   "peak_rss_gb": 3.06,
+   "peak_mps_driver_gb": 3.07,
+   "torch": "2.14.0",
+   "per_frame": {
+    "wreck_07/f000105": {
+     "n_compared": 841158,
+     "valid_fraction": 0.91271484375,
+     "within_process_bitwise": true,
+     "within_process_p99_rel": 0.0,
+     "within_process_valid_mask_identical": true,
+     "across_process_bitwise": true,
+     "across_process_p99_rel": 0.0,
+     "across_process_valid_mask_identical": true
+    },
+    "wreck_05/f000109": {
+     "n_compared": 706822,
+     "valid_fraction": 0.7669509548611111,
+     "within_process_bitwise": true,
+     "within_process_p99_rel": 0.0,
+     "within_process_valid_mask_identical": true,
+     "across_process_bitwise": true,
+     "across_process_p99_rel": 0.0,
+     "across_process_valid_mask_identical": true
+    },
+    "cenote_01/f000193": {
+     "n_compared": 921600,
+     "valid_fraction": 1.0,
+     "within_process_bitwise": true,
+     "within_process_p99_rel": 0.0,
+     "within_process_valid_mask_identical": true,
+     "across_process_bitwise": true,
+     "across_process_p99_rel": 0.0,
+     "across_process_valid_mask_identical": true
+    },
+    "wreck_01/f001845": {
+     "n_compared": 921600,
+     "valid_fraction": 1.0,
+     "within_process_bitwise": true,
+     "within_process_p99_rel": 0.0,
+     "within_process_valid_mask_identical": true,
+     "across_process_bitwise": true,
+     "across_process_p99_rel": 0.0,
+     "across_process_valid_mask_identical": true
+    }
+   },
+   "grid": "source grid 1280x720 = 921600 samples; the mask is the model's own, so the compared count varies with coverage",
+   "configuration": "Step 0 (refine_steps = 0, refiner=None).  Step 3 was not measured -- see pending.moge3_vitl_step3."
+  },
+  "mda_mog_sky_l2": {
+   "status": "measured",
+   "checkpoint": "DA3_MOG_Sky_LogL2 (mda_mog_sky_l2)",
+   "device": "mps",
+   "precision": "float32 (no autocast; MPS supports only bf16/fp16 autocast)",
+   "seed": 0,
+   "repeats": 3,
+   "compared_field": "canonical_range where the model emits one, otherwise the NATIVE field \u2014 so the floor is in the units the S2 alignment policy will actually work in",
+   "bitwise_reproducible": true,
+   "stochasticity_source": "none observed \u2014 bitwise reproducible on this device and precision",
+   "noise_floor": {
+    "within_process_p99_rel": 0.0,
+    "across_process_p99_rel": 0.0,
+    "floor_p99_rel": 0.0,
+    "meaning": "Worst 99th-percentile RELATIVE difference between repeated runs on identical input. No downstream relative delta below this may be read as signal for this model."
+   },
+   "runtime_seconds": {
+    "n": 12,
+    "median": 2.8159675619972404,
+    "min": 1.7989902090048417,
+    "max": 3.302784667001106
+   },
+   "load_seconds": 14.64,
+   "peak_rss_gb": 10.35,
+   "peak_mps_driver_gb": 6.2,
+   "torch": "2.14.0",
+   "per_frame": {
+    "wreck_07/f000105": {
+     "n_compared": 141120,
+     "valid_fraction": 1.0,
+     "within_process_bitwise": true,
+     "within_process_p99_rel": 0.0,
+     "within_process_valid_mask_identical": true,
+     "across_process_bitwise": true,
+     "across_process_p99_rel": 0.0,
+     "across_process_valid_mask_identical": true
+    },
+    "wreck_05/f000109": {
+     "n_compared": 141120,
+     "valid_fraction": 1.0,
+     "within_process_bitwise": true,
+     "within_process_p99_rel": 0.0,
+     "within_process_valid_mask_identical": true,
+     "across_process_bitwise": true,
+     "across_process_p99_rel": 0.0,
+     "across_process_valid_mask_identical": true
+    },
+    "cenote_01/f000193": {
+     "n_compared": 141120,
+     "valid_fraction": 1.0,
+     "within_process_bitwise": true,
+     "within_process_p99_rel": 0.0,
+     "within_process_valid_mask_identical": true,
+     "across_process_bitwise": true,
+     "across_process_p99_rel": 0.0,
+     "across_process_valid_mask_identical": true
+    },
+    "wreck_01/f001845": {
+     "n_compared": 141120,
+     "valid_fraction": 1.0,
+     "within_process_bitwise": true,
+     "within_process_p99_rel": 0.0,
+     "within_process_valid_mask_identical": true,
+     "across_process_bitwise": true,
+     "across_process_p99_rel": 0.0,
+     "across_process_valid_mask_identical": true
+    }
+   },
+   "grid": "native 512-long-edge patch-aligned grid 504x280 = 141120 samples (size_long_edge 512, patch 14); coverage is 1.0 on all four frames, so the compared count is constant",
+   "mixture_note": "the mixture component depths, probabilities, chosen component and entropy are reproduced bitwise together with the depth, so the \u00a712 mixture record is itself repeatable.  Per \u00a712 these are NOT called calibrated confidence."
+  },
+  "pxdepth": {
+   "status": "measured",
+   "checkpoint": "official released PXDepth checkpoint (native relative prediction; MoGe-2 assist EXCLUDED per protocol \u00a710)",
+   "device": "cpu",
+   "precision": "float32 (no autocast; MPS supports only bf16/fp16 autocast)",
+   "seed": 0,
+   "repeats": 3,
+   "compared_field": "canonical_range where the model emits one, otherwise the NATIVE field \u2014 so the floor is in the units the S2 alignment policy will actually work in",
+   "bitwise_reproducible": true,
+   "stochasticity_source": "none observed \u2014 bitwise reproducible on this device and precision",
+   "noise_floor": {
+    "within_process_p99_rel": 0.0,
+    "across_process_p99_rel": 0.0,
+    "floor_p99_rel": 0.0,
+    "meaning": "Worst 99th-percentile RELATIVE difference between repeated runs on identical input. No downstream relative delta below this may be read as signal for this model."
+   },
+   "runtime_seconds": {
+    "n": 12,
+    "median": 16.45033895850065,
+    "min": 15.401681166957133,
+    "max": 17.08885837503476
+   },
+   "load_seconds": 3.92,
+   "peak_rss_gb": 5.69,
+   "peak_mps_driver_gb": null,
+   "torch": "2.11.0",
+   "per_frame": {
+    "wreck_07/f000105": {
+     "n_compared": 715228,
+     "valid_fraction": 0.905040289925494,
+     "within_process_bitwise": true,
+     "within_process_p99_rel": 0.0,
+     "within_process_valid_mask_identical": true,
+     "across_process_bitwise": true,
+     "across_process_p99_rel": 0.0,
+     "across_process_valid_mask_identical": true
+    },
+    "wreck_05/f000109": {
+     "n_compared": 657949,
+     "valid_fraction": 0.8325601818108196,
+     "within_process_bitwise": true,
+     "within_process_p99_rel": 0.0,
+     "within_process_valid_mask_identical": true,
+     "across_process_bitwise": true,
+     "across_process_p99_rel": 0.0,
+     "across_process_valid_mask_identical": true
+    },
+    "cenote_01/f000193": {
+     "n_compared": 790272,
+     "valid_fraction": 1.0,
+     "within_process_bitwise": true,
+     "within_process_p99_rel": 0.0,
+     "within_process_valid_mask_identical": true,
+     "across_process_bitwise": true,
+     "across_process_p99_rel": 0.0,
+     "across_process_valid_mask_identical": true
+    },
+    "wreck_01/f001845": {
+     "n_compared": 790272,
+     "valid_fraction": 1.0,
+     "within_process_bitwise": true,
+     "within_process_p99_rel": 0.0,
+     "within_process_valid_mask_identical": true,
+     "across_process_bitwise": true,
+     "across_process_p99_rel": 0.0,
+     "across_process_valid_mask_identical": true
+    }
+   },
+   "note": "Median 16.45 s/frame here against the 22.25-23.68 s/frame recorded in S3. The S3 figure is the one to quote for that stage -- it was measured under that stage's own load -- and the gap is machine contention, not a model difference. PXDepth is the only arm with no MPS path at all.",
+   "env": {
+    "python": "3.13.5",
+    "executable": "/Users/nishanthmohan/code/uwrestore/experiments/week4_mono/round2/.venv-pxdepth/bin/python",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "torch": "2.11.0",
+    "mps_available": true,
+    "mps_built": true,
+    "cuda_available": false,
+    "numpy": "2.5.3"
+   }
+  }
+ },
+ "pending": {
+  "moge3_vitl_step3": {
+   "status": "pending_cuda",
+   "stopped_at": "S0 gate; the Step-3 refiner never became constructible on this machine",
+   "reason": "moge/model/modules/sparse_unet.py:14 requires flex_gemm.ops.NeighborCache; FlexGEMM is Triton-powered (pyproject: triton>=3.2.0) and Triton has no macOS distribution. No CUDA device on this machine."
+  },
+  "surge_large": {
+   "status": "pending_cuda",
+   "stopped_at": "S0 gate, first sanity inference -- no S1-S6 stage was entered",
+   "reason": "SurGe's Neighborhood Attention has no backend that both runs on this machine and is numerically the released one. NATTEN refuses MPS outright and refuses compiled flex on two independent gates; the one sanctioned path, uncompiled CPU flex, was measured above to need ~138 GB of memory footprint and was killed by the OS at 931 s on a 24 GB machine.",
+   "environment_required": "one CUDA GPU with compute capability >= 7.0, so NATTEN selects a fused FNA backend instead of materialising the score matrix"
+  },
+  "hyden_mogev2_metric": {
+   "status": "pending_checkpoint",
+   "stopped_at": "S0 gate; checkpoint could not be obtained",
+   "reason": "GatedRepoError 401: 'Cannot access gated repo ... Access to model facebook/hyden-mogev2-metric-point is restricted. You must have access to it and be authenticated to access it.' The repository requires a manually approved access request plus an authenticated HF token; no token exists on this machine and the execution policy forbids provisioning or authenticating to a service."
+  },
+  "pointdit_l512": {
+   "status": "pending_checkpoint",
+   "stopped_at": "S0 gate; checkpoint incomplete",
+   "reason": "The released PointDiT checkpoint is published WITHOUT the DINOv3 image encoder -- the filename says so ('nodinov3') and README:59-62 states 'The DINOv3 weights are gated and cannot be redistributed, so they are not part of the released checkpoints.' model.py:270 requires feature_embedding_type='dinov3_vitb16' and :305-317 loads pretrained/dinov3/dinov3_{vit_type}_pretrain_lvd1689m-{sha}.pth from a third_party/dinov3 checkout. Fetching those weights returns GatedRepoError 401 for facebook/dinov3-vitb16-pretrain-lvd1689m (gated: manual).",
+   "protocol_consequence": "\u00a715 requires the single-step all-zero-initialisation path to be tested DIRECTLY for determinism, because a diffusion-family model is the one challenger where stochastic initialisation is the expected failure.  That test is blocked, not passed, not skipped."
+  }
+ },
+ "round1_incumbent_reference": {
+  "da3mono_large": {
+   "bitwise_reproducible": true,
+   "floor_p99_rel": 0.0,
+   "runtime_median_s": 0.2899317294941284,
+   "peak_rss_gb": 2.89,
+   "load_seconds": 2.69
+  },
+  "dav2_small": {
+   "bitwise_reproducible": true,
+   "floor_p99_rel": 0.0,
+   "runtime_median_s": 0.19351168751018122,
+   "peak_rss_gb": 0.77,
+   "load_seconds": 0.77
+  },
+  "foundationgeo_11": {
+   "bitwise_reproducible": true,
+   "floor_p99_rel": 0.0,
+   "runtime_median_s": 1.4540251250145957,
+   "peak_rss_gb": 2.71,
+   "load_seconds": 4.48
+  },
+  "mapanything_n1": {
+   "bitwise_reproducible": true,
+   "floor_p99_rel": 0.0,
+   "runtime_median_s": 1.0967805210093502,
+   "peak_rss_gb": 9.59,
+   "load_seconds": 18.31
+  },
+  "metricanything_pointmap": {
+   "bitwise_reproducible": true,
+   "floor_p99_rel": 0.0,
+   "runtime_median_s": 2.1219782709958963,
+   "peak_rss_gb": 2.8,
+   "load_seconds": 4.38
+  },
+  "moge2_vitl": {
+   "bitwise_reproducible": true,
+   "floor_p99_rel": 0.0,
+   "runtime_median_s": 2.0913718744996004,
+   "peak_rss_gb": 2.8,
+   "load_seconds": 4.55
+  },
+  "wat3r_n1": {
+   "bitwise_reproducible": true,
+   "floor_p99_rel": 0.0,
+   "runtime_median_s": 1.1367548124981113,
+   "peak_rss_gb": 9.18,
+   "load_seconds": 8.04
+  },
+  "_note": "Reproduced unchanged from results/S1_results.json for runtime/memory comparison only.  \u00a713 forbids rerunning the incumbents, and determinism is a property of the model and device, not of the Part A/B/D corrections, which touched only post-inference semantics and grid mapping."
+ }
+}

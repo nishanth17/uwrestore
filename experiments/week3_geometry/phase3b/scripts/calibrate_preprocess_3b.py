@@ -35,7 +35,7 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", 
 if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
 
-from experiments.week3_geometry.scripts.calibrate_preprocess import (  # noqa: E402
+from experiments.week3_geometry.phase3a.scripts.calibrate_preprocess import (  # noqa: E402
     SOURCE_SIZES,
     fit_affine,
     locate,
@@ -43,6 +43,7 @@ from experiments.week3_geometry.scripts.calibrate_preprocess import (  # noqa: E
 )
 
 W3 = os.path.join(REPO_ROOT, "experiments", "week3_geometry")
+W3_PHASE3A = os.path.join(W3, "phase3a")
 OUT = os.path.join(W3, "phase3b", "outputs", "preprocess_maps_3b.json")
 
 

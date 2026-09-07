@@ -29,7 +29,7 @@ Phase 3A's configuration A.
 
 Usage:
     .venv/bin/python -m experiments.week3_geometry.phase3b.scripts.prep_db \
-        --src-run experiments/week3_geometry/outputs/colmap/A/wreck_05/run0 \
+        --src-run experiments/week3_geometry/phase3a/outputs/colmap/A/wreck_05/run0 \
         --dst    experiments/week3_geometry/phase3b/outputs/db/3b3_wreck_05_opencv.db \
         --camera-model OPENCV
 """

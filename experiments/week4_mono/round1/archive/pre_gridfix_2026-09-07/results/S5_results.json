@@ -1,0 +1,1194 @@
+{
+  "stage": "S5",
+  "clips": [
+    "wreck_07",
+    "wreck_05",
+    "cenote_01",
+    "swimthrough_02",
+    "wreck_01",
+    "wreck_03"
+  ],
+  "flow": {
+    "backend": {
+      "backend": "searaft",
+      "model": "SEA-RAFT-M",
+      "paper": "arXiv:2405.14793 (ECCV 2024)",
+      "repository": "https://github.com/princeton-vl/SEA-RAFT",
+      "repo_path": "/Users/nishanthmohan/code/uwrestore/experiments/week2a_flow/vendor/SEA-RAFT",
+      "repo_commit": "9137517ba24e628442aec097d3afe71d03503b75",
+      "repo_commit_expected": "9137517ba24e628442aec097d3afe71d03503b75",
+      "repo_commit_matches_expected": true,
+      "checkpoint": "MemorySlices/Tartan-C-T-TSKH-spring540x960-M",
+      "checkpoint_source": "huggingface_hub",
+      "license": "BSD-3-Clause",
+      "config": "config/eval/spring-M.json with scale=0 (see module docstring)",
+      "iters": 4,
+      "python": "3.13.5",
+      "torch": "2.13.0",
+      "device": "mps",
+      "modifications_to_third_party_code": "none",
+      "preprocessing": "linear Frame -> linear_to_srgb -> uint8 RGB -> float32 tensor in [0,255]; model normalises to [-1,1] internally; RAFT InputPadder replicate-pads H,W to a multiple of 8 and unpads. No resize in the wrapper.",
+      "native_confidence": "mixture-of-Laplace log-b uncertainty (SEA-RAFT custom.py get_heatmap); LOWER = more confident. Inspection only \u2014 not used by any metric.",
+      "known_limitation": "conservatively invalidates smooth low-texture independently moving subjects (whole eel body); mean FB-valid coverage in the Phase 2A lag study fell ~97% @1 / ~91% @4 / ~83% @8"
+    },
+    "clips": {
+      "wreck_07": {
+        "n_pairs": 47,
+        "seconds": 143.8,
+        "median_valid_fraction": 0.6936805555555555,
+        "median_flow_px": 4.777570724487305
+      },
+      "wreck_05": {
+        "n_pairs": 47,
+        "seconds": 153.8,
+        "median_valid_fraction": 0.4175173611111111,
+        "median_flow_px": 19.57562255859375
+      },
+      "cenote_01": {
+        "n_pairs": 47,
+        "seconds": 152.7,
+        "median_valid_fraction": 0.9403472222222222,
+        "median_flow_px": 4.624234199523926
+      },
+      "swimthrough_02": {
+        "n_pairs": 47,
+        "seconds": 145.0,
+        "median_valid_fraction": 0.9321701388888889,
+        "median_flow_px": 4.357316017150879
+      },
+      "wreck_01": {
+        "n_pairs": 47,
+        "seconds": 140.7,
+        "median_valid_fraction": 0.9295486111111111,
+        "median_flow_px": 7.09791898727417
+      },
+      "wreck_03": {
+        "n_pairs": 47,
+        "seconds": 137.0,
+        "median_valid_fraction": 0.46706597222222224,
+        "median_flow_px": 15.498164176940918
+      }
+    }
+  },
+  "arms": {
+    "mapanything_n1": {
+      "scale_median": {
+        "wreck_07": 1.0533537809762417,
+        "wreck_05": 1.0056192122791996,
+        "cenote_01": 1.1113404245399425,
+        "swimthrough_02": 0.9977499267876359,
+        "wreck_01": 0.9298245380579532,
+        "wreck_03": 1.1152667003428112
+      },
+      "scale_wander": {
+        "wreck_07": 1.5440561535131514,
+        "wreck_05": 1.5207343213389617,
+        "cenote_01": 5.606910103881815,
+        "swimthrough_02": 1.6313832482635995,
+        "wreck_01": 2.477019338532838,
+        "wreck_03": 2.0519151218408593
+      },
+      "scale_log_std": {
+        "wreck_07": 0.09564031036786678,
+        "wreck_05": 0.08487199504633225,
+        "cenote_01": 0.283893772180002,
+        "swimthrough_02": 0.12348117205141507,
+        "wreck_01": 0.2708264281267733,
+        "wreck_03": 0.17450944893060366
+      },
+      "scale_f2f_log_mad": {
+        "wreck_07": 0.025158940373397734,
+        "wreck_05": 0.05190679116425481,
+        "cenote_01": 0.06838335674300697,
+        "swimthrough_02": 0.036273783883413846,
+        "wreck_01": 0.11239148445304425,
+        "wreck_03": 0.04863026162205307
+      },
+      "near_far_wander": {
+        "wreck_07": 5.230587996461785,
+        "wreck_05": 3.460595016206833,
+        "cenote_01": 2.1930095303455053,
+        "swimthrough_02": 1.6003277905491962,
+        "wreck_01": 2.317630328233416,
+        "wreck_03": 8.068619028456638
+      },
+      "local_stability_dlog": {
+        "wreck_07": 0.02048894819623115,
+        "wreck_05": 0.01736787095430481,
+        "cenote_01": 0.03869563681688004,
+        "swimthrough_02": 0.015687603546939766,
+        "wreck_01": 0.017119009051673406,
+        "wreck_03": 0.022816028558694135
+      },
+      "boundary_jitter_px": {
+        "wreck_07": 1.0,
+        "wreck_05": 1.0,
+        "cenote_01": 3.302775637731995,
+        "swimthrough_02": 1.0,
+        "wreck_01": 1.0,
+        "wreck_03": 4.123105625617661
+      },
+      "coverage_median": {
+        "wreck_07": 0.7965451388888889,
+        "wreck_05": 0.7231857638888889,
+        "cenote_01": 0.929921875,
+        "swimthrough_02": 0.732265625,
+        "wreck_01": 0.9905642361111111,
+        "wreck_03": 0.7596788194444444
+      },
+      "coverage_min": {
+        "wreck_07": 0.6237326388888889,
+        "wreck_05": 0.6466319444444445,
+        "cenote_01": 0.8947395833333334,
+        "swimthrough_02": 0.5211458333333333,
+        "wreck_01": 0.93109375,
+        "wreck_03": 0.3203125
+      },
+      "partition": {
+        "wreck_07": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.020380008033587638
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 22,
+            "median_abs_dlog": 0.023184192492623268
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.013106169090642439
+          }
+        },
+        "wreck_05": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.017323361704307594
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 15,
+            "median_abs_dlog": 0.011565544581659815
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.025803564338712226
+          }
+        },
+        "cenote_01": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.039130199670845744
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 46,
+            "median_abs_dlog": 0.03735239747868441
+          },
+          "dynamic": {
+            "n_pairs": 29,
+            "median_abs_dlog": 0.013725025135558955
+          }
+        },
+        "swimthrough_02": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.015436939704993158
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.02063709739900821
+          },
+          "dynamic": {
+            "n_pairs": 2,
+            "median_abs_dlog": 0.0234490910337386
+          }
+        },
+        "wreck_01": {
+          "static_anchored": {
+            "n_pairs": 41,
+            "median_abs_dlog": 0.017118669566145828
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 0,
+            "median_abs_dlog": NaN
+          },
+          "dynamic": {
+            "n_pairs": 17,
+            "median_abs_dlog": 0.018045377751392255
+          }
+        },
+        "wreck_03": {
+          "static_anchored": {
+            "n_pairs": 46,
+            "median_abs_dlog": 0.022790803635137302
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 20,
+            "median_abs_dlog": 0.01775761383741714
+          },
+          "dynamic": {
+            "n_pairs": 45,
+            "median_abs_dlog": 0.029855963663723006
+          }
+        }
+      }
+    },
+    "dav2_small": {
+      "scale_median": {
+        "wreck_07": 0.02488768988873176,
+        "wreck_05": 0.009052203388249228,
+        "cenote_01": 0.024583911929990095,
+        "swimthrough_02": 0.013486223514561337,
+        "wreck_01": 0.03641353394130823,
+        "wreck_03": 0.00792837090745758
+      },
+      "scale_wander": {
+        "wreck_07": 3.402145341776047,
+        "wreck_05": 3.8285404026179033,
+        "cenote_01": 2.15563782901436,
+        "swimthrough_02": 2.033158652117549,
+        "wreck_01": 3.692450167138217,
+        "wreck_03": 21.171536987884824
+      },
+      "scale_log_std": {
+        "wreck_07": 0.34881111936347337,
+        "wreck_05": 0.26410552665675546,
+        "cenote_01": 0.19685966156011536,
+        "swimthrough_02": 0.19275242196926803,
+        "wreck_01": 0.25584790816912323,
+        "wreck_03": 0.6683301982471366
+      },
+      "scale_f2f_log_mad": {
+        "wreck_07": 0.03173401596471148,
+        "wreck_05": 0.08486322577944883,
+        "cenote_01": 0.06667944591626851,
+        "swimthrough_02": 0.03556797324022298,
+        "wreck_01": 0.08347337449321124,
+        "wreck_03": 0.214700504385676
+      },
+      "near_far_wander": {
+        "wreck_07": 29.311412673946688,
+        "wreck_05": 1.4028029641461863,
+        "cenote_01": 1.4324892145067285,
+        "swimthrough_02": 1.1812261220795606,
+        "wreck_01": 1.3591151370284213,
+        "wreck_03": 1.3440170002085614
+      },
+      "local_stability_dlog": {
+        "wreck_07": 0.01872791747263347,
+        "wreck_05": 0.012421671110343091,
+        "cenote_01": 0.010877310858832145,
+        "swimthrough_02": 0.008019230157149337,
+        "wreck_01": 0.007384366316683044,
+        "wreck_03": 0.010769068416213834
+      },
+      "boundary_jitter_px": {
+        "wreck_07": 0.0,
+        "wreck_05": 1.0,
+        "cenote_01": 0.5,
+        "swimthrough_02": 0.0,
+        "wreck_03": 2.23606797749979
+      },
+      "coverage_median": {
+        "wreck_07": 0.7977864583333334,
+        "wreck_05": 0.6213454861111112,
+        "cenote_01": 0.9422743055555556,
+        "swimthrough_02": 0.7106510416666667,
+        "wreck_01": 0.9905642361111111,
+        "wreck_03": 0.7704513888888889
+      },
+      "coverage_min": {
+        "wreck_07": 0.6355381944444445,
+        "wreck_05": 0.4382465277777778,
+        "cenote_01": 0.91296875,
+        "swimthrough_02": 0.46371527777777777,
+        "wreck_01": 0.9357291666666666,
+        "wreck_03": 0.3081597222222222
+      },
+      "partition": {
+        "wreck_07": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.018086292353864497
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.017798167798991127
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.05875310888910423
+          }
+        },
+        "wreck_05": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.012283644958501982
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 44,
+            "median_abs_dlog": 0.009763577932830891
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.012217666930779636
+          }
+        },
+        "cenote_01": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.010883224044716311
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.009200501676592143
+          },
+          "dynamic": {
+            "n_pairs": 33,
+            "median_abs_dlog": 0.005399142999437556
+          }
+        },
+        "swimthrough_02": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.008065156963769304
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.010007865818571382
+          },
+          "dynamic": {
+            "n_pairs": 34,
+            "median_abs_dlog": 0.006731281856005467
+          }
+        },
+        "wreck_01": {
+          "static_anchored": {
+            "n_pairs": 41,
+            "median_abs_dlog": 0.007328407529876069
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 21,
+            "median_abs_dlog": 0.0034522297869425955
+          },
+          "dynamic": {
+            "n_pairs": 24,
+            "median_abs_dlog": 0.003072197309134106
+          }
+        },
+        "wreck_03": {
+          "static_anchored": {
+            "n_pairs": 45,
+            "median_abs_dlog": 0.01069139258621421
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 43,
+            "median_abs_dlog": 0.007412158654029
+          },
+          "dynamic": {
+            "n_pairs": 44,
+            "median_abs_dlog": 0.01576152544019871
+          }
+        }
+      }
+    },
+    "moge2_vitl": {
+      "scale_median": {
+        "wreck_07": 2.903220066071272,
+        "wreck_05": 3.0148970595611493,
+        "cenote_01": 1.9414167898534351,
+        "swimthrough_02": 2.36759357269327,
+        "wreck_01": 2.652320428090947,
+        "wreck_03": 2.8462233927033296
+      },
+      "scale_wander": {
+        "wreck_07": 1.686083319903788,
+        "wreck_05": 1.466795486320338,
+        "cenote_01": 3.172471381693656,
+        "swimthrough_02": 1.3054045660474023,
+        "wreck_01": 7.161043236254613,
+        "wreck_03": 4.8597454437104695
+      },
+      "scale_log_std": {
+        "wreck_07": 0.10667457306611697,
+        "wreck_05": 0.107122712211152,
+        "cenote_01": 0.29147675252513383,
+        "swimthrough_02": 0.06778751031679968,
+        "wreck_01": 0.44151196034916285,
+        "wreck_03": 0.3574968260886053
+      },
+      "scale_f2f_log_mad": {
+        "wreck_07": 0.04617051431717245,
+        "wreck_05": 0.03753004530970716,
+        "cenote_01": 0.19944352043722585,
+        "swimthrough_02": 0.023647016590559566,
+        "wreck_01": 0.13572489649282637,
+        "wreck_03": 0.09248711729872705
+      },
+      "near_far_wander": {
+        "wreck_07": 4.176111682822205,
+        "wreck_05": 3.3967743187453734,
+        "cenote_01": 2.4573971453207193,
+        "swimthrough_02": 8.938116262025186,
+        "wreck_01": 3.193376957516015,
+        "wreck_03": 19.031576522383325
+      },
+      "local_stability_dlog": {
+        "wreck_07": 0.02085157751731015,
+        "wreck_05": 0.02561998793393716,
+        "cenote_01": 0.03094485031617311,
+        "swimthrough_02": 0.01645750518198219,
+        "wreck_01": 0.008565107652426462,
+        "wreck_03": 0.03664417173892898
+      },
+      "boundary_jitter_px": {
+        "wreck_07": 0.0,
+        "wreck_05": 0.0,
+        "cenote_01": 0.0,
+        "swimthrough_02": 0.0,
+        "wreck_01": 0.0,
+        "wreck_03": 0.0
+      },
+      "coverage_median": {
+        "wreck_07": 0.815763888888889,
+        "wreck_05": 0.6946440972222222,
+        "cenote_01": 0.9422743055555556,
+        "swimthrough_02": 0.7518229166666667,
+        "wreck_01": 0.9905642361111111,
+        "wreck_03": 0.7863194444444445
+      },
+      "coverage_min": {
+        "wreck_07": 0.6341145833333334,
+        "wreck_05": 0.5972395833333334,
+        "cenote_01": 0.91296875,
+        "swimthrough_02": 0.5443923611111111,
+        "wreck_01": 0.9357291666666666,
+        "wreck_03": 0.35359375
+      },
+      "partition": {
+        "wreck_07": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.018898738541727855
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.03260931154898028
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.05343175542512313
+          }
+        },
+        "wreck_05": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.024195573796460312
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 43,
+            "median_abs_dlog": 0.035350734588520005
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.04553408423511707
+          }
+        },
+        "cenote_01": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.02971206308063079
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.030096799177646627
+          },
+          "dynamic": {
+            "n_pairs": 33,
+            "median_abs_dlog": 0.019333297563173923
+          }
+        },
+        "swimthrough_02": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.01502526268675819
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.02273635559219378
+          },
+          "dynamic": {
+            "n_pairs": 38,
+            "median_abs_dlog": 0.02337840250096912
+          }
+        },
+        "wreck_01": {
+          "static_anchored": {
+            "n_pairs": 41,
+            "median_abs_dlog": 0.008432235797227072
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 21,
+            "median_abs_dlog": 0.007230936480375094
+          },
+          "dynamic": {
+            "n_pairs": 24,
+            "median_abs_dlog": 0.009064122601615598
+          }
+        },
+        "wreck_03": {
+          "static_anchored": {
+            "n_pairs": 46,
+            "median_abs_dlog": 0.03240265252444918
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 43,
+            "median_abs_dlog": 0.048153298100581665
+          },
+          "dynamic": {
+            "n_pairs": 46,
+            "median_abs_dlog": 0.07130192518040623
+          }
+        }
+      }
+    },
+    "metricanything_pointmap": {
+      "scale_median": {
+        "wreck_07": 2.637716445894603,
+        "wreck_05": 2.931586314981199,
+        "cenote_01": 1.6653933623462616,
+        "swimthrough_02": 2.2795514249627113,
+        "wreck_01": 2.7327526053371827,
+        "wreck_03": 2.61096780604309
+      },
+      "scale_wander": {
+        "wreck_07": 1.886500502156707,
+        "wreck_05": 1.5372461125454606,
+        "cenote_01": 2.6858862363321205,
+        "swimthrough_02": 1.2938992074354936,
+        "wreck_01": 7.112085274556216,
+        "wreck_03": 4.933278662087611
+      },
+      "scale_log_std": {
+        "wreck_07": 0.13200525766944424,
+        "wreck_05": 0.11596752376442981,
+        "cenote_01": 0.2562513323729776,
+        "swimthrough_02": 0.0654276542613671,
+        "wreck_01": 0.4913752008015651,
+        "wreck_03": 0.32180021765684436
+      },
+      "scale_f2f_log_mad": {
+        "wreck_07": 0.05626405153228864,
+        "wreck_05": 0.039745994249855476,
+        "cenote_01": 0.12288288407826553,
+        "swimthrough_02": 0.022334973220227483,
+        "wreck_01": 0.10353892692171107,
+        "wreck_03": 0.0983450040309537
+      },
+      "near_far_wander": {
+        "wreck_07": 22.02726318829748,
+        "wreck_05": 4.12772859785331,
+        "cenote_01": 1.8150186824121188,
+        "swimthrough_02": 8.888831574120506,
+        "wreck_01": 3.023703677375803,
+        "wreck_03": 11.208999338495365
+      },
+      "local_stability_dlog": {
+        "wreck_07": 0.01987030573394244,
+        "wreck_05": 0.019824785589103167,
+        "cenote_01": 0.019537464933848003,
+        "swimthrough_02": 0.01441323816375606,
+        "wreck_01": 0.009866273239571566,
+        "wreck_03": 0.03279854136410332
+      },
+      "boundary_jitter_px": {
+        "wreck_07": 0.0,
+        "wreck_05": 0.0,
+        "cenote_01": 0.0,
+        "swimthrough_02": 0.0,
+        "wreck_01": 0.0,
+        "wreck_03": 0.0
+      },
+      "coverage_median": {
+        "wreck_07": 0.7807204861111111,
+        "wreck_05": 0.6643229166666667,
+        "cenote_01": 0.9422743055555556,
+        "swimthrough_02": 0.7438020833333333,
+        "wreck_01": 0.9905642361111111,
+        "wreck_03": 0.7842100694444445
+      },
+      "coverage_min": {
+        "wreck_07": 0.6104166666666667,
+        "wreck_05": 0.5294618055555556,
+        "cenote_01": 0.91296875,
+        "swimthrough_02": 0.5330208333333334,
+        "wreck_01": 0.9357291666666666,
+        "wreck_03": 0.3482638888888889
+      },
+      "partition": {
+        "wreck_07": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.01837613995163112
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.028867694071291528
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.04349754260954497
+          }
+        },
+        "wreck_05": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.018793525866675154
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 43,
+            "median_abs_dlog": 0.022522782625356008
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.040377925533995995
+          }
+        },
+        "cenote_01": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.01902446427130622
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.02395964788413818
+          },
+          "dynamic": {
+            "n_pairs": 33,
+            "median_abs_dlog": 0.015052125955463236
+          }
+        },
+        "swimthrough_02": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.013425136083104139
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.02035754129946865
+          },
+          "dynamic": {
+            "n_pairs": 35,
+            "median_abs_dlog": 0.026025295420737393
+          }
+        },
+        "wreck_01": {
+          "static_anchored": {
+            "n_pairs": 41,
+            "median_abs_dlog": 0.009605979813901655
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 21,
+            "median_abs_dlog": 0.007795753760719615
+          },
+          "dynamic": {
+            "n_pairs": 24,
+            "median_abs_dlog": 0.010972650760870506
+          }
+        },
+        "wreck_03": {
+          "static_anchored": {
+            "n_pairs": 46,
+            "median_abs_dlog": 0.029229966747459812
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 43,
+            "median_abs_dlog": 0.042490261336864066
+          },
+          "dynamic": {
+            "n_pairs": 46,
+            "median_abs_dlog": 0.06088611991465842
+          }
+        }
+      }
+    },
+    "wat3r_n1": {
+      "scale_median": {
+        "wreck_07": 20.738461986262504,
+        "wreck_05": 28.260403886483783,
+        "cenote_01": 7.022887235128308,
+        "swimthrough_02": 12.369399397102157,
+        "wreck_01": 5.213195235805282,
+        "wreck_03": 21.184767670654704
+      },
+      "scale_wander": {
+        "wreck_07": 1.9944348627266115,
+        "wreck_05": 2.1937541092365764,
+        "cenote_01": 1.341675343790106,
+        "swimthrough_02": 2.3924048148317345,
+        "wreck_01": 2.851094187397779,
+        "wreck_03": 3.357204893823601
+      },
+      "scale_log_std": {
+        "wreck_07": 0.16529464219531026,
+        "wreck_05": 0.23998382302548313,
+        "cenote_01": 0.07444283602299236,
+        "swimthrough_02": 0.27591436653535806,
+        "wreck_01": 0.2846357929483923,
+        "wreck_03": 0.32076510888161824
+      },
+      "scale_f2f_log_mad": {
+        "wreck_07": 0.0484086424778547,
+        "wreck_05": 0.042041255102311936,
+        "cenote_01": 0.015051511744991863,
+        "swimthrough_02": 0.020462659079519163,
+        "wreck_01": 0.03613971415343453,
+        "wreck_03": 0.05794760012171407
+      },
+      "near_far_wander": {
+        "wreck_07": 2.288980498358216,
+        "wreck_05": 1.8749151361656313,
+        "cenote_01": 3.0524378656269078,
+        "swimthrough_02": 4.1838526345157705,
+        "wreck_01": 4.447555735446473,
+        "wreck_03": 6.043042060320524
+      },
+      "local_stability_dlog": {
+        "wreck_07": 0.024894517133865257,
+        "wreck_05": 0.018555138501028967,
+        "cenote_01": 0.02773387643573122,
+        "swimthrough_02": 0.018587857664630558,
+        "wreck_01": 0.011582887674309816,
+        "wreck_03": 0.027070722199669217
+      },
+      "boundary_jitter_px": {
+        "wreck_07": 0.0,
+        "wreck_05": 0.0,
+        "cenote_01": 0.0,
+        "swimthrough_02": 0.0,
+        "wreck_01": 0.0,
+        "wreck_03": 0.0
+      },
+      "coverage_median": {
+        "wreck_07": 0.815763888888889,
+        "wreck_05": 0.7506770833333334,
+        "cenote_01": 0.9422743055555556,
+        "swimthrough_02": 0.7518229166666667,
+        "wreck_01": 0.5625,
+        "wreck_03": 0.8007031250000001
+      },
+      "coverage_min": {
+        "wreck_07": 0.6770138888888889,
+        "wreck_05": 0.6655902777777778,
+        "cenote_01": 0.91296875,
+        "swimthrough_02": 0.5463194444444445,
+        "wreck_01": 0.5506770833333333,
+        "wreck_03": 0.3536458333333333
+      },
+      "partition": {
+        "wreck_07": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.02389192777389848
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.04090972868789189
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.03571851439008222
+          }
+        },
+        "wreck_05": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.016536589216906705
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 44,
+            "median_abs_dlog": 0.0371240793540244
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.03288003564117359
+          }
+        },
+        "cenote_01": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.027378383504524928
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.04182228788042519
+          },
+          "dynamic": {
+            "n_pairs": 33,
+            "median_abs_dlog": 0.027257224598307928
+          }
+        },
+        "swimthrough_02": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.01623028951961092
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.031209987131100236
+          },
+          "dynamic": {
+            "n_pairs": 38,
+            "median_abs_dlog": 0.028578109906247207
+          }
+        },
+        "wreck_01": {
+          "static_anchored": {
+            "n_pairs": 39,
+            "median_abs_dlog": 0.011582887674309816
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 0,
+            "median_abs_dlog": NaN
+          },
+          "dynamic": {
+            "n_pairs": 8,
+            "median_abs_dlog": 0.014894706291845305
+          }
+        },
+        "wreck_03": {
+          "static_anchored": {
+            "n_pairs": 46,
+            "median_abs_dlog": 0.02467592431973431
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 43,
+            "median_abs_dlog": 0.04292347732345392
+          },
+          "dynamic": {
+            "n_pairs": 46,
+            "median_abs_dlog": 0.05398046406259227
+          }
+        }
+      }
+    },
+    "da3mono_large": {
+      "scale_median": {
+        "wreck_07": 6.848346920863121,
+        "wreck_05": 7.6723707353961235,
+        "cenote_01": 2.867528802131831,
+        "swimthrough_02": 8.709953364987463,
+        "wreck_01": 3.602835945931528,
+        "wreck_03": 7.022668878459026
+      },
+      "scale_wander": {
+        "wreck_07": 1.4818875534363136,
+        "wreck_05": 2.4882480921266956,
+        "cenote_01": 1.583556840706011,
+        "swimthrough_02": 1.5818293832210222,
+        "wreck_01": 4.2545940190876665,
+        "wreck_03": 4.362885783961086
+      },
+      "scale_log_std": {
+        "wreck_07": 0.09444393562040948,
+        "wreck_05": 0.265609873080573,
+        "cenote_01": 0.10980902338928701,
+        "swimthrough_02": 0.12377873289096991,
+        "wreck_01": 0.298301747419873,
+        "wreck_03": 0.31015773032255506
+      },
+      "scale_f2f_log_mad": {
+        "wreck_07": 0.043339859849439666,
+        "wreck_05": 0.04106768355308765,
+        "cenote_01": 0.05059392606337465,
+        "swimthrough_02": 0.02326364876276843,
+        "wreck_01": 0.0735314005643708,
+        "wreck_03": 0.07815911970127098
+      },
+      "near_far_wander": {
+        "wreck_07": 1.6684557789152703,
+        "wreck_05": 1.6267784491455717,
+        "cenote_01": 1.2028030590832708,
+        "swimthrough_02": 2.6781238260556863,
+        "wreck_01": 2.7027298848667938,
+        "wreck_03": 3.0508909011753964
+      },
+      "local_stability_dlog": {
+        "wreck_07": 0.009300472603551713,
+        "wreck_05": 0.006562276045263271,
+        "cenote_01": 0.008515773831913265,
+        "swimthrough_02": 0.011973391118765386,
+        "wreck_01": 0.009859501726681819,
+        "wreck_03": 0.012847638677466744
+      },
+      "boundary_jitter_px": {
+        "wreck_07": 0.0,
+        "wreck_05": 0.0,
+        "cenote_01": 0.0,
+        "swimthrough_02": 0.0,
+        "wreck_01": 0.0,
+        "wreck_03": 0.0
+      },
+      "coverage_median": {
+        "wreck_07": 0.815763888888889,
+        "wreck_05": 0.7506770833333334,
+        "cenote_01": 0.9422743055555556,
+        "swimthrough_02": 0.7518229166666667,
+        "wreck_01": 0.9905642361111111,
+        "wreck_03": 0.8007031250000001
+      },
+      "coverage_min": {
+        "wreck_07": 0.6770138888888889,
+        "wreck_05": 0.6655902777777778,
+        "cenote_01": 0.91296875,
+        "swimthrough_02": 0.5463194444444445,
+        "wreck_01": 0.9357291666666666,
+        "wreck_03": 0.3536458333333333
+      },
+      "partition": {
+        "wreck_07": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.00813491144576739
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.0213590669740209
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.02462442791947206
+          }
+        },
+        "wreck_05": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.005939626978982204
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 44,
+            "median_abs_dlog": 0.018273747243681582
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.01925908759983974
+          }
+        },
+        "cenote_01": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.008177071935310476
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.024024048222792693
+          },
+          "dynamic": {
+            "n_pairs": 33,
+            "median_abs_dlog": 0.008604124598661889
+          }
+        },
+        "swimthrough_02": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.009636348273844408
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.02014104740964351
+          },
+          "dynamic": {
+            "n_pairs": 38,
+            "median_abs_dlog": 0.030545985244345153
+          }
+        },
+        "wreck_01": {
+          "static_anchored": {
+            "n_pairs": 41,
+            "median_abs_dlog": 0.00979210827339927
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 21,
+            "median_abs_dlog": 0.011755110260675883
+          },
+          "dynamic": {
+            "n_pairs": 24,
+            "median_abs_dlog": 0.05821062887394196
+          }
+        },
+        "wreck_03": {
+          "static_anchored": {
+            "n_pairs": 46,
+            "median_abs_dlog": 0.01189346650254608
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 43,
+            "median_abs_dlog": 0.02098715091933112
+          },
+          "dynamic": {
+            "n_pairs": 46,
+            "median_abs_dlog": 0.03358344099578092
+          }
+        }
+      }
+    },
+    "foundationgeo_11": {
+      "scale_median": {
+        "wreck_07": 2.4166998606671553,
+        "wreck_05": 2.530928060836483,
+        "cenote_01": 0.5241010358985172,
+        "swimthrough_02": 1.608165251683304,
+        "wreck_01": 2.165751833069872,
+        "wreck_03": 2.202015838300263
+      },
+      "scale_wander": {
+        "wreck_07": 1.7281679625625528,
+        "wreck_05": 1.6057319424042504,
+        "cenote_01": 2.3302820943245264,
+        "swimthrough_02": 1.3243130281382143,
+        "wreck_01": 5.902226315428065,
+        "wreck_03": 2.1676700729865113
+      },
+      "scale_log_std": {
+        "wreck_07": 0.11429250930902424,
+        "wreck_05": 0.12989983340276265,
+        "cenote_01": 0.22478505666652904,
+        "swimthrough_02": 0.08527994247836848,
+        "wreck_01": 0.35729563419987903,
+        "wreck_03": 0.17179077736779869
+      },
+      "scale_f2f_log_mad": {
+        "wreck_07": 0.04284229421500596,
+        "wreck_05": 0.0377961524440259,
+        "cenote_01": 0.07858095872508986,
+        "swimthrough_02": 0.017351781400633925,
+        "wreck_01": 0.1488861718640726,
+        "wreck_03": 0.06571511121788487
+      },
+      "near_far_wander": {
+        "wreck_07": 3.5705203462016493,
+        "wreck_05": 3.493570243084569,
+        "cenote_01": 2.1702265779240144,
+        "swimthrough_02": 3.1976577240161785,
+        "wreck_01": 2.409870454898502,
+        "wreck_03": 6.0077994448173495
+      },
+      "local_stability_dlog": {
+        "wreck_07": 0.021903341466213533,
+        "wreck_05": 0.02932601563848536,
+        "cenote_01": 0.024106520128778564,
+        "swimthrough_02": 0.018566936356958497,
+        "wreck_01": 0.0094771222891753,
+        "wreck_03": 0.03264157767874698
+      },
+      "boundary_jitter_px": {
+        "wreck_07": 0.0,
+        "wreck_05": 0.0,
+        "cenote_01": 0.0,
+        "swimthrough_02": 0.0,
+        "wreck_01": 1.0,
+        "wreck_03": 0.0
+      },
+      "coverage_median": {
+        "wreck_07": 0.8153559027777778,
+        "wreck_05": 0.6377777777777778,
+        "cenote_01": 0.9422743055555556,
+        "swimthrough_02": 0.7491406249999999,
+        "wreck_01": 0.9905642361111111,
+        "wreck_03": 0.7968836805555556
+      },
+      "coverage_min": {
+        "wreck_07": 0.6750520833333333,
+        "wreck_05": 0.4711111111111111,
+        "cenote_01": 0.91296875,
+        "swimthrough_02": 0.5314409722222222,
+        "wreck_01": 0.9357291666666666,
+        "wreck_03": 0.351875
+      },
+      "partition": {
+        "wreck_07": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.021536548120991705
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.024602486409881053
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.05135546521408063
+          }
+        },
+        "wreck_05": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.028112421048502867
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 43,
+            "median_abs_dlog": 0.032043517360238916
+          },
+          "dynamic": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.04575757903646771
+          }
+        },
+        "cenote_01": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.023635421276467783
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.02482346710867933
+          },
+          "dynamic": {
+            "n_pairs": 33,
+            "median_abs_dlog": 0.024578320512847807
+          }
+        },
+        "swimthrough_02": {
+          "static_anchored": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.017059267467239847
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 47,
+            "median_abs_dlog": 0.022267053707317075
+          },
+          "dynamic": {
+            "n_pairs": 38,
+            "median_abs_dlog": 0.021553552391224917
+          }
+        },
+        "wreck_01": {
+          "static_anchored": {
+            "n_pairs": 41,
+            "median_abs_dlog": 0.009404254041632587
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 21,
+            "median_abs_dlog": 0.008670726294234377
+          },
+          "dynamic": {
+            "n_pairs": 24,
+            "median_abs_dlog": 0.006416102345150776
+          }
+        },
+        "wreck_03": {
+          "static_anchored": {
+            "n_pairs": 46,
+            "median_abs_dlog": 0.030297875961471155
+          },
+          "static_reference_uncertain": {
+            "n_pairs": 43,
+            "median_abs_dlog": 0.03595415186246753
+          },
+          "dynamic": {
+            "n_pairs": 46,
+            "median_abs_dlog": 0.048968536579276134
+          }
+        }
+      }
+    }
+  }
+}
