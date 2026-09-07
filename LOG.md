@@ -1818,3 +1818,626 @@ validation and for resolving refraction, **not** a blocker to downstream pipelin
 development. Phase 3B shows an independent metric anchor would resolve both sides
 of the Phase 3A disagreement at once, since the reference itself is unidentified
 on exactly the clips where that disagreement was largest.
+
+## 2026-09-06 — Week 4A monocular depth bakeoff: execution start + S0 gate
+
+**Baseline safety check, before any Week-4 code.** `uw score
+data/testset/murky/MURKYSHARK.MP4` runs clean (292 frames, gray-world gains R
+3.940–25.752 / G 0.669–0.837 / B 0.619–0.691, out-of-range 0.0000, ΔE still
+unwired because `data/testset/chart/` is still empty). The deprecated Week-1
+number that every prior entry pins against —
+`temporal_stability(gray_world(f) for f in load('data/testset/murky/
+MURKYSHARK.MP4'))` — still returns `3.244860636186786e-05` **bit-for-bit**.
+`pytest tests/` is 323 passed, 1 skipped. No baseline change, so Week 4 proceeds.
+
+**Frozen material verified before, not after.** `verify_frozen_set --hash`
+re-hashes all 288 frames: six clips × 48, every `frame_set_sha256` matching
+Week 3's `extraction_report.json`, and the persisted `D_mapanything` reference
+product present at 48 frames for each. The primary bakeoff runs on exactly the
+footage Week 3 characterised — nothing regenerated, nothing substituted.
+`wreck_01` is the one portrait clip (1280×720), which matters below.
+
+**What was built.** `experiments/week4_mono/` — `common.py` (the frozen
+experiment definition), `monoio.py` (a per-model product that stores the NATIVE
+output alongside a derived canonical range, because unlike Week 3 the seven
+entrants do not share a representation), `backends/` (one module per model,
+each in its own venv, `infer()` taking ONE image path so a batch is not
+expressible), and `scripts/`. Three new venvs: `.venv-mono` (numpy<2: DA V2,
+DA3 Mono, FoundationGeo), `.venv-moge` (numpy≥2: MoGe-2, MetricAnything),
+`.venv-eval` (analysis only, so a model venv change cannot silently alter the
+measuring instrument). MapAnything and Wat3R reuse the Week-3 venvs unchanged.
+
+**S0 result: all 7/7 mandatory checkpoints PASS. Nobody exits at S0.** Every one
+runs on MPS in float32; nothing needs CUDA; five of seven also run on CPU.
+Runtime per frame 0.28–2.32 s, load 0.9–15.5 s, peak 2.1–9.6 GB.
+
+**Two documented expectations were corrected by measurement rather than
+repaired.** (1) **`DA3MONO-LARGE` emits no camera.** Its config is a DINOv2
+ViT-L with a single DPT head of `output_dim: 1`; the returned `Prediction`
+carries `depth` and `sky` and nothing else — `intrinsics`, `extrinsics` and
+`conf` are all `None`. Range needs a camera, so this backend writes **no**
+canonical range; inventing a focal would manufacture exactly the radial error
+M-6 exists to detect. It also leaves the z-vs-range question about its native
+field genuinely open, since the reference implementation's own `unproject_depth`
+is never reached for this checkpoint. (2) **`Depth-Anything-V2-Small` likewise
+writes no range**, because its ambiguity is affine in *disparity* and inverting
+before S2 fixes `(a,b)` produces a number that looks like a range and is not
+one. Both deferred to the frozen S2 policy.
+
+**The z-vs-range mistake is worth 11–19 % median and up to 59 % at the corners
+on this camera.** Measured `median_ratio_range_over_z` per model on the ordinary
+frame: MapAnything 1.113, MoGe-2 1.193, MetricAnything 1.109, FoundationGeo
+1.117; corner maxima 1.35–1.59. Every conversion that *was* available is
+verified numerically per frame, not assumed — MapAnything's
+`depth_along_ray == ||pts3d_cam||` re-verified at N=1 to **7.6e-06**, so the
+Week-3 range identity survives the view-count change.
+
+**FOV audit, 25 markers per orientation through each model's own
+preprocessing.** The portrait trap is real and it is **Wat3R's alone**: on the
+1280×720 portrait source it loses **10/25 markers and retains 56.0 % of the
+frame area** (short side resized to 518, long side centre-cropped to 518),
+reproducing Week 3's VGGT-family finding exactly. Every other entrant retains
+98.7–100 % at both orientations; all affine residuals sub-pixel. Consequence:
+Wat3R's `wreck_01` column is a *different, smaller field of view*, not a
+like-for-like result, and S3 must read it that way.
+
+**Checkpoint integrity — MetricAnything vs stock MoGe-2: LINEAGE_CONSISTENT.**
+Mandated by FREEZE C5 because of the Week-3 Water-VGGT finding, not download
+statistics. Identical `model_config`, identical 483-tensor key set, zero shape
+mismatches, global relative L2 **0.0096**. It is a decoder-heavy fine-tune and
+the split says so: encoder median rel-L2 **0.0002** over 352 tensors, versus
+neck 0.033, points head 0.027, mask head 0.019, scale head 0.044. V5's premise —
+architecture and representation genuinely controlled — holds. It still does not
+unconfound *which* part of the fine-tuning treatment causes any later difference.
+
+**Surprising, and a pre-S3 flag.** On the same frame MoGe-2 and MetricAnything
+recover materially different cameras: normalised fx **0.465 vs 0.611**. Both
+models' metric scale is coupled to the recovered focal, so their absolute scales
+should be expected to disagree — which is exactly what V9's known-FOV
+*postprocessing* ablation is for. Separately, FoundationGeo's learned ray
+correction turns rays by a median of **0.044°** (p95 0.11°, max 0.78°), an order
+of magnitude under its own 3° cap, and its "per-pixel spatial" `scalefield` sits
+at 0.84 with a 0.82–0.85 spread — behaving almost like a global scalar. Both are
+one-frame observations, not conclusions; S3 runs the ablations properly.
+
+**Reference-implementation modifications required:** exactly one model needed
+any. DA3 — `requires-python` widened to install on CPython 3.13.5, and the
+pycolmap-backed COLMAP *export* import made optional (importing pycolmap
+alongside torch aborts on macOS with a duplicate libomp). FoundationGeo needed a
+hard-coded `device='cuda'` moved off a CUDA-less host, where it only chooses
+where uninitialised parameters land before a strict `load_state_dict` overwrites
+every one. Patches in `experiments/week4_mono/patches/`. None touches weights,
+structure or any numerical path.
+
+**Deliberate non-modifications, each replacing an easy wrong patch.** `moge` is
+put on `sys.path` explicitly rather than pip-installed — both the MetricAnything
+release and upstream microsoft/MoGe ship a package literally named `moge`, an
+installed one would silently win, and V5 would stop being controlled without any
+error. And FoundationGeo's `infer()` is **not** called: it postprocesses its two
+ray-correction arms through *independent* `recover_focal_shift` solutions, so
+their difference is the ray correction plus whatever focal and shift each
+recovered separately. The backend calls `forward()` and applies one frozen
+solution to both arms, which is what FREEZE C3 requires.
+
+**Artifacts:** `experiments/week4_mono/results/S0_SEMANTICS_RUNTIME.md`,
+`S0_results.json`; raw per-model records in `outputs/s0/`.
+
+**Next:** S1 determinism and noise floor. No downstream delta smaller than the
+floor S1 measures may be read as signal.
+
+## 2026-09-06 — Week 4A: S1 determinism, the 288-frame sweep, S2 ambiguity gate
+
+**S1 — all seven bitwise reproducible, floor exactly zero.** Repeated inference
+on identical input, both within one process and across separate processes,
+returns bit-identical arrays for every entrant. The measured p99 relative
+noise floor is therefore `0.0` across the board, and no downstream delta in
+S3–S6 has to be discounted as run-to-run noise.
+
+That result is manufactured, not lucky: MoGe-2's and FoundationGeo's
+`use_fp16=True` defaults are explicitly overridden to float32 with autocast off
+everywhere. Half precision on MPS would have put a stochastic floor under every
+difference the later stages are built to read.
+
+What S1 does **not** license: the binding floor on this whole comparison is not
+model noise but the *reference's* own instability, which Week 3 measured at
+2.1–6.5 % median on `wreck_05` against 0.01 % on `wreck_07`.
+
+**The 288-frame sweep.** Seven models × 6 clips × 48 frames, one model per
+process in the freeze's integration order, `mapanything_n1 → dav2_small →
+moge2_vitl → metricanything_pointmap → wat3r_n1 → da3mono_large →
+foundationgeo_11`. All 2016 predictions persisted (26 GB under
+`outputs/predictions/`, gitignored). Runtime per model over 288 frames:
+MapAnything 347 s (peak RSS 9.58 GB), DA V2 72 s (0.7 GB), MoGe-2 724 s
+(2.8 GB), MetricAnything 746 s (2.8 GB), Wat3R 438 s (9.17 GB), DA3 Mono 117 s
+(2.89 GB), FoundationGeo 535 s (2.7 GB).
+
+**A real defect, caught by a guard doing its job.** `wat3r_n1` failed all six
+clips on the first pass with `unknown native_kind 'pointmap'`.
+`monoio.NATIVE_KINDS` is a closed set precisely so a backend cannot invent a
+representation string, and `common.DECLARED_NATIVE` declared one that had never
+been added. The analysis side already treated `"pointmap"` as its own third kind
+— `LEGAL_FAMILIES["pointmap"] = ["none", "scale", "affine_depth"]`, the widest
+set of any entrant — so only the writer's set was missing it.
+
+Resolved as a distinct kind rather than folded into `pointmap_metric` or
+`pointmap_relative`, because that choice is a scientific claim: FREEZE §3.3
+forbids inferring Wat3R's native ambiguity from its released evaluation code's
+alignment, and declaring it either way here would be exactly that inheritance.
+`pointmap` now means *camera-frame point map whose scale claim the release does
+not state*, and the question is settled by measurement in S2. The validation
+fires at `close()`, i.e. after 48 frames of inference are already paid for, so a
+test now asserts every `DECLARED_NATIVE` value is writable.
+
+**S2 — the frozen alignment policy.** 9 arms (7 models + FoundationGeo's two ray
+arms, which inherit). Clip-level scope for every arm; per-frame fits are kept as
+diagnostics only, because renormalising each frame would erase the temporal
+scale drift FREEZE C7 makes a first-class failure mode.
+
+| arm | native | E1 family | convention | source |
+|---|---|---|---|---|
+| `mapanything_n1` | depth_along_ray_metric | scale | range | S0 semantics |
+| `dav2_small` | disparity_relative | affine_disparity | range | MEASURED |
+| `moge2_vitl` | pointmap_metric | scale | range | S0 semantics |
+| `metricanything_pointmap` | pointmap_metric | scale | range | S0 semantics |
+| `wat3r_n1` | pointmap | scale | range | S0 semantics |
+| `da3mono_large` | depth_relative | affine_depth | range | MEASURED |
+| `foundationgeo_11` | pointmap_metric | scale | range | S0 semantics |
+
+**The two open conventions, settled by residual rather than by paper.** Neither
+came back clean, and both are recorded as what they are. `dav2_small` pools to a
+margin ratio of **1.0185** — inside the 3 % threshold, so INDISTINGUISHABLE,
+defaulted to the project's canonical range with the tie recorded (per-clip: 1
+z-depth, 2 range, 3 indistinguishable). `da3mono_large` pools to **1.1109** in
+favour of range (0.1358 vs 0.1509), with 3 of 6 clips agreeing. A verdict of
+INDISTINGUISHABLE is itself informative here: it means the model's shape error is
+larger than this camera's 35 % radial secant term.
+
+**The additive term earns its place for DA3 Mono.** Granting the shift over
+scale-only removes a median **38.3 %** of the error (per clip up to +55.6 %).
+FREEZE C1 allows "approximately scale-only" only from measured evidence; this
+measurement denies it. For `wat3r_n1` the gain is a median +11.1 % and is
+*negative* on one clip.
+
+**Raw metric behaviour — recorded pre-C2, judged post-C2.**
+
+| arm | raw abs-rel | E1-aligned | oracle scale by clip | clip-to-clip spread |
+|---|---|---|---|---|
+| `mapanything_n1` | 0.1158 | 0.1019 | 0.93–1.12 | 1.200 |
+| `foundationgeo_11` | 0.5793 | 0.1869 | 0.52–2.54 | 4.860 |
+| `metricanything_pointmap` | 0.6297 | 0.1943 | 1.66–2.93 | 1.759 |
+| `moge2_vitl` | 0.6447 | 0.2189 | 1.94–3.03 | 1.559 |
+| `wat3r_n1` | 0.9354 | 0.2021 | 5.21–28.2 | 5.412 |
+| `da3mono_large` | — | 0.1331 | 2.76–8.99 | 3.259 |
+| `dav2_small` | — | 0.1739 | 0.009–0.037 | 4.594 |
+
+Three things worth carrying forward. **Wat3R's metric claim does not survive
+contact with the data** — an oracle scale between 5× and 28× across six clips is
+not a metric field with a bias, and this is the measured answer to the question
+the freeze forbade inheriting from its eval code. **MoGe-2 and MetricAnything are
+consistently ~2–3× off but internally consistent** (spread 1.56 / 1.76), which is
+the signature of a global gauge error rather than scene-dependent scale.
+**FoundationGeo is the metric claimant with the least consistent scale**
+(0.52 on `cenote_01` against 2.54 on `wreck_05`, spread 4.86) — and a scale that
+depends on the scene is a different and worse problem than a scale that is
+uniformly wrong, because only the latter is absorbable by `b → b/s`.
+
+Clip-to-clip spread is a diagnostic of the metric *claim*, not a C7 failure — the
+frozen policy re-fits per clip, and different clips are different scenes. The C7
+quantity is within-clip drift, and it is already visible: median within-clip
+scale wander runs 1.84–3.17 for every arm including MapAnything N=1, worst case
+17.4 for DA V2. That is the S5 question, measured here so the policy carries it.
+
+**One confound to state before S3 reads a single ranking.** `mapanything_n1`
+scores roughly half everyone else's aligned error, and the reference *is*
+MapAnything run multi-view. Agreement with one's own family's multi-view solution
+is weaker evidence than agreement from an independent architecture, and S3 must
+not read it as a quality ranking.
+
+**Cross-check.** This session's independent S0 measurement of MapAnything's
+preprocessing agrees with Week 3's persisted `preprocess_maps.json` to ~1e-11 in
+scale and ~1e-8 px in offset — evidence the reference is being sampled on the
+grid it was written on.
+
+**Artifacts:** `results/S1_DETERMINISM.md`, `S1_results.json`,
+`S2_AMBIGUITY.md`, `S2_alignment_policy.json`; raw measurements in
+`outputs/s1/`, `outputs/s2/s2_raw.json`.
+
+**Next:** S3 local geometry over all 288 frames × 10 arms — the primary
+reduction from 7 candidates to ~3–4.
+
+## 2026-09-06 — Week 4A: S3 local geometry, the primary reduction (7 → 4)
+
+Nine arms (7 candidates + FoundationGeo's two causal ablation arms) over the full
+frozen set: 6 clips × 48 frames, six dimensions, no weighted master score. The
+dimensions disagree about the ordering, which is exactly why FREEZE §6 forbids
+collapsing them.
+
+| arm | M-1 abs-rel | M-2 b | M-3 RelNormal | M-3 normal | M-4 boundary | M-5 ord@25% | M-6 out/in | coverage |
+|---|---|---|---|---|---|---|---|---|
+| `mapanything_n1` | 0.085 | 0.950 | 6.84° | 7.9° | 0.0028 | 0.0000 | 1.04 | 0.778 |
+| `da3mono_large` | 0.128 | 0.846 | 12.77° | 20.6° | 0.0285 | 0.0037 | 1.01 | 0.808 |
+| `foundationgeo_11` | 0.171 | 0.845 | 32.71° | 38.5° | 0.0423 | 0.0862 | 0.79 | 0.806 |
+| `dav2_small` | 0.176 | 0.535 | 27.50° | 36.3° | 0.1022 | 0.1172 | 0.93 | 0.786 |
+| `metricanything_pointmap` | 0.182 | 0.975 | 27.50° | 30.0° | 0.0360 | 0.0665 | 0.94 | 0.782 |
+| `wat3r_n1` | 0.184 | 1.223 | 15.62° | 19.9° | 0.0171 | 0.0057 | 0.93 | 0.776 |
+| `moge2_vitl` | 0.216 | 1.211 | 27.78° | 30.3° | 0.0355 | 0.0676 | 1.01 | 0.801 |
+
+**The confound, stated before the ranking.** `mapanything_n1` leads all six
+dimensions, several by 2× or more — and the reference *is* MapAnything run
+multi-view. Two runs of one architecture share inductive biases and therefore
+share systematic errors, and a shared systematic error is invisible to a
+disagreement metric. Pre-C2 nothing here can separate "better geometry" from
+"the same errors as the reference". It advances because the fallback question is
+literally whether this architecture keeps usable geometry at N=1 — not as the
+objective best.
+
+**Scale-invariant far field (M-1b, q80–100) is the most decision-relevant
+column**, because that is the band where the water path is longest and where
+attenuation inversion is most sensitive: MapAnything 0.104, DA3 Mono 0.129,
+Wat3R 0.229, DA V2 0.333, FoundationGeo 0.336, MetricAnything **0.682**,
+MoGe-2 **1.098**.
+
+**Eliminated at S3, each on a named dimension.**
+
+*`dav2_small` — structure.* M-4 boundary 0.1022 is ~3× the next-worst arm and 36×
+the leader (0.2749 on the portrait clip); M-2 slope 0.535, falling to 0.101 on
+`wreck_03`, is severe near/far compression. Boundary failure is what a
+backscatter stage turns into visible haloes. Its 0.2 s/frame cost is real but
+does not buy this.
+
+*`foundationgeo_11` — shape.* Worst surface orientation in the field on both
+forms (32.71° RelNormal, 38.5° absolute, 47.2° worst clip) and the worst radial
+signature (M-6 0.79, reaching 0.54 on `swimthrough_02`) — a systematic radial
+term on a wide-FOV underwater camera is the specific failure M-6 exists to catch.
+Its S2 scale is also the least consistent of any metric claimant (0.55–2.51).
+
+*`moge2_vitl` — far field, and it loses its own V5 comparison.* Far quintile
+**1.098**, i.e. median relative range error above 100 % in the most consequential
+band. MetricAnything — same architecture, heterogeneous metric fine-tuning —
+reaches 0.682 there with better M-1 (0.182 vs 0.216) and much better M-2 (0.975
+vs 1.211). **V5's question is answered: the fine-tune helps.** Carrying both
+forward would carry a control past the point where it controls anything.
+
+**The two FoundationGeo interventions, measured causally under one frozen
+(focal, shift) from one forward pass.**
+
+*V4b (learned ray correction) is null on this footage.* All six dimensions move
+by less than printing precision. Not an artefact and not the arms being the same
+data — the point maps differ by a mean relative 1.1e-03. The mechanism is in the
+raw fields: the correction turns each ray by a median **0.044°** (p99 0.21°, max
+0.78°) against its own **3° cap**, and rotating a ray changes bearing while
+leaving length nearly untouched — the induced change in *range* is a median
+relative **2.3e-07** (p99 3.8e-06). This project consumes range, not bearing, so
+V4b is irrelevant to it by construction. That the learned delta uses ~1.5 % of
+its permitted capacity is itself the finding.
+
+*V4c (learned per-pixel scale field) makes agreement worse.* +7.3 % on M-1
+(0.1596 → 0.1712), +6.1 % on absolute normal error, +1.8 % on RelNormal, buying
+back only −2.4 % on M-4 and −1.5 % on M-6. And it is barely per-pixel: median
+0.840, p01–p99 0.803–0.872 — a global 0.84 scalar with a ±4 % ripple. The E1
+policy already grants a clip-level scale, so the global part is absorbed and only
+the ripple is scored; the ripple is a net loss. Both deltas clear the S1 floor
+trivially, that floor being exactly zero.
+
+**Advancing to S4 — four arms, deliberately four different *kinds*:**
+`mapanything_n1` (the reference's own architecture at N=1 — the fallback question
+itself), `da3mono_large` (strongest arm independent of the reference; flattest
+radial signature at M-6 1.01 and best coverage 0.808, but relative-only so it
+brings no scale), `wat3r_n1` (the underwater-specialisation control, 2nd best on
+both M-4 and M-5, but **loses 44 % of the portrait frame** at coverage 0.562 and
+carries an oracle-only 5.2–28.2× scale), `metricanything_pointmap` (best
+metric-claimed point-map model on M-1/M-2/far-field, but 0.682 in the far
+quintile and 0.365 on the portrait clip).
+
+Keeping the four best M-1 values would have discarded every architecture capable
+of disagreeing with the reference for an interesting reason.
+
+**Artifacts:** `results/S3_LOCAL_GEOMETRY.md`, `S3_results.json`;
+`outputs/s3/s3_raw.json`.
+
+**Next:** S4 appearance invariance — 12 geometry-preserving perturbations in
+linear light, decomposed into constant scale bias / frame-varying drift / local
+range deformation.
+
+
+## 2026-09-06 — Week 4A: S4 appearance invariance (all four survivors advance)
+
+**Ran.** 4 S3 survivors x 13 arms x 6 clips x 16 frames = 312 (arm,clip) products,
+34 GB, one model per process, strictly N=1.
+
+```
+bash experiments/week4_mono/scripts/run_s4_survivors.sh
+PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
+  -m experiments.week4_mono.scripts.s4_analysis --overwrite
+PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
+  -m experiments.week4_mono.scripts.s4_report --overwrite
+```
+
+Runtimes: mapanything 1920 s, da3mono 517 s, wat3r 2673 s, metricanything 4668 s.
+
+**Two defects found in this stage, both fixed before conclusions were drawn.**
+
+*(a) The cue conflict was measuring its own control.* `cue_conflict_inverted_veil`
+and `veil_depth_consistent` came out bit-identical: each stated its direction twice
+— swapped `t_near`/`t_far` AND an `invert` flag — and the double negation cancelled.
+Caught because the two agreed to four decimals on every model and clip. `invert`
+removed from `perturb.py`; arm regenerated (96 frames changed, other 11 arms
+byte-identical by hash); that arm re-inferred on the four survivors (799 s). Two
+tests added — pairwise, no two arms may be the same stimulus; and on the stimulus,
+the control must veil the far field and the conflict the near. 31 tests pass.
+Blast radius contained to S4: only `s4_make_perturbations` and `s4_run` read the
+perturbed frames, so S0–S3 stand and S5/S6 do not use them.
+
+*(b) The cross-model table was comparing different units — and this one reversed the
+stage's conclusion.* Rows 3/3b are in each model's NATIVE quantity. Three survivors
+are scale-family, where native is proportional to range, so native == physical. But
+`da3mono_large` is `affine_depth`, range = `s*d + t`, with a large fitted shift
+(t = 1.78–11.56 m against median scene ranges 6.4–22.5 m), so its native log-ratios
+are inflated ~2x: `L_phys ~= L_native * (1 - t/r)`, factor ~0.51 here. Added row 3c,
+the same residual in physical range under a gauge fitted on the BASELINE arm alone
+and then frozen (a unit conversion; no oracle sees a perturbed field). The
+scale-family columns reproduce row 3 to four decimals — the check that it is right.
+
+Read natively, da3mono looked like the worst model in the stage by a wide margin and
+the obvious elimination. Read in range it is the most appearance-invariant of the
+four. Recording this because the native-unit table was not obviously wrong to look
+at; it took asking why the one affine-family arm was an outlier.
+
+**Findings (all on physical range).**
+
+- Colour and exposure are geometrically inert: `wb_*`/`brightness_*` 0.0022–0.0081
+  for all four, at the 8-bit floor. `attenuation_red` 0.0041–0.0124.
+- The response is essentially all veil, and two different models win the two halves:
+
+  | model | non-veil mean (9 arms) | veil mean (3 arms) | all 12 |
+  |---|---|---|---|
+  | mapanything_n1 | 0.0215 | **0.0383** | 0.0257 |
+  | metricanything_pointmap | 0.0130 | 0.0869 | 0.0315 |
+  | wat3r_n1 | 0.0204 | 0.0725 | 0.0334 |
+  | da3mono_large | **0.0089** | 0.0670 | **0.0234** |
+
+  da3mono is steadiest under everything that is not haze (1.5x the next, best on 9 of
+  12 arms); mapanything is steadiest under haze (1.75x the next, best on all three).
+  For underwater the veil column is the one that matters — haze is the permanent
+  condition of the medium and covaries with the quantity being estimated.
+- Cue conflict vs its matched control (same veil magnitude, direction reversed) —
+  the ratio is unaffected by defect (b) since both terms carry the same factor:
+  mapanything 0.0578/0.0245 = 2.36x, metricanything 0.1107/0.0742 = 1.49x,
+  wat3r 0.1072/0.0550 = 1.95x, **da3mono 0.1128/0.0283 = 3.99x**.
+  da3mono's calm and its veil-leaning are the same fact: it is stable exactly as long
+  as the haze cue is honest. metricanything's low ratio is not robustness — its
+  control response is the worst of the four, so it is already deformed under a
+  correct veil.
+  Caveat kept explicit: real footage has veil running WITH depth (the control column,
+  0.0245–0.0742, inside the 12 %-at-3 m budget). The inverted arm probes mechanism,
+  not deployment.
+- FREEZE C7 earns its keep again: mapanything has the LARGEST global scale response
+  to `veil_uniform` (sigma 1.4156) and the SMALLEST local deformation (0.0327);
+  da3mono 1.0941 / 0.0598. Constant global scale is a benign gauge absorbed by
+  `beta' = beta/s`; local deformation is not absorbable. Ranking on sigma would have
+  inverted the ranking that matters. Two separate ways this stage would have ranked
+  the field backwards on a naive robustness number.
+- Scale wander: da3mono 1.01–1.30 and wat3r 1.03–1.22 hold far steadier than
+  mapanything 1.06–1.62 and metricanything 1.06–1.87. Pipeline consequence:
+  `channel_neutralize` — gray-world, what our own baseline does — is mapanything's
+  WORST wander arm (1.6159). Gray-world before monocular inference is not neutral.
+- wat3r and da3mono cannot signal their own failure: coverage exactly unchanged on
+  all twelve arms, neither emits confidence. Not stability — silence.
+- Boundary jitter is floor-saturated (median NN distance, 0.00 for three models) and
+  ranks only mapanything. Reported, not used.
+
+**Gate: all four advance to S5.** Reduction to 2–3 finalists comes after S5; post
+correction this stage holds no disqualifying result. metricanything_pointmap is now
+the weakest of the four here, not da3mono_large.
+
+**Carried into S6 as a named question.** If a model draws geometry from veil and
+restoration removes veil, then range-before and range-after restoration are different
+fields and the pipeline is self-referential. The cue-conflict ratio measures how tight
+that loop is — tightest for the model that otherwise looks steadiest.
+
+Persisted: `results/S4_APPEARANCE.md`, `results/S4_results.json`.
+
+## 2026-09-06 — Week 4A: S5 temporal stability, reduction to 2 finalists
+
+**Ran.** All 9 arms x 6 clips, independent per-frame inference from the main sweep,
+SEA-RAFT correspondence computed once per clip, frozen epistemic partition.
+
+```
+PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
+  -m experiments.week4_mono.scripts.s5_temporal --overwrite
+PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
+  -m experiments.week4_mono.scripts.s5_report --overwrite
+```
+
+S5 applies the frozen S2 policy before measuring, so it is already in physical range
+and the S4 unit defect does not apply here.
+
+**Findings.**
+
+- `da3mono_large` is the most temporally stable model in the field: local instability
+  0.0096 vs mapanything 0.0189, metricanything 0.0197, wat3r 0.0217 — 2.0x the next,
+  and better on all six clips individually (0.0066–0.0128). In `static_anchored`, the
+  only partition where the reference may arbitrate, it wins all six again
+  (0.0059–0.0119). Also best near/far wander (2.17) and best coverage (0.808).
+- S4 and S5 agree and for one reason. A single-image relative-depth model with a
+  strong layout prior returns the same layout for similar-looking frames — that is
+  the stability. The same prior is keyed on appearance including haze — that is the
+  3.99x cue-conflict ratio. One property, two sides.
+- `metricanything_pointmap` is last or near-last everywhere: near/far wander 6.51 vs
+  2.17–3.62 (the SHAPE of its depth range, not just scale, changes 6x within a clip),
+  worst f2f MAD 0.0773, 7.112 scale wander on wreck_01 — on top of the worst S3 far
+  quintile (0.682) and the worst S4 veil mean.
+- `mapanything_n1`'s instability is concentrated on `cenote_01`: scale wander 5.607
+  (vs 1.521–2.477 elsewhere), local instability 0.0387 (vs 0.0157–0.0228). The widest
+  near/far clip in the set. The strongest S3 model destabilises specifically where
+  the scene is deep — exactly where the 8.5 %-at-8 m budget is tightest.
+- `wat3r_n1` degrades most from `static_anchored` (0.0116–0.0274) to
+  `static_reference_uncertain` (0.0312–0.0429): it is least reliable where it is
+  least checkable.
+- **Nobody is temporally stable in absolute terms.** Scale wander is 1.84–2.29 for
+  all four — the scalar relating output to reference moves by 2x or more inside a
+  48-frame clip. Absorbing that under one clip-level coefficient needs
+  `beta'_t = beta/s_t`, water properties that change with the estimator. No monocular
+  candidate can supply temporally coherent scale on its own; Week 5–6's temporal
+  stage must own scale continuity regardless of which model is chosen.
+- Dynamic-region numbers recorded, not used as a quality claim (freeze).
+
+**Reduction 4 -> 2.**
+
+- Eliminated `metricanything_pointmap`: last or near-last in S3, S4 and S5; nothing
+  best-in-field.
+- Eliminated `wat3r_n1`: dominated by da3mono on every S3 geometry dimension
+  (M-1 0.184 vs 0.128, far 0.229 vs 0.129, normals 15.62° vs 12.77°), and S0's
+  portrait failure stands — 10/25 FOV markers and 44 % of frame area lost, a
+  structural failure for a video pipeline.
+- **Finalists: `mapanything_n1` (best geometry, most veil-robust) and
+  `da3mono_large` (most temporally stable, most appearance-invariant off-veil).**
+  Two rather than three: the pair spans the design space (multi-view-trained metric
+  point map vs single-image affine-ambiguous relative depth) and both eliminated arms
+  are dominated rather than merely behind.
+
+**Shared unresolved question.** da3mono needs a fitted affine (s,t) with t = 1.78–11.56 m;
+mapanything needs a scale. Neither is available at inference without an oracle. S6
+measures restoration impact UNDER the frozen oracle alignment and does not establish
+deployability without one. That is C2's question.
+
+Persisted: `results/S5_TEMPORAL.md`, `results/S5_results.json`.
+
+## 2026-09-06 — Week 4A: S6 restoration impact (both finalists DEGRADED), and two instrument defects
+
+**Commands.**
+
+```
+PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
+  -m experiments.week4_mono.scripts.s6_restoration --overwrite
+PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
+  -m experiments.week4_mono.scripts.s6_temporal --overwrite
+PYTHONPATH=$PWD experiments/week4_mono/.venv-eval/bin/python \
+  -m experiments.week4_mono.scripts.s6_inspect --overwrite
+PYTHONPATH=$PWD .venv/bin/python \
+  -m experiments.week4_mono.scripts.s6_report --overwrite
+```
+
+**Config.** Arms `week3_reference` (Week-3 persisted multi-view range) vs
+`mapanything_n1` (`facebook/map-anything-apache`, N=1) vs `da3mono_large`
+(`depth-anything/DA3MONO-LARGE`), same six frozen clips, 48 frames each, SOURCE
+resolution, frozen S2 oracle alignment. Image-formation coefficients are the
+Jerlov-bracketing sets Week 3 swept: coastal (primary) `b_att` [0.55, 0.20, 0.19]
+/ `b_bs` [0.45, 0.22, 0.22]; clear_oceanic [0.35, 0.09, 0.08] / [0.30, 0.11, 0.10];
+turbid_coastal [0.85, 0.45, 0.48] / [0.70, 0.50, 0.55]. `J_CLAMP` 8.0,
+`T_FLOOR` 0.05. Coefficients and `Binf` are SHARED and FIXED across arms —
+`d_hat` is the only thing that varies. Temporal metrics are the unchanged
+Phase-2B machinery (SEA-RAFT, MC-warp at lags 1/4/8, temporal ΔE00), plus an
+`mcwarp_input_lagN` control measured on the UNPROCESSED sequence with the same
+correspondence and mask.
+
+**Two defects in the instrument, found and fixed before any number was read.**
+
+The first full run reported median ΔE00 = 0.000 on four of six clips. It was not
+agreement. Restored frames were monochrome red (median `[0.75, 0, 0]`), 99 % of
+pixels had at least one channel driven negative and clipped, and 50–84 % of the
+common support was BIT-IDENTICAL between arms. Two saturations agreeing.
+
+1. **The veiling light was not one the image could carry.** `Binf` as the p90 of
+   the far field is inadmissible on footage whose water column is CLIPPED in the
+   source: `wreck_07` and `wreck_03` blow out blue at 10.7 % / 14.4 % of pixels at
+   code 254+, giving `Binf_B = 1.0`, and `1.0·(1−exp(−0.22·7 m)) = 0.79` exceeds
+   the observed blue nearly everywhere not far away. Exactly the four clips
+   reporting 0.000 are the four with inadmissible `Binf`. The model states its own
+   bound: `J ≥ 0` requires `Binf_c ≤ min_p I_c(p)/(1−exp(−b_bs_c·d(p)))`, whose
+   minimising pixels are the darkest ones AT THEIR OWN RANGE — the dark-channel
+   estimator made exact by knowing `d`. `Binf` is now that far-field p90 capped by
+   the bound at its 1st percentile (`restoration.admissible_veiling_light`).
+2. **The inversion gain was unbounded.** Reference ranges run past 50 m where
+   `1/exp(−0.55 d)` is 1e12; the 8-bit source's linear quantisation step is ~3e-4,
+   so past ~20× the amplified step stops being negligible against restored medians
+   of 0.2–0.5. Transmission is floored at `T_FLOOR = 0.05` per channel — red stops
+   responding beyond ~5.4 m coastal while green and blue respond past 15 m.
+
+Consequence for reporting: every metric is now given twice, over the full common
+support and over the RESPONSIVE WINDOW (pixels not floored in every channel and
+not pinned at either clamp end in either arm), with the window fraction alongside.
+Outside that window two range fields produce the same pixel however much they
+disagree. `compare_restorations` now returns a total key set with NaN and a
+`status` where a quantity is undefined, and the aggregator counts colour frames
+and radiance frames separately.
+
+**Findings (responsive window, coastal; window fraction in brackets).**
+
+- Windowed median ΔE00, mapanything / da3mono: wreck_07 2.13/3.18 [0.59/0.64],
+  wreck_05 2.56/**7.78** [0.39/0.38], cenote_01 1.83/**1.59** [0.96/0.97],
+  swimthrough_02 2.72/3.49 [0.76/0.73], wreck_01 2.70/3.53 [0.99/0.99],
+  wreck_03 2.93/4.28 [0.34/0.19]. MapAnything is the tighter arm on five of six.
+- Windowed median |relative radiance error| — the quantity directly comparable to
+  the Week-3 budget (5 % worst-channel radiance error at 9.4 % range error @3 m,
+  6.1 % @8 m coastal): mapanything 0.039–0.190 (median ≈ 0.10), da3mono
+  0.064–0.333. **Neither finalist meets the budget.** MapAnything misses by ≈2×,
+  da3mono by up to 6×.
+- The ranking is the same in `clear_oceanic` (mapanything windowed ΔE00
+  1.10–2.64, da3mono 1.84–5.83). `turbid_coastal` is UNMEASURABLE on this footage
+  — every channel floored on 100 % of pixels for four of six clips under da3mono
+  and two under mapanything — and its row must not be used.
+- **The failure modes are opposite.** MapAnything's static disagreement is small
+  and often close to a pure global gauge (`wreck_01`'s signed disagreement is a
+  near-uniform field, benign per FREEZE C7 and absorbable by `b → b/s`), but it is
+  the temporally worse arm: higher windowed colour pumping on five of six clips
+  (1.72 on `wreck_05`), and on `cenote_01` it more than DOUBLES MC-warp against the
+  reference-driven arm (0.02330 vs 0.00983) and lifts temporal ΔE00 from 2.82 to
+  6.75 (input control 2.51). da3mono is the more stable arm — lower pumping on
+  five of six, the only arm not degrading `cenote_01`, and better than the
+  reference at lag 8 on `wreck_01` (0.00710 vs 0.00848) — but its static errors are
+  structured deformations, not gauges.
+- **Every arm, the reference included, makes the footage temporally WORSE than its
+  own unprocessed input** at lag 1 on five of six clips (reference ratios
+  1.17–3.73). A fixed-coefficient range-driven inversion amplifies per-frame range
+  noise into colour. The temporal rows are therefore only readable as
+  arm-vs-reference, never arm-vs-nothing.
+- Reference-restoration health is worst on exactly the clips where disagreement is
+  worst: responsive fraction 0.41 on `wreck_05` and `wreck_03`, p99 gains asked for
+  reaching 1e8. Pre-C2 that is a limit on the verdict, not a point for either arm.
+
+**Visual inspection (CLAUDE.md invariant 5).** 18 sheets and 144
+worst-disagreement crops under `outputs/s6/inspect/`; six frames viewed across
+five clips. No hallucinated texture — the instrument is a per-pixel gain and
+cannot invent detail, and scene identity survives in every arm. Hallucinated
+GEOMETRY does show up as hallucinated colour: on `wreck_07` da3mono fills the thin
+crane lattice with a solid opaque surface where reference and mapanything leave
+holes, so water seen THROUGH the lattice is restored at the lattice's range; on
+`wreck_03` it displaces the diver — the moving subject — farther and renders it
+visibly redder; on `swimthrough_02` it puts the central channel much deeper and
+blows it out to bright cyan. Both arms' worst crops on `cenote_01` land in the
+unlit cave void, where the source is black and no monocular model can do better —
+the cost there is instability, not error. Every arm including the reference
+produces unnatural orange-brown colour under the fixed coastal coefficients; that
+is the coefficients, which Week 6 owns, and it is why S6 is a differencing
+instrument and not a deliverable.
+
+**Classification: both finalists DEGRADED relative to the current Week-3
+hypothesis**, `da3mono_large` approaching UNSAFE on low-texture lateral footage
+(`wreck_05`: windowed ΔE00 7.78, p95 16.1, 33 % radiance error) and on
+scene-identity grounds (thin structure, dynamic subject). Neither is ADEQUATE.
+Neither is eliminated: pre-C2 there is no independent anchor, so a
+monocular-vs-reference disagreement cannot say which side is wrong, and the two
+arms fail in complementary ways.
+
+Persisted: `results/S6_RESTORATION.md`, `results/S6_results.json`,
+`outputs/s6/{s6_raw.json, s6_temporal.json, inspect/}`. Tests: 34 passing
+(`.venv/bin/python -m pytest tests/test_week4_mono.py`), three new ones covering
+the total key set, the admissible veiling light, and the transmission floor.
+
+### Week 4A close-out (same session)
+
+`FINALISTS_PRE_C2.md` written: full elimination chain with the stage, dimension and
+number behind each exit; the two pre-C2 finalists with what each still has to
+prove; nine unresolved questions carried into C2. **No weighted master score and no
+objective Week-4 winner** — pre-C2 the reference is a hypothesis, so raw metric
+behaviour is RECORDED here and JUDGED after C2.
+
+Baseline re-checked after the session, unchanged bit-for-bit:
+`temporal_stability(gray_world(f) for f in load('data/testset/murky/
+MURKYSHARK.MP4'))` = `3.244860636186786e-05`. `pytest tests/` 357 passed, 1
+skipped (323 + 34 Week-4).
+
+**Next: C2 acquisition.** Every remaining Week-4 question is blocked on it — the
+reference-architecture confound, scale at inference, and whether either finalist's
+range error is inside the restoration budget in absolute rather than relative terms.

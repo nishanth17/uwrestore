@@ -1,0 +1,18 @@
+diff --git a/foundationgeo/model/v1.py b/foundationgeo/model/v1.py
+index a279015..38a10b2 100644
+--- a/foundationgeo/model/v1.py
++++ b/foundationgeo/model/v1.py
+@@ -197,7 +197,12 @@ class FoundationGeo(nn.Module):
+         self.backbone = backbone_factories[self.encoder](
+             pretrained=False,
+             weights=Weights.LVD1689M,
+-            device='cuda',
++            # uwrestore week4a: was hard-coded 'cuda', which aborts on a
++            # CUDA-less build. pretrained=False, so this only chooses where the
++            # UNINITIALISED parameters are allocated; from_pretrained then
++            # overwrites every one of them via a strict load_state_dict, and the
++            # caller moves the model to its real device afterwards.
++            device='cpu',
+         )
+         dim_feature = self.backbone.embed_dim
+ 

@@ -169,3 +169,14 @@ without understanding why it applies here.
 ## Logistics
 
 Use separate passes/agents for research, implementation, and adversarial review when useful. 
+
+## Long-Running Tasks
+
+Strictly DO NOT repeatedly poll long-running processes for completion. Repeated polling wastes context and tokens.
+
+Prefer, in order:
+1. Blocking/waiting on the process when possible.
+2. Watch/event-driven completion mechanisms when available.
+3. A single deferred check after a suitably long interval if neither is available.
+
+Never run tight or repeated `ps`, `jobs`, log-tail, file-existence, or status-check loops merely to determine whether a task has finished. Do other independent work or yield until completion instead.

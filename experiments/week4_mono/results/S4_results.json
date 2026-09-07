@@ -1,0 +1,685 @@
+{
+  "stage": "S4",
+  "perturbations": [
+    {
+      "name": "wb_warm",
+      "kind": "channel_gain",
+      "params": {
+        "gain": [
+          1.25,
+          1.0,
+          0.8
+        ]
+      },
+      "probes": "white balance pushed warm; a pure per-channel gain in linear light"
+    },
+    {
+      "name": "wb_cool",
+      "kind": "channel_gain",
+      "params": {
+        "gain": [
+          0.8,
+          1.0,
+          1.25
+        ]
+      },
+      "probes": "white balance pushed cool, the opposite gain"
+    },
+    {
+      "name": "channel_neutralize",
+      "kind": "gray_world",
+      "params": {},
+      "probes": "channel neutralisation: each linear channel scaled to a common mean, i.e. the colour cast removed the way the project's gray-world baseline does"
+    },
+    {
+      "name": "attenuation_red",
+      "kind": "channel_gain",
+      "params": {
+        "gain": [
+          0.45,
+          0.9,
+          1.0
+        ]
+      },
+      "probes": "stronger Beer-Lambert-like red loss, uniform over the frame so it changes appearance WITHOUT encoding depth"
+    },
+    {
+      "name": "contrast_low",
+      "kind": "contrast",
+      "params": {
+        "factor": 0.7
+      },
+      "probes": "contrast reduced about the frame's linear mean"
+    },
+    {
+      "name": "contrast_high",
+      "kind": "contrast",
+      "params": {
+        "factor": 1.4
+      },
+      "probes": "contrast increased about the frame's linear mean"
+    },
+    {
+      "name": "brightness_down",
+      "kind": "gain",
+      "params": {
+        "factor": 0.6
+      },
+      "probes": "exposure down; a pure scalar on linear radiance"
+    },
+    {
+      "name": "brightness_up",
+      "kind": "gain",
+      "params": {
+        "factor": 1.6
+      },
+      "probes": "exposure up"
+    },
+    {
+      "name": "veil_uniform",
+      "kind": "veil",
+      "params": {
+        "t": 0.6
+      },
+      "probes": "uniform veiling light: x -> t*x + (1-t)*A. Haze-LIKE appearance with NO depth dependence, so the geometry cue is unchanged"
+    },
+    {
+      "name": "hotspot",
+      "kind": "hotspot",
+      "params": {
+        "strength": 0.55,
+        "sigma_frac": 0.22
+      },
+      "probes": "artificial dive light: a bright radial falloff added in linear light, the illumination structure a torch or video light produces"
+    },
+    {
+      "name": "cue_conflict_inverted_veil",
+      "kind": "veil_depth",
+      "params": {
+        "t_near": 0.45,
+        "t_far": 0.95
+      },
+      "probes": "CUE CONFLICT: veil strength runs OPPOSITE to the reference depth, so the image says 'far' where the geometry says 'near'. The reference builds the stimulus and never reaches the model"
+    },
+    {
+      "name": "veil_depth_consistent",
+      "kind": "veil_depth",
+      "params": {
+        "t_near": 0.95,
+        "t_far": 0.45
+      },
+      "probes": "the CONTROL for the cue-conflict case: the same veil magnitude applied in the physically correct direction"
+    }
+  ],
+  "window": 16,
+  "models": {
+    "mapanything_n1": {
+      "constant_global_scale_bias": {
+        "wb_warm": 1.0158485016778256,
+        "wb_cool": 0.9772867297742622,
+        "channel_neutralize": 1.0817445906238232,
+        "attenuation_red": 0.9600989527840974,
+        "contrast_low": 0.9571739373365534,
+        "contrast_high": 0.8859792662627253,
+        "brightness_down": 0.990609393295586,
+        "brightness_up": 1.0138851469883758,
+        "veil_uniform": 1.4155759137110633,
+        "hotspot": 1.1610887142917523,
+        "cue_conflict_inverted_veil": 1.0897648085113048,
+        "veil_depth_consistent": 1.2874670320519592
+      },
+      "frame_varying_scale_drift": {
+        "wb_warm": 1.1118848092310554,
+        "wb_cool": 1.0745480613604914,
+        "channel_neutralize": 1.6159441759767903,
+        "attenuation_red": 1.1108367359004265,
+        "contrast_low": 1.1534045734718066,
+        "contrast_high": 1.351264574950617,
+        "brightness_down": 1.061671137757514,
+        "brightness_up": 1.0883704808446435,
+        "veil_uniform": 1.3770394078310324,
+        "hotspot": 1.2395319939102207,
+        "cue_conflict_inverted_veil": 1.5140657785364744,
+        "veil_depth_consistent": 1.4683618821100057
+      },
+      "frame_to_frame_log_mad": {
+        "wb_warm": 0.015327832871187715,
+        "wb_cool": 0.013578540225530782,
+        "channel_neutralize": 0.0866102982023405,
+        "attenuation_red": 0.02352168914231928,
+        "contrast_low": 0.02327251126806033,
+        "contrast_high": 0.06467839405050034,
+        "brightness_down": 0.01037902667317476,
+        "brightness_up": 0.016045196352317458,
+        "veil_uniform": 0.06729966787602065,
+        "hotspot": 0.04420836299621915,
+        "cue_conflict_inverted_veil": 0.10392799675889998,
+        "veil_depth_consistent": 0.060634035195846675
+      },
+      "local_range_deformation": {
+        "wb_warm": 0.007919471764264885,
+        "wb_cool": 0.0078672134070579,
+        "channel_neutralize": 0.06186504322399394,
+        "attenuation_red": 0.012444888746030225,
+        "contrast_low": 0.015495422717985596,
+        "contrast_high": 0.03669569593751709,
+        "brightness_down": 0.004765357858165731,
+        "brightness_up": 0.008076088178036012,
+        "veil_uniform": 0.03272942944110002,
+        "hotspot": 0.038329515267286424,
+        "cue_conflict_inverted_veil": 0.05780928197900831,
+        "veil_depth_consistent": 0.024515441170588792
+      },
+      "local_range_deformation_p95": {
+        "wb_warm": 0.02881179249728018,
+        "wb_cool": 0.034007735893696836,
+        "channel_neutralize": 0.28522071098864654,
+        "attenuation_red": 0.0514225628869384,
+        "contrast_low": 0.08875493530034942,
+        "contrast_high": 0.16727251838695434,
+        "brightness_down": 0.0255125221844884,
+        "brightness_up": 0.041148937669346464,
+        "veil_uniform": 0.20106637086820783,
+        "hotspot": 0.15216397484328098,
+        "cue_conflict_inverted_veil": 0.4063441427816491,
+        "veil_depth_consistent": 0.12220112721177986
+      },
+      "local_range_deformation_physical": {
+        "wb_warm": 0.007919471764264774,
+        "wb_cool": 0.007867213407057705,
+        "channel_neutralize": 0.06186504322399383,
+        "attenuation_red": 0.012444888746030114,
+        "contrast_low": 0.015495422717985596,
+        "contrast_high": 0.036695695937517314,
+        "brightness_down": 0.004765357858165814,
+        "brightness_up": 0.008076088178036067,
+        "veil_uniform": 0.03272942944110002,
+        "hotspot": 0.038329515267286396,
+        "cue_conflict_inverted_veil": 0.057809281979008365,
+        "veil_depth_consistent": 0.024515441170588792
+      },
+      "local_range_deformation_physical_p95": {
+        "wb_warm": 0.028811792497280143,
+        "wb_cool": 0.034007735893696836,
+        "channel_neutralize": 0.2852207109886465,
+        "attenuation_red": 0.051422562886938354,
+        "contrast_low": 0.08875493530034942,
+        "contrast_high": 0.16727251838695456,
+        "brightness_down": 0.02551252218448835,
+        "brightness_up": 0.0411489376693466,
+        "veil_uniform": 0.20106637086820772,
+        "hotspot": 0.15216397484328087,
+        "cue_conflict_inverted_veil": 0.4063441427816493,
+        "veil_depth_consistent": 0.12220112721177975
+      },
+      "coverage_baseline": {
+        "wb_warm": 0.7735980902777778,
+        "wb_cool": 0.7735980902777778,
+        "channel_neutralize": 0.7735980902777778,
+        "attenuation_red": 0.7735980902777778,
+        "contrast_low": 0.7735980902777778,
+        "contrast_high": 0.7735980902777778,
+        "brightness_down": 0.7735980902777778,
+        "brightness_up": 0.7735980902777778,
+        "veil_uniform": 0.7735980902777778,
+        "hotspot": 0.7735980902777778,
+        "cue_conflict_inverted_veil": 0.7735980902777778,
+        "veil_depth_consistent": 0.7735980902777778
+      },
+      "coverage_perturbed": {
+        "wb_warm": 0.7753298611111111,
+        "wb_cool": 0.7617404513888888,
+        "channel_neutralize": 0.7850520833333333,
+        "attenuation_red": 0.7654427083333333,
+        "contrast_low": 0.7518402777777777,
+        "contrast_high": 0.7558159722222222,
+        "brightness_down": 0.7691276041666666,
+        "brightness_up": 0.7712803819444445,
+        "veil_uniform": 0.7772352430555556,
+        "hotspot": 0.7511241319444444,
+        "cue_conflict_inverted_veil": 0.7820399305555555,
+        "veil_depth_consistent": 0.7578211805555556
+      },
+      "boundary_jitter_px": {
+        "wb_warm": 0.0,
+        "wb_cool": 0.0,
+        "channel_neutralize": 0.75,
+        "attenuation_red": 0.0,
+        "contrast_low": 0.375,
+        "contrast_high": 2.2806043737181163,
+        "brightness_down": 0.0,
+        "brightness_up": 0.0,
+        "veil_uniform": 1.2071067811865475,
+        "hotspot": 1.516123775561495,
+        "cue_conflict_inverted_veil": 3.050761594369236,
+        "veil_depth_consistent": 1.0
+      }
+    },
+    "metricanything_pointmap": {
+      "constant_global_scale_bias": {
+        "wb_warm": 0.9729565485830984,
+        "wb_cool": 1.0210472669494122,
+        "channel_neutralize": 0.8735472466145653,
+        "attenuation_red": 1.0485516241925477,
+        "contrast_low": 1.040345944568617,
+        "contrast_high": 0.8931462874989421,
+        "brightness_down": 1.0127863493842466,
+        "brightness_up": 0.9896652929171919,
+        "veil_uniform": 1.2120951094028345,
+        "hotspot": 0.9602276219062369,
+        "cue_conflict_inverted_veil": 0.9830015588292826,
+        "veil_depth_consistent": 1.3171514530559638
+      },
+      "frame_varying_scale_drift": {
+        "wb_warm": 1.0883863041807804,
+        "wb_cool": 1.0755683740125224,
+        "channel_neutralize": 1.311645719524384,
+        "attenuation_red": 1.1439570041111078,
+        "contrast_low": 1.1522583144966472,
+        "contrast_high": 1.2963977726468623,
+        "brightness_down": 1.061097865270444,
+        "brightness_up": 1.0731439214694563,
+        "veil_uniform": 1.4037026845719216,
+        "hotspot": 1.2684012358152057,
+        "cue_conflict_inverted_veil": 1.8709180936721097,
+        "veil_depth_consistent": 1.4032574293495776
+      },
+      "frame_to_frame_log_mad": {
+        "wb_warm": 0.01139571753640883,
+        "wb_cool": 0.011611332505115132,
+        "channel_neutralize": 0.06704501555016681,
+        "attenuation_red": 0.017142717384322388,
+        "contrast_low": 0.03438040637470275,
+        "contrast_high": 0.060962974060731256,
+        "brightness_down": 0.008159540805722782,
+        "brightness_up": 0.009169245131549346,
+        "veil_uniform": 0.04808487040132018,
+        "hotspot": 0.05003178190482393,
+        "cue_conflict_inverted_veil": 0.11090188206255647,
+        "veil_depth_consistent": 0.06365675579194857
+      },
+      "local_range_deformation": {
+        "wb_warm": 0.004622956409173984,
+        "wb_cool": 0.004077411276478871,
+        "channel_neutralize": 0.028277293736403142,
+        "attenuation_red": 0.007357102236294558,
+        "contrast_low": 0.011584663404014345,
+        "contrast_high": 0.028701901242528666,
+        "brightness_down": 0.002752466895192221,
+        "brightness_up": 0.0034393297802848832,
+        "veil_uniform": 0.07590708204688919,
+        "hotspot": 0.02591360715836659,
+        "cue_conflict_inverted_veil": 0.11065329563996973,
+        "veil_depth_consistent": 0.07421926850333462
+      },
+      "local_range_deformation_p95": {
+        "wb_warm": 0.025173261518263518,
+        "wb_cool": 0.027956754346239843,
+        "channel_neutralize": 0.14133451340729078,
+        "attenuation_red": 0.036948050070832766,
+        "contrast_low": 0.0612103428436979,
+        "contrast_high": 0.14649009121928458,
+        "brightness_down": 0.019109161417267657,
+        "brightness_up": 0.035988346352869474,
+        "veil_uniform": 0.24401399848953237,
+        "hotspot": 0.2112332002577418,
+        "cue_conflict_inverted_veil": 0.38547813939308745,
+        "veil_depth_consistent": 0.2669099762371512
+      },
+      "local_range_deformation_physical": {
+        "wb_warm": 0.004622956409173873,
+        "wb_cool": 0.004077411276479037,
+        "channel_neutralize": 0.02827729373640317,
+        "attenuation_red": 0.007357102236294488,
+        "contrast_low": 0.011584663404014373,
+        "contrast_high": 0.02870190124252861,
+        "brightness_down": 0.002752466895192207,
+        "brightness_up": 0.003439329780284772,
+        "veil_uniform": 0.07590708204688926,
+        "hotspot": 0.02591360715836663,
+        "cue_conflict_inverted_veil": 0.11065329563996962,
+        "veil_depth_consistent": 0.07421926850333443
+      },
+      "local_range_deformation_physical_p95": {
+        "wb_warm": 0.025173261518263768,
+        "wb_cool": 0.02795675434624007,
+        "channel_neutralize": 0.14133451340729083,
+        "attenuation_red": 0.03694805007083298,
+        "contrast_low": 0.06121034284369791,
+        "contrast_high": 0.14649009121928463,
+        "brightness_down": 0.019109161417267713,
+        "brightness_up": 0.03598834635286957,
+        "veil_uniform": 0.24401399848953226,
+        "hotspot": 0.21123320025774167,
+        "cue_conflict_inverted_veil": 0.3854781393930875,
+        "veil_depth_consistent": 0.26690997623715146
+      },
+      "coverage_baseline": {
+        "wb_warm": 0.7710894097222223,
+        "wb_cool": 0.7710894097222223,
+        "channel_neutralize": 0.7710894097222223,
+        "attenuation_red": 0.7710894097222223,
+        "contrast_low": 0.7710894097222223,
+        "contrast_high": 0.7710894097222223,
+        "brightness_down": 0.7710894097222223,
+        "brightness_up": 0.7710894097222223,
+        "veil_uniform": 0.7710894097222223,
+        "hotspot": 0.7710894097222223,
+        "cue_conflict_inverted_veil": 0.7710894097222223,
+        "veil_depth_consistent": 0.7710894097222223
+      },
+      "coverage_perturbed": {
+        "wb_warm": 0.7760590277777778,
+        "wb_cool": 0.7698133680555556,
+        "channel_neutralize": 0.7811935763888889,
+        "attenuation_red": 0.7711371527777777,
+        "contrast_low": 0.7700130208333333,
+        "contrast_high": 0.7664800347222223,
+        "brightness_down": 0.7726085069444445,
+        "brightness_up": 0.7783810763888889,
+        "veil_uniform": 0.7702907986111112,
+        "hotspot": 0.7579774305555556,
+        "cue_conflict_inverted_veil": 0.7814409722222222,
+        "veil_depth_consistent": 0.7760243055555556
+      },
+      "boundary_jitter_px": {
+        "wb_warm": 0.0,
+        "wb_cool": 0.0,
+        "channel_neutralize": 0.0,
+        "attenuation_red": 0.0,
+        "contrast_low": 0.0,
+        "contrast_high": 0.0,
+        "brightness_down": 0.0,
+        "brightness_up": 0.0,
+        "veil_uniform": 0.0,
+        "hotspot": 0.0,
+        "cue_conflict_inverted_veil": 0.0,
+        "veil_depth_consistent": 0.0
+      }
+    },
+    "wat3r_n1": {
+      "constant_global_scale_bias": {
+        "wb_warm": 0.9925165640697715,
+        "wb_cool": 1.0100100405399086,
+        "channel_neutralize": 1.008532542429536,
+        "attenuation_red": 1.0011648008128207,
+        "contrast_low": 0.9978004423159462,
+        "contrast_high": 0.9884416995495774,
+        "brightness_down": 0.9995480901009259,
+        "brightness_up": 0.9993883400144596,
+        "veil_uniform": 1.0219488491635684,
+        "hotspot": 0.9907488686482663,
+        "cue_conflict_inverted_veil": 1.0232893337335136,
+        "veil_depth_consistent": 0.9473686988762481
+      },
+      "frame_varying_scale_drift": {
+        "wb_warm": 1.040399565189774,
+        "wb_cool": 1.0364794890699702,
+        "channel_neutralize": 1.2183069755281584,
+        "attenuation_red": 1.038603826126904,
+        "contrast_low": 1.0465746377310927,
+        "contrast_high": 1.106781752150034,
+        "brightness_down": 1.0297162807102433,
+        "brightness_up": 1.0496338465616888,
+        "veil_uniform": 1.0730448404000408,
+        "hotspot": 1.0782861486838946,
+        "cue_conflict_inverted_veil": 1.1368545429260446,
+        "veil_depth_consistent": 1.1880997363285895
+      },
+      "frame_to_frame_log_mad": {
+        "wb_warm": 0.007621735431531778,
+        "wb_cool": 0.006508066497913181,
+        "channel_neutralize": 0.021835372509946466,
+        "attenuation_red": 0.0051350512810388604,
+        "contrast_low": 0.008293929295651387,
+        "contrast_high": 0.008766536394197312,
+        "brightness_down": 0.004331577848358843,
+        "brightness_up": 0.009649353223076845,
+        "veil_uniform": 0.019287275110470188,
+        "hotspot": 0.01896658554980475,
+        "cue_conflict_inverted_veil": 0.033104007927690283,
+        "veil_depth_consistent": 0.03671182103630022
+      },
+      "local_range_deformation": {
+        "wb_warm": 0.006955191812919255,
+        "wb_cool": 0.0064510802954216035,
+        "channel_neutralize": 0.04008171782955158,
+        "attenuation_red": 0.009319328207524003,
+        "contrast_low": 0.01473451666061977,
+        "contrast_high": 0.03660545749850676,
+        "brightness_down": 0.005173998965884476,
+        "brightness_up": 0.006809026552305415,
+        "veil_uniform": 0.055217120955058756,
+        "hotspot": 0.05697971136123291,
+        "cue_conflict_inverted_veil": 0.10715983218908356,
+        "veil_depth_consistent": 0.05501047766541643
+      },
+      "local_range_deformation_p95": {
+        "wb_warm": 0.030208536238656304,
+        "wb_cool": 0.027784807540510374,
+        "channel_neutralize": 0.14288394549202052,
+        "attenuation_red": 0.04530773079444864,
+        "contrast_low": 0.07621022093968527,
+        "contrast_high": 0.2047612803241212,
+        "brightness_down": 0.027107144929752986,
+        "brightness_up": 0.03786798909089748,
+        "veil_uniform": 0.2163138200611775,
+        "hotspot": 0.18158027803659443,
+        "cue_conflict_inverted_veil": 0.41425870886299976,
+        "veil_depth_consistent": 0.21776504164755156
+      },
+      "local_range_deformation_physical": {
+        "wb_warm": 0.006955191812919204,
+        "wb_cool": 0.006451080295421546,
+        "channel_neutralize": 0.040081717829551666,
+        "attenuation_red": 0.009319328207523958,
+        "contrast_low": 0.014734516660619645,
+        "contrast_high": 0.03660545749850677,
+        "brightness_down": 0.005173998965884635,
+        "brightness_up": 0.006809026552305308,
+        "veil_uniform": 0.055217120955058596,
+        "hotspot": 0.056979711361232865,
+        "cue_conflict_inverted_veil": 0.10715983218908365,
+        "veil_depth_consistent": 0.055010477665416335
+      },
+      "local_range_deformation_physical_p95": {
+        "wb_warm": 0.030208536238656377,
+        "wb_cool": 0.0277848075405106,
+        "channel_neutralize": 0.14288394549202046,
+        "attenuation_red": 0.045307730794448775,
+        "contrast_low": 0.0762102209396853,
+        "contrast_high": 0.2047612803241212,
+        "brightness_down": 0.02710714492975299,
+        "brightness_up": 0.03786798909089732,
+        "veil_uniform": 0.21631382006117755,
+        "hotspot": 0.1815802780365944,
+        "cue_conflict_inverted_veil": 0.414258708863,
+        "veil_depth_consistent": 0.2177650416475519
+      },
+      "coverage_baseline": {
+        "wb_warm": 0.7819487847222222,
+        "wb_cool": 0.7819487847222222,
+        "channel_neutralize": 0.7819487847222222,
+        "attenuation_red": 0.7819487847222222,
+        "contrast_low": 0.7819487847222222,
+        "contrast_high": 0.7819487847222222,
+        "brightness_down": 0.7819487847222222,
+        "brightness_up": 0.7819487847222222,
+        "veil_uniform": 0.7819487847222222,
+        "hotspot": 0.7819487847222222,
+        "cue_conflict_inverted_veil": 0.7819487847222222,
+        "veil_depth_consistent": 0.7819487847222222
+      },
+      "coverage_perturbed": {
+        "wb_warm": 0.7819487847222222,
+        "wb_cool": 0.7819487847222222,
+        "channel_neutralize": 0.7819487847222222,
+        "attenuation_red": 0.7819487847222222,
+        "contrast_low": 0.7819487847222222,
+        "contrast_high": 0.7819487847222222,
+        "brightness_down": 0.7819487847222222,
+        "brightness_up": 0.7819487847222222,
+        "veil_uniform": 0.7819487847222222,
+        "hotspot": 0.7819487847222222,
+        "cue_conflict_inverted_veil": 0.7819487847222222,
+        "veil_depth_consistent": 0.7819487847222222
+      },
+      "boundary_jitter_px": {
+        "wb_warm": 0.0,
+        "wb_cool": 0.0,
+        "channel_neutralize": 0.0,
+        "attenuation_red": 0.0,
+        "contrast_low": 0.0,
+        "contrast_high": 0.0,
+        "brightness_down": 0.0,
+        "brightness_up": 0.0,
+        "veil_uniform": 0.0,
+        "hotspot": 0.0,
+        "cue_conflict_inverted_veil": 0.0,
+        "veil_depth_consistent": 0.0
+      }
+    },
+    "da3mono_large": {
+      "constant_global_scale_bias": {
+        "wb_warm": 0.9930292824938275,
+        "wb_cool": 1.0101447466747961,
+        "channel_neutralize": 1.0087829546516363,
+        "attenuation_red": 0.9993841054770434,
+        "contrast_low": 1.0006287131755363,
+        "contrast_high": 0.970069554430973,
+        "brightness_down": 0.9897177881678751,
+        "brightness_up": 1.0224423831668707,
+        "veil_uniform": 1.0940586673318875,
+        "hotspot": 1.0607796347963512,
+        "cue_conflict_inverted_veil": 1.1163333253454173,
+        "veil_depth_consistent": 1.0581178726845832
+      },
+      "frame_varying_scale_drift": {
+        "wb_warm": 1.0147985676537652,
+        "wb_cool": 1.0177218156406798,
+        "channel_neutralize": 1.0820470098301829,
+        "attenuation_red": 1.0217061349040244,
+        "contrast_low": 1.0384679196210085,
+        "contrast_high": 1.0938161007364484,
+        "brightness_down": 1.0185225597531293,
+        "brightness_up": 1.0248382458460459,
+        "veil_uniform": 1.109932902733917,
+        "hotspot": 1.0486753214759197,
+        "cue_conflict_inverted_veil": 1.2950965237368315,
+        "veil_depth_consistent": 1.0999542618394849
+      },
+      "frame_to_frame_log_mad": {
+        "wb_warm": 0.003311070618108939,
+        "wb_cool": 0.0037384948965844796,
+        "channel_neutralize": 0.012942281762608015,
+        "attenuation_red": 0.006678664797251403,
+        "contrast_low": 0.010091598459754788,
+        "contrast_high": 0.01617021415260099,
+        "brightness_down": 0.003472403150628635,
+        "brightness_up": 0.004243185557074989,
+        "veil_uniform": 0.015615145555209107,
+        "hotspot": 0.013998172237109082,
+        "cue_conflict_inverted_veil": 0.0330582501233276,
+        "veil_depth_consistent": 0.01712989650737581
+      },
+      "local_range_deformation": {
+        "wb_warm": 0.007447950531026162,
+        "wb_cool": 0.007450523725598349,
+        "channel_neutralize": 0.03912482781539707,
+        "attenuation_red": 0.009626368624577686,
+        "contrast_low": 0.021157287968185563,
+        "contrast_high": 0.04219186780334095,
+        "brightness_down": 0.00494545125589925,
+        "brightness_up": 0.0049963875024994844,
+        "veil_uniform": 0.12887210516659958,
+        "hotspot": 0.052516603652436086,
+        "cue_conflict_inverted_veil": 0.24866723679798602,
+        "veil_depth_consistent": 0.05670631299591637
+      },
+      "local_range_deformation_p95": {
+        "wb_warm": 0.028899506713847847,
+        "wb_cool": 0.03297329368887017,
+        "channel_neutralize": 0.12197178967389295,
+        "attenuation_red": 0.041247458539111805,
+        "contrast_low": 0.06818467123026506,
+        "contrast_high": 0.17547061257675173,
+        "brightness_down": 0.03209222862256823,
+        "brightness_up": 0.04614144845972298,
+        "veil_uniform": 0.38747443461855496,
+        "hotspot": 0.18591334451908947,
+        "cue_conflict_inverted_veil": 0.6660544901303185,
+        "veil_depth_consistent": 0.2742546929820596
+      },
+      "local_range_deformation_physical": {
+        "wb_warm": 0.003460647626267771,
+        "wb_cool": 0.003524039620171948,
+        "channel_neutralize": 0.017141733374653856,
+        "attenuation_red": 0.004089883677100031,
+        "contrast_low": 0.008281288778665352,
+        "contrast_high": 0.01615280161473856,
+        "brightness_down": 0.00223087202840197,
+        "brightness_up": 0.0034443329734692996,
+        "veil_uniform": 0.059806754674576634,
+        "hotspot": 0.02178125568770639,
+        "cue_conflict_inverted_veil": 0.11280246488258355,
+        "veil_depth_consistent": 0.028282860636260815
+      },
+      "local_range_deformation_physical_p95": {
+        "wb_warm": 0.01927960293821536,
+        "wb_cool": 0.023062670256183054,
+        "channel_neutralize": 0.09052866115553176,
+        "attenuation_red": 0.03055107272392432,
+        "contrast_low": 0.0464789701705545,
+        "contrast_high": 0.10852144297946917,
+        "brightness_down": 0.018284393122952165,
+        "brightness_up": 0.04046952756410731,
+        "veil_uniform": 0.23526307301561458,
+        "hotspot": 0.10095108831593308,
+        "cue_conflict_inverted_veil": 0.39531791569076924,
+        "veil_depth_consistent": 0.19008638512782974
+      },
+      "coverage_baseline": {
+        "wb_warm": 0.8033984375000001,
+        "wb_cool": 0.8033984375000001,
+        "channel_neutralize": 0.8033984375000001,
+        "attenuation_red": 0.8033984375000001,
+        "contrast_low": 0.8033984375000001,
+        "contrast_high": 0.8033984375000001,
+        "brightness_down": 0.8033984375000001,
+        "brightness_up": 0.8033984375000001,
+        "veil_uniform": 0.8033984375000001,
+        "hotspot": 0.8033984375000001,
+        "cue_conflict_inverted_veil": 0.8033984375000001,
+        "veil_depth_consistent": 0.8033984375000001
+      },
+      "coverage_perturbed": {
+        "wb_warm": 0.8033984375000001,
+        "wb_cool": 0.8033984375000001,
+        "channel_neutralize": 0.8033984375000001,
+        "attenuation_red": 0.8033984375000001,
+        "contrast_low": 0.8033984375000001,
+        "contrast_high": 0.8033984375000001,
+        "brightness_down": 0.8033984375000001,
+        "brightness_up": 0.8033984375000001,
+        "veil_uniform": 0.8033984375000001,
+        "hotspot": 0.8033984375000001,
+        "cue_conflict_inverted_veil": 0.8033984375000001,
+        "veil_depth_consistent": 0.8033984375000001
+      },
+      "boundary_jitter_px": {
+        "wb_warm": 0.0,
+        "wb_cool": 0.0,
+        "channel_neutralize": 0.0,
+        "attenuation_red": 0.0,
+        "contrast_low": 0.0,
+        "contrast_high": 0.0,
+        "brightness_down": 0.0,
+        "brightness_up": 0.0,
+        "veil_uniform": 0.0,
+        "hotspot": 0.0,
+        "cue_conflict_inverted_veil": 0.0,
+        "veil_depth_consistent": 0.0
+      }
+    }
+  }
+}

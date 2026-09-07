@@ -1,0 +1,29 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 6a11c7a..dbe3436 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -7,7 +7,7 @@ name = "depth-anything-3"
+ version = "0.0.0"
+ description = "Depth Anything 3"
+ readme = "README.md"
+-requires-python = ">=3.9, <=3.13"
++requires-python = ">=3.9, <3.14"
+ license = { text = "Apache-2.0" }
+ authors = [{ name = "Your Name" }]
+ 
+diff --git a/src/depth_anything_3/utils/export/__init__.py b/src/depth_anything_3/utils/export/__init__.py
+index b707398..ddc2bcb 100644
+--- a/src/depth_anything_3/utils/export/__init__.py
++++ b/src/depth_anything_3/utils/export/__init__.py
+@@ -15,7 +15,10 @@
+ from depth_anything_3.specs import Prediction
+ from depth_anything_3.utils.export.gs import export_to_gs_ply, export_to_gs_video
+ 
+-from .colmap import export_to_colmap
++try:  # uwrestore week4a: pycolmap is not importable alongside torch on macOS
++    from .colmap import export_to_colmap  # (OpenMP libomp double-init abort)
++except Exception:  # pragma: no cover - export path unused by this project
++    export_to_colmap = None
+ from .depth_vis import export_to_depth_vis
+ from .feat_vis import export_to_feat_vis
+ from .glb import export_to_glb

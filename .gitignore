@@ -79,3 +79,10 @@ experiments/week3_geometry/phase3b/outputs/
 experiments/week3_geometry/phase3b/vendor/
 experiments/week3_geometry/phase3b/checkpoints/
 experiments/week3_geometry/phase3b/.venv-*/
+
+# Week 4A monocular depth bakeoff — heavy environments, vendored model repos and
+# local artifacts. `outputs/` and `vendor/` above already match most of this;
+# the venvs are named explicitly, same pattern as Weeks 2A and 3.
+experiments/week4_mono/.venv-*/
+experiments/week4_mono/vendor/
+experiments/week4_mono/outputs/
